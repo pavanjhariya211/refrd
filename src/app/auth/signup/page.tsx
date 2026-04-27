@@ -22,27 +22,22 @@ export default function SignupPage() {
     e.preventDefault()
     setLoading(true)
     const supabase = createClient()
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: name },
+        // The handle_new_user trigger reads full_name and user_type from this metadata
+        // and writes them to public.profiles atomically — works even when email
+        // confirmation is enabled and there's no client session yet.
+        data: { full_name: name, user_type: userType },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     })
+    setLoading(false)
     if (error) {
-      setLoading(false)
       toast.error(error.message)
       return
     }
-    if (data.user) {
-      // Set user_type via update — the trigger creates a baseline profile from auth metadata.
-      await supabase
-        .from('profiles')
-        .update({ user_type: userType, name })
-        .eq('id', data.user.id)
-    }
-    setLoading(false)
     toast.success('Account created. Check your email to confirm.')
     router.replace('/auth/login')
   }

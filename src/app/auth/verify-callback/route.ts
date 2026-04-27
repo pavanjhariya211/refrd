@@ -42,25 +42,27 @@ export async function GET(request: Request) {
     preferred_username?: string
   }
 
-  // The LinkedIn OIDC provider doesn't always return a public profile URL directly,
-  // but the `sub` claim plus the LinkedIn vanity is enough to construct one. Fall
-  // back to whatever Supabase saved on `identity_data`.
+  // LinkedIn's OIDC claims don't include a public profile URL — just `sub`
+  // (a LinkedIn person URN), name, picture, email. We use the link as the
+  // verification signal itself; the user's manually-entered linkedin_url stays.
   const linkedinUrl =
     data.profile_url ||
     (data.preferred_username
       ? `https://www.linkedin.com/in/${data.preferred_username}`
-      : undefined)
+      : null)
 
-  await supabase
-    .from('profiles')
-    .update({
-      linkedin_url: linkedinUrl ?? null,
-      linkedin_verified_at: new Date().toISOString(),
-      verification_status: 'verified',
-      profile_photo: data.picture || data.avatar_url || undefined,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', user.id)
+  // Only patch fields we actually have new values for — never clobber
+  // existing user-entered data with null/undefined.
+  const update: Record<string, string> = {
+    linkedin_verified_at: new Date().toISOString(),
+    verification_status: 'verified',
+    updated_at: new Date().toISOString(),
+  }
+  if (linkedinUrl) update.linkedin_url = linkedinUrl
+  const photo = data.picture || data.avatar_url
+  if (photo) update.profile_photo = photo
+
+  await supabase.from('profiles').update(update).eq('id', user.id)
 
   return NextResponse.redirect(`${origin}/verify?verified=1`)
 }

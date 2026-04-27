@@ -33,7 +33,7 @@ export function BidRankIndicator({ bidAmount, allBids, className }: Props) {
     <div className={cn('space-y-2', className)}>
       <div className="flex items-baseline justify-between text-sm">
         <span className="font-semibold text-slate-900">
-          You'd be ranked <span className="text-primary">#{rank}</span>{' '}
+          You&apos;d be ranked <span className="text-primary">#{rank}</span>{' '}
           <span className="text-slate-500">of {total}</span>
         </span>
         {isFirst && <span className="text-xs font-semibold text-success">🏆 Top bid</span>}

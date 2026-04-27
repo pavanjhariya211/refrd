@@ -269,8 +269,13 @@ create policy "Own match usage" on public.match_check_usage for all using (auth.
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, email, name)
-  values (new.id, new.email, new.raw_user_meta_data->>'full_name');
+  insert into public.profiles (id, email, name, user_type)
+  values (
+    new.id,
+    new.email,
+    new.raw_user_meta_data->>'full_name',
+    coalesce(new.raw_user_meta_data->>'user_type', 'jobseeker')
+  );
   return new;
 end;
 $$ language plpgsql security definer;
