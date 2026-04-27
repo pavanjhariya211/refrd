@@ -47,7 +47,7 @@ export default function LoginPage() {
           <div className="flex h-8 w-8 items-center justify-center rounded-btn bg-primary text-white">
             <Briefcase className="h-4 w-4" />
           </div>
-          <span className="text-lg font-extrabold tracking-tight">RefHire</span>
+          <span className="text-lg font-extrabold tracking-tight">Refrd</span>
         </Link>
       </header>
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-12">

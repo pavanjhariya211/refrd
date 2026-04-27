@@ -1,6 +1,6 @@
 import type { ApplicationStatus, ExperienceLevel, LocationType } from '@/types'
 
-export const APP_NAME = 'RefHire'
+export const APP_NAME = 'Refrd'
 
 export const FREE_MATCH_CHECK_LIMIT = 5
 

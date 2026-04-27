@@ -53,7 +53,7 @@ export function Navbar() {
             <div className="flex h-8 w-8 items-center justify-center rounded-btn bg-primary text-white">
               <Briefcase className="h-4 w-4" />
             </div>
-            <span className="text-lg font-extrabold tracking-tight text-slate-900">RefHire</span>
+            <span className="text-lg font-extrabold tracking-tight text-slate-900">Refrd</span>
           </Link>
           <nav className="hidden items-center gap-6 md:flex">
             <Link href="/jobs" className="text-sm font-medium text-slate-700 hover:text-primary">

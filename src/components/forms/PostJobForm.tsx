@@ -249,7 +249,7 @@ export function PostJobForm({ userId }: { userId: string }) {
             onChange={(e) => setDeadline(e.target.value)}
           />
           <div className="rounded-card bg-slate-50 p-4 text-xs text-slate-600">
-            <strong>Reminder:</strong> RefHire takes a 15% platform fee (min ₹50). The remainder
+            <strong>Reminder:</strong> Refrd takes a 15% platform fee (min ₹50). The remainder
             credits to your wallet the moment you submit a referral.
           </div>
           <div className="flex flex-wrap justify-between gap-2">

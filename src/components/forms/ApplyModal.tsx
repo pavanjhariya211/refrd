@@ -201,7 +201,7 @@ export function ApplyModal({ job, onClose }: Props) {
         amount: order.amount,
         currency: order.currency,
         order_id: order.order_id,
-        name: 'RefHire',
+        name: 'Refrd',
         description: job.title,
         handler: async (response: any) => {
           try {

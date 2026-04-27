@@ -1,4 +1,4 @@
-# RefHire v2.1
+# Refrd v2.1
 
 A competitive auction marketplace where job seekers bid for referrals from verified
 employees. Highest bid is reviewed first. Full refund if not selected. AI score is

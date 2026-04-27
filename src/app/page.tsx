@@ -35,7 +35,7 @@ export default async function HomePage() {
             <span className="text-primary"> Bid. Be reviewed first.</span>
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
-            RefHire is a competitive auction marketplace. Job seekers bid for referrals.
+            Refrd is a competitive auction marketplace. Job seekers bid for referrals.
             Highest bids are reviewed first. Full refund if you&apos;re not selected.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

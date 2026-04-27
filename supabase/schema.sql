@@ -1,4 +1,4 @@
--- RefHire v2.1 — Full Database Schema
+-- Refrd v2.1 — Full Database Schema
 -- Run this in the Supabase SQL Editor.
 
 create extension if not exists "uuid-ossp";

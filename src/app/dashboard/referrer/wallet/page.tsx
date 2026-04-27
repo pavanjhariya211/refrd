@@ -151,7 +151,7 @@ export default async function WalletPage() {
           </p>
           <p className="mt-3 rounded-card bg-amber-50 p-3 text-xs text-warning">
             Bank account onboarding is being rolled out. Email{' '}
-            <a className="underline" href="mailto:support@refhire.com">support@refhire.com</a> in
+            <a className="underline" href="mailto:support@refrd.com">support@refrd.com</a> in
             the meantime.
           </p>
         </section>

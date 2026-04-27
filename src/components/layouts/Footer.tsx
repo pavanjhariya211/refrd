@@ -11,7 +11,7 @@ export function Footer() {
               <div className="flex h-8 w-8 items-center justify-center rounded-btn bg-primary text-white">
                 <Briefcase className="h-4 w-4" />
               </div>
-              <span className="text-lg font-extrabold tracking-tight text-slate-900">RefHire</span>
+              <span className="text-lg font-extrabold tracking-tight text-slate-900">Refrd</span>
             </Link>
             <p className="mt-3 text-sm text-slate-600">
               Get referred by verified employees. Bid, get reviewed first, get refunded if not selected.
@@ -43,7 +43,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-10 border-t border-slate-100 pt-6 text-xs text-slate-500">
-          © {new Date().getFullYear()} RefHire. All rights reserved.
+          © {new Date().getFullYear()} Refrd. All rights reserved.
         </div>
       </div>
     </footer>
