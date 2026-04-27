@@ -4,7 +4,7 @@ export const APP_NAME = 'Refrd'
 
 // Storage bucket name for resume PDFs. Must match the bucket created in
 // Supabase and the bucket_id used in the storage RLS policies.
-export const RESUMES_BUCKET = 'resumes'
+export const RESUMES_BUCKET = 'Resume-2'
 
 export const FREE_MATCH_CHECK_LIMIT = 5
 
