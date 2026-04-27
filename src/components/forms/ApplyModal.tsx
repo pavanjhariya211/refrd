@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/Textarea'
 import { BidDisplay } from '@/components/ui/BidDisplay'
 import { BidRankIndicator } from '@/components/ui/BidRankIndicator'
 import { ScorePanel, ScorePanelSkeleton } from '@/components/ui/ScorePanel'
-import { FREE_MATCH_CHECK_LIMIT } from '@/lib/constants'
+import { FREE_MATCH_CHECK_LIMIT, RESUMES_BUCKET } from '@/lib/constants'
 import type { JobPost, MatchScore } from '@/types'
 
 interface Props {
@@ -102,11 +102,11 @@ export function ApplyModal({ job, onClose }: Props) {
     try {
       const path = `${user.id}/${job.id}/${Date.now()}-${f.name.replace(/\s+/g, '_')}`
       const { error: upErr } = await supabase.storage
-        .from('resumes')
+        .from(RESUMES_BUCKET)
         .upload(path, f, { upsert: true })
       if (upErr) throw upErr
       const { data: signed } = await supabase.storage
-        .from('resumes')
+        .from(RESUMES_BUCKET)
         .createSignedUrl(path, 60 * 60 * 24 * 30)
       setResumeUrl(signed?.signedUrl ?? path)
 
