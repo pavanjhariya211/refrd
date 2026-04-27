@@ -115,10 +115,40 @@ To enable this in Supabase:
 
 1. **Authentication → Providers → LinkedIn (OIDC)** — turn on, paste the LinkedIn
    client id and secret.
-2. Add `${NEXT_PUBLIC_APP_URL}/auth/verify-callback` to the LinkedIn app's
-   redirect URLs.
-3. Make sure the project has the LinkedIn OIDC scopes `openid profile email`
-   enabled (Supabase default).
+2. **Authentication → URL Configuration → Redirect URLs** — add **both**:
+   - `${NEXT_PUBLIC_APP_URL}/auth/callback` (used after email confirmation and
+     Google OAuth login)
+   - `${NEXT_PUBLIC_APP_URL}/auth/verify-callback` (used after LinkedIn link)
+3. **In your LinkedIn developer app** (linkedin.com/developers/apps), add
+   Supabase's callback (`https://<project>.supabase.co/auth/v1/callback`) as an
+   authorised redirect URL.
+4. Make sure the LinkedIn app has **Sign In with LinkedIn using OpenID Connect**
+   product approved.
+
+## Storage bucket (resumes)
+
+Create a private bucket named `resumes` (Storage → New bucket → public OFF).
+Then run these in the SQL editor so seekers can upload to their own folder
+and the referrer-side server uses signed URLs:
+
+```sql
+create policy "Users can upload own resumes" on storage.objects
+  for insert to authenticated
+  with check (
+    bucket_id = 'resumes'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+create policy "Users can read own resumes" on storage.objects
+  for select to authenticated
+  using (
+    bucket_id = 'resumes'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+```
+
+The upload path is `${userId}/${jobId}/${filename}` so the first folder
+matches `auth.uid()`.
 
 ## Money flow
 

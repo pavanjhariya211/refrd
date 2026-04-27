@@ -92,16 +92,28 @@ export async function POST(request: Request) {
     ranking?.filter((r) => r.bid_amount > body.bid_amount).length ?? 0
   const total = ranking?.length ?? 1
 
-  // Trigger AI scoring in background — fire-and-forget.
-  const url = new URL('/api/score-application', request.url).toString()
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      cookie: request.headers.get('cookie') ?? '',
-    },
-    body: JSON.stringify({ application_id }),
-  }).catch((e) => console.error('Background scoring trigger failed:', e))
+  // Trigger AI scoring synchronously. We previously fired-and-forgot, but that
+  // doesn't work reliably in serverless (the function returns before the fetch
+  // completes). Awaiting adds ~5s to checkout but guarantees the score row
+  // exists before the seeker hits the success state.
+  const scoreUrl = new URL('/api/score-application', request.url).toString()
+  try {
+    const scoreRes = await fetch(scoreUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        cookie: request.headers.get('cookie') ?? '',
+      },
+      body: JSON.stringify({ application_id }),
+    })
+    if (!scoreRes.ok) {
+      // Don't fail the payment confirmation — the seeker can still see their
+      // application in 'scoring…' state and we can retry later.
+      console.error('Scoring returned non-OK:', scoreRes.status, await scoreRes.text())
+    }
+  } catch (err) {
+    console.error('Scoring call failed:', err)
+  }
 
   return NextResponse.json({
     application_id,
