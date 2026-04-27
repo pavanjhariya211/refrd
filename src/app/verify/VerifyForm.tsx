@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { ShieldCheck, Mail } from 'lucide-react'
+import { ShieldCheck, Linkedin } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -11,38 +11,52 @@ import type { VerificationStatus } from '@/types'
 interface Props {
   status: VerificationStatus
   companyName?: string | null
+  linkedinVerifiedAt?: string | null
 }
 
-export function VerifyForm({ status, companyName }: Props) {
-  const [workEmail, setWorkEmail] = useState('')
+export function VerifyForm({ status, companyName, linkedinVerifiedAt }: Props) {
   const [company, setCompany] = useState(companyName ?? '')
   const [submitting, setSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(status === 'pending')
 
-  async function submit() {
-    if (!workEmail.includes('@') || !company) {
-      toast.error('Provide your work email and company.')
+  async function verifyWithLinkedIn() {
+    if (!company.trim()) {
+      toast.error('Enter the company you can refer to.')
       return
     }
     setSubmitting(true)
     const supabase = createClient()
-    // work_email is stored only on the server-controlled column; never selected publicly.
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        work_email: workEmail,
-        company_name: company,
-        verification_status: 'pending',
-      })
-      .eq('id', (await supabase.auth.getUser()).data.user!.id)
-    setSubmitting(false)
-    if (error) {
-      toast.error(error.message)
+
+    // Persist the company before redirecting so it's there when the user returns.
+    const { data: userData } = await supabase.auth.getUser()
+    if (!userData.user) {
+      toast.error('Please sign in again.')
+      setSubmitting(false)
       return
     }
-    toast.success("Verification request sent. We'll email you within 1 business day.")
-    setSubmitted(true)
+    const { error: profileErr } = await supabase
+      .from('profiles')
+      .update({ company_name: company.trim() })
+      .eq('id', userData.user.id)
+    if (profileErr) {
+      toast.error(profileErr.message)
+      setSubmitting(false)
+      return
+    }
+
+    const redirectTo = `${window.location.origin}/auth/verify-callback`
+    const { data, error } = await supabase.auth.linkIdentity({
+      provider: 'linkedin_oidc',
+      options: { redirectTo },
+    })
+    if (error) {
+      toast.error(error.message)
+      setSubmitting(false)
+      return
+    }
+    if (data?.url) window.location.href = data.url
   }
+
+  const isVerified = status === 'verified' && !!linkedinVerifiedAt
 
   return (
     <div className="card mt-6 space-y-4">
@@ -51,42 +65,44 @@ export function VerifyForm({ status, companyName }: Props) {
         <div>
           <p className="font-semibold">Why verification matters</p>
           <p className="mt-1 text-primary/80">
-            Verified employees show a blue badge on every job and rank higher in seeker search.
-            Your work email is private and used only to confirm employment.
+            Verified employees show a blue badge on every job and rank higher in seeker search. We
+            verify by linking your LinkedIn account via OAuth — your LinkedIn URL is already public,
+            and the link confirms you control the account.
           </p>
         </div>
       </div>
 
-      {status === 'verified' ? (
+      {isVerified ? (
         <div className="rounded-card bg-green-50 p-4 text-sm text-success">
-          You&apos;re verified. <ShieldCheck className="inline h-4 w-4" />
+          <ShieldCheck className="mr-1 inline h-4 w-4" /> LinkedIn linked &amp; verified.
+          {linkedinVerifiedAt && (
+            <span className="ml-1 text-xs text-success/80">
+              ({new Date(linkedinVerifiedAt).toLocaleDateString()})
+            </span>
+          )}
         </div>
-      ) : submitted ? (
+      ) : status === 'pending' ? (
         <div className="rounded-card bg-amber-50 p-4 text-sm text-warning">
-          <Mail className="inline h-4 w-4" /> Verification pending. We&apos;ll review within 1 business day.
+          Verification pending. Finish the LinkedIn flow if you closed the popup, or try again below.
         </div>
-      ) : (
-        <>
-          <Input
-            label="Company name"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-          />
-          <Input
-            type="email"
-            label="Work email"
-            placeholder="you@company.com"
-            hint="Must match a domain you own as an employee. Stored privately."
-            value={workEmail}
-            onChange={(e) => setWorkEmail(e.target.value)}
-          />
-          <div className="flex justify-end">
-            <Button onClick={submit} loading={submitting}>
-              Submit for verification
-            </Button>
-          </div>
-        </>
-      )}
+      ) : null}
+
+      <Input
+        label="Company name"
+        hint="The company you can refer candidates to."
+        value={company}
+        onChange={(e) => setCompany(e.target.value)}
+      />
+
+      <Button onClick={verifyWithLinkedIn} loading={submitting} fullWidth>
+        <Linkedin className="h-4 w-4" />
+        {isVerified ? 'Re-link LinkedIn' : 'Verify with LinkedIn'}
+      </Button>
+
+      <p className="text-xs text-slate-500">
+        We use Supabase&apos;s LinkedIn OIDC provider. We only read your name, profile URL, and
+        avatar — never your password or your network.
+      </p>
     </div>
   )
 }

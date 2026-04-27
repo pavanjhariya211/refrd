@@ -13,7 +13,7 @@ export default async function VerifyPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id, verification_status, company_name')
+    .select('id, verification_status, company_name, linkedin_url, linkedin_verified_at')
     .eq('id', user.id)
     .single()
 
@@ -23,12 +23,13 @@ export default async function VerifyPage() {
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
         <h1 className="text-3xl font-extrabold text-slate-900">Verify employee status</h1>
         <p className="text-sm text-slate-600">
-          Verified referrers earn higher reputation and rank higher in search. Your work email is
-          stored securely and never shown publicly.
+          Verified referrers earn higher reputation and rank higher in search. We confirm employment
+          by linking your LinkedIn account — no work-email back-and-forth.
         </p>
         <VerifyForm
           status={profile?.verification_status ?? 'unverified'}
           companyName={profile?.company_name}
+          linkedinVerifiedAt={profile?.linkedin_verified_at ?? null}
         />
       </main>
       <Footer />

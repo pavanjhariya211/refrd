@@ -15,8 +15,8 @@ create table public.profiles (
   user_type text check (user_type in ('referrer','jobseeker','both')) default 'jobseeker',
   verification_status text check (verification_status in ('unverified','pending','verified')) default 'unverified',
   company_name text,
-  work_email text,            -- NEVER expose in public client queries
   linkedin_url text,
+  linkedin_verified_at timestamptz,   -- set when LinkedIn OAuth identity is linked
   github_url text,
   skills text[] default '{}',
   reputation_score integer default 0,

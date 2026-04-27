@@ -19,11 +19,10 @@ export function useUser() {
       if (!active) return
       setUser(data.user)
       if (data.user) {
-        // Note: never select work_email — public-facing client should never read it.
         const { data: p } = await supabase
           .from('profiles')
           .select(
-            'id, email, name, profile_photo, headline, location, bio, user_type, verification_status, company_name, linkedin_url, github_url, skills, reputation_score, total_referrals, successful_referrals, avg_response_days, is_open_to_work, created_at, updated_at'
+            'id, email, name, profile_photo, headline, location, bio, user_type, verification_status, company_name, linkedin_url, linkedin_verified_at, github_url, skills, reputation_score, total_referrals, successful_referrals, avg_response_days, is_open_to_work, created_at, updated_at'
           )
           .eq('id', data.user.id)
           .single()

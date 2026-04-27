@@ -63,8 +63,8 @@ export interface Profile {
   user_type: UserType
   verification_status: VerificationStatus
   company_name?: string
-  // NOTE: work_email is intentionally NEVER included in client-side type usage.
   linkedin_url?: string
+  linkedin_verified_at?: string
   github_url?: string
   skills: string[]
   reputation_score: number

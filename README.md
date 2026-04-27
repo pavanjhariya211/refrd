@@ -58,9 +58,11 @@ src/
       seeker/                bid rank + AI score panel + refunds
       referrer/              jobs list, wallet, kanban
     messages/                Supabase Realtime threads
-    profile/[id]/            public profile (no work_email)
+    profile/[id]/            public profile
     settings/profile/        edit profile
-    verify/                  request employee verification
+    verify/                  link LinkedIn to verify employment
+    auth/verify-callback/    handles the LinkedIn OAuth return + flips
+                             verification_status to 'verified'
   components/
     ui/                      Design system (Button, Input, MatchGradeBadge, ScorePanel, …)
     forms/                   ApplyModal (3-step), PostJobForm
@@ -72,7 +74,7 @@ src/
     razorpay.ts              SDK + HMAC verification
     constants.ts             Public field allow-list, kanban columns, fees
     utils.ts                 cn, formatINR, getInitials, …
-  types/                     Domain types — work_email is intentionally absent
+  types/                     Domain types
   middleware.ts              Auth gate for /dashboard, /messages, /post-job, /settings, /verify
 supabase/
   schema.sql                 Tables, RLS, triggers, realtime publications
@@ -83,19 +85,40 @@ vercel.json                  Daily auto-refund cron
 
 These are enforced both in RLS and in client query shapes:
 
-1. **`work_email` is server-side only.** The column exists in `profiles` but is never
-   selected by any client query. Use `PUBLIC_REFERRER_FIELDS` from
-   `src/lib/constants.ts` whenever joining a referrer.
-2. **`resume_text` is server-side only.** Stored on `applications` for AI scoring,
+1. **`resume_text` is server-side only.** Stored on `applications` for AI scoring,
    never returned in any client `.select()`. The `Application` type does not
    include it.
-3. **Referrer name/email are never exposed.** Job seekers see reputation, successful
-   referrals, company name, verification status, and avg response time only.
-4. **Bid amounts across competing applicants are private.** Job seeker only sees:
+2. **Referrer name/email are never exposed.** Job seekers see reputation, successful
+   referrals, company name, verification status, and avg response time only. Use
+   `PUBLIC_REFERRER_FIELDS` from `src/lib/constants.ts` whenever joining a referrer.
+3. **Bid amounts across competing applicants are private.** Job seeker only sees:
    their own bid, current highest aggregate, their rank.
-5. **`ScorePanel` shows full data to both parties** — full transparency. Pass
+4. **`ScorePanel` shows full data to both parties** — full transparency. Pass
    `showImprovementTips` to surface job-seeker tips; this prop changes presentation
    only, never visibility of the score itself.
+
+## Employee verification (LinkedIn OAuth)
+
+Verification is performed by linking a LinkedIn identity via Supabase's
+`linkedin_oidc` provider. There is no work-email step.
+
+```
+/verify  → user enters company name, clicks "Verify with LinkedIn"
+        → supabase.auth.linkIdentity({ provider: 'linkedin_oidc' })
+        → LinkedIn → /auth/verify-callback
+        → server reads user.identities, pulls the LinkedIn URL + avatar,
+          sets profile.linkedin_url, profile.linkedin_verified_at,
+          profile.verification_status = 'verified'
+```
+
+To enable this in Supabase:
+
+1. **Authentication → Providers → LinkedIn (OIDC)** — turn on, paste the LinkedIn
+   client id and secret.
+2. Add `${NEXT_PUBLIC_APP_URL}/auth/verify-callback` to the LinkedIn app's
+   redirect URLs.
+3. Make sure the project has the LinkedIn OIDC scopes `openid profile email`
+   enabled (Supabase default).
 
 ## Money flow
 
@@ -149,7 +172,8 @@ Grades: A ≥ 85, B ≥ 70, C ≥ 55, D ≥ 40, F < 40.
 
 ## Final checklist
 
-- [x] Referrer `name`/`email`/`work_email` never returned in any public query
+- [x] Referrer `name`/`email` never returned in any public query
+- [x] Employee verification uses LinkedIn OAuth (no work-email collection)
 - [x] `resume_text` never sent to client — server API routes only
 - [x] `ScorePanel` renders identically for both parties (no conditional hiding)
 - [x] Bid amounts across competing applicants never leaked (only aggregate)
