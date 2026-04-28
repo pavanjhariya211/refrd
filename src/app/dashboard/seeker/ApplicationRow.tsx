@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
 import { MatchGradeBadge } from '@/components/ui/MatchGradeBadge'
@@ -15,6 +15,7 @@ interface Props {
 }
 
 export function ApplicationRow({ app, onViewScore }: Props) {
+  const subscriptionId = useId()
   const [highest, setHighest] = useState(app.job?.current_highest_bid ?? 0)
   const [count, setCount] = useState(app.job?.applications_count ?? 1)
   const [rankAbove, setRankAbove] = useState(0)
@@ -39,7 +40,7 @@ export function ApplicationRow({ app, onViewScore }: Props) {
     fetchRank()
 
     const channel = supabase
-      .channel(`apps:${app.job_id}`)
+      .channel(`apps:${app.job_id}:${subscriptionId}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'applications', filter: `job_id=eq.${app.job_id}` },
@@ -60,7 +61,7 @@ export function ApplicationRow({ app, onViewScore }: Props) {
       cancelled = true
       supabase.removeChannel(channel)
     }
-  }, [app.job_id, app.bid_amount])
+  }, [app.job_id, app.bid_amount, subscriptionId])
 
   const myRank = rankAbove + 1
   const outranked = highest > app.bid_amount

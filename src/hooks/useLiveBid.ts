@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 interface LiveBid {
@@ -10,6 +10,7 @@ interface LiveBid {
 }
 
 export function useLiveBid(jobId: string, initial?: Partial<LiveBid>): LiveBid {
+  const subscriptionId = useId()
   const [state, setState] = useState<LiveBid>({
     currentHighestBid: initial?.currentHighestBid ?? 0,
     applicantCount: initial?.applicantCount ?? 0,
@@ -37,8 +38,11 @@ export function useLiveBid(jobId: string, initial?: Partial<LiveBid>): LiveBid {
     }
     fetchOnce()
 
+    // Channel names must be unique per subscriber. Two components can't
+    // call .on() after .subscribe() on the same channel — Supabase returns
+    // the existing channel, and adding a listener post-subscribe throws.
     const channel = supabase
-      .channel(`job_posts:${jobId}`)
+      .channel(`job_posts:${jobId}:${subscriptionId}`)
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'job_posts', filter: `id=eq.${jobId}` },
@@ -57,7 +61,7 @@ export function useLiveBid(jobId: string, initial?: Partial<LiveBid>): LiveBid {
       cancelled = true
       supabase.removeChannel(channel)
     }
-  }, [jobId])
+  }, [jobId, subscriptionId])
 
   return state
 }

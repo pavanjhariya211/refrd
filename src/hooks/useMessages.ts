@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Message } from '@/types'
 
 export function useMessages(applicationId?: string) {
+  const subscriptionId = useId()
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -29,8 +30,9 @@ export function useMessages(applicationId?: string) {
     }
     load()
 
+    // Unique per subscriber — see useLiveBid for the same-channel-name pitfall.
     const channel = supabase
-      .channel(`messages:${applicationId}`)
+      .channel(`messages:${applicationId}:${subscriptionId}`)
       .on(
         'postgres_changes',
         {
@@ -49,7 +51,7 @@ export function useMessages(applicationId?: string) {
       active = false
       supabase.removeChannel(channel)
     }
-  }, [applicationId])
+  }, [applicationId, subscriptionId])
 
   return { messages, loading }
 }
