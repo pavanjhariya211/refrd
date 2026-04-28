@@ -1,45 +1,31 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { Briefcase } from 'lucide-react'
+import { Briefcase, Linkedin } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
 import type { UserType } from '@/types'
 
 export default function SignupPage() {
-  const router = useRouter()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [userType, setUserType] = useState<UserType>('jobseeker')
   const [loading, setLoading] = useState(false)
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  async function signUpWithLinkedIn() {
     setLoading(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        // The handle_new_user trigger reads full_name and user_type from this metadata
-        // and writes them to public.profiles atomically — works even when email
-        // confirmation is enabled and there's no client session yet.
-        data: { full_name: name, user_type: userType },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
+    // We pass user_type via the redirectTo query so /auth/callback can persist it
+    // on the freshly-created profile after the LinkedIn OAuth handshake completes.
+    const redirectTo = `${window.location.origin}/auth/callback?user_type=${userType}&next=/dashboard/${userType === 'referrer' ? 'referrer' : 'seeker'}`
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'linkedin_oidc',
+      options: { redirectTo },
     })
-    setLoading(false)
     if (error) {
       toast.error(error.message)
-      return
+      setLoading(false)
     }
-    toast.success('Account created. Check your email to confirm.')
-    router.replace('/auth/login')
   }
 
   return (
@@ -56,57 +42,46 @@ export default function SignupPage() {
         <div className="card w-full">
           <h1 className="text-2xl font-extrabold text-slate-900">Create your account</h1>
           <p className="mt-1 text-sm text-slate-600">
-            Pay-on-apply, full refund if not selected.
+            Pay-on-apply, full refund if not selected. Verified via LinkedIn.
           </p>
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
-            <Input
-              label="Full name"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <Input
-              type="email"
-              label="Email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Input
-              type="password"
-              label="Password"
-              minLength={8}
-              required
-              autoComplete="new-password"
-              hint="At least 8 characters"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">I am a…</label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['jobseeker', 'referrer', 'both'] as UserType[]).map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => setUserType(t)}
-                    className={
-                      'rounded-btn border px-3 py-2 text-sm font-medium capitalize ' +
-                      (userType === t
-                        ? 'border-primary bg-brand-50 text-primary'
-                        : 'border-slate-200 text-slate-600 hover:bg-slate-50')
-                    }
-                  >
-                    {t === 'jobseeker' ? 'Job seeker' : t}
-                  </button>
-                ))}
-              </div>
+
+          <div className="mt-6">
+            <label className="mb-1.5 block text-sm font-medium text-slate-700">I am a…</label>
+            <div className="grid grid-cols-3 gap-2">
+              {(['jobseeker', 'referrer', 'both'] as UserType[]).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setUserType(t)}
+                  className={
+                    'rounded-btn border px-3 py-2 text-sm font-medium capitalize ' +
+                    (userType === t
+                      ? 'border-primary bg-brand-50 text-primary'
+                      : 'border-slate-200 text-slate-600 hover:bg-slate-50')
+                  }
+                >
+                  {t === 'jobseeker' ? 'Job seeker' : t}
+                </button>
+              ))}
             </div>
-            <Button type="submit" loading={loading} fullWidth>
-              Create account
-            </Button>
-          </form>
+          </div>
+
+          <Button
+            onClick={signUpWithLinkedIn}
+            loading={loading}
+            fullWidth
+            size="lg"
+            className="mt-5 bg-[#0A66C2] hover:bg-[#0A66C2]/90"
+          >
+            <Linkedin className="h-4 w-4" />
+            Continue with LinkedIn
+          </Button>
+
+          <p className="mt-4 text-center text-xs text-slate-500">
+            We only read your name, profile URL, email, and avatar. We never post on
+            your behalf or read your network.
+          </p>
+
           <p className="mt-6 text-center text-sm text-slate-600">
             Already have an account?{' '}
             <Link href="/auth/login" className="font-semibold text-primary hover:underline">

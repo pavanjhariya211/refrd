@@ -21,10 +21,11 @@ export default async function VerifyPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
-        <h1 className="text-3xl font-extrabold text-slate-900">Verify employee status</h1>
+        <h1 className="text-3xl font-extrabold text-slate-900">Verification</h1>
         <p className="text-sm text-slate-600">
-          Verified referrers earn higher reputation and rank higher in search. We confirm employment
-          by linking your LinkedIn account — no work-email back-and-forth.
+          Refrd verifies referrers via LinkedIn at signup. The badge on your job posts
+          turns on automatically when the company you set below matches the employer on
+          your LinkedIn profile.
         </p>
         <VerifyForm
           status={profile?.verification_status ?? 'unverified'}
