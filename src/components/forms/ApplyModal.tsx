@@ -30,6 +30,12 @@ declare global {
 
 type Step = 'resume' | 'bid' | 'pay' | 'success'
 
+const LINKEDIN_URL_RE = /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/(in|pub)\/[\w\-_%]+\/?(\?.*)?$/i
+
+function isValidLinkedinUrl(value: string): boolean {
+  return LINKEDIN_URL_RE.test(value.trim())
+}
+
 export function ApplyModal({ job, onClose }: Props) {
   const { user } = useUser()
   const supabase = createClient()
@@ -328,23 +334,31 @@ export function ApplyModal({ job, onClose }: Props) {
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <Input
-                  label="LinkedIn URL"
+                  label="LinkedIn URL *"
                   placeholder="https://linkedin.com/in/…"
+                  type="url"
+                  required
                   value={linkedinUrl}
                   onChange={(e) => setLinkedinUrl(e.target.value)}
+                  error={
+                    linkedinUrl.length > 0 && !isValidLinkedinUrl(linkedinUrl)
+                      ? 'Enter a valid LinkedIn URL'
+                      : undefined
+                  }
                 />
                 <Input
                   label="Portfolio URL"
-                  placeholder="https://…"
+                  placeholder="https://… (optional)"
+                  type="url"
                   value={portfolioUrl}
                   onChange={(e) => setPortfolioUrl(e.target.value)}
                 />
               </div>
 
               <Textarea
-                label="Cover note"
+                label="Cover note (optional)"
                 placeholder="Why are you a great fit for this role?"
-                hint="50–500 characters"
+                hint="Up to 500 characters. Optional but improves your AI match score."
                 showCount
                 maxLength={500}
                 value={coverNote}
@@ -388,7 +402,7 @@ export function ApplyModal({ job, onClose }: Props) {
               <div className="flex justify-end pt-2">
                 <Button
                   onClick={() => setStep('bid')}
-                  disabled={!resumeUrl || coverNote.length < 50}
+                  disabled={!resumeUrl || !isValidLinkedinUrl(linkedinUrl)}
                 >
                   Next: place your bid →
                 </Button>

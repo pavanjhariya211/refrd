@@ -119,7 +119,7 @@ create table public.match_scores (
   ai_summary text,
   improvement_tips text[],
   scored_at timestamptz default now(),
-  model_version text default 'claude-sonnet-4-20250514'
+  model_version text default 'claude-opus-4-7'
 );
 
 -- ─── REFERRALS ───────────────────────────────────────────────────────────────

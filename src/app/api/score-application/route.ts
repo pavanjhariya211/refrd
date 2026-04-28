@@ -4,7 +4,7 @@ import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { buildScorePrompt, parseScoreResponse } from '@/lib/scoring'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-const MODEL = 'claude-sonnet-4-20250514'
+const MODEL = 'claude-opus-4-7'
 
 export async function POST(request: Request) {
   let application_id: string
