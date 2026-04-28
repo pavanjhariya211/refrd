@@ -50,34 +50,51 @@ export async function POST(request: Request) {
     coverNote: body.cover_note,
   })
 
+  let raw = ''
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-opus-4-7',
-      max_tokens: 1000,
+      model: 'claude-haiku-4-5',
+      max_tokens: 2048,
       messages: [{ role: 'user', content: prompt }],
     })
     const block = response.content[0]
-    const raw = block.type === 'text' ? block.text : ''
-    const result = parseScoreResponse(raw)
-
-    if (usage) {
-      await supabase
-        .from('match_check_usage')
-        .update({ usage_count: used + 1 })
-        .eq('id', usage.id)
-    } else {
-      await supabase
-        .from('match_check_usage')
-        .insert({ user_id: user.id, month_key: monthKey, usage_count: 1 })
-    }
-
-    return NextResponse.json({
-      ...result,
-      used: used + 1,
-      limit: FREE_MATCH_CHECK_LIMIT,
-    })
+    raw = block.type === 'text' ? block.text : ''
   } catch (err) {
-    console.error('Quick match failed:', err)
-    return NextResponse.json({ error: 'Quick match failed' }, { status: 500 })
+    console.error('[quick-match] Anthropic call failed:', err)
+    if (err instanceof Anthropic.APIError) {
+      return NextResponse.json(
+        { error: `Claude API ${err.status}: ${err.message}` },
+        { status: 502 }
+      )
+    }
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Anthropic call failed' },
+      { status: 502 }
+    )
   }
+
+  let result
+  try {
+    result = parseScoreResponse(raw)
+  } catch (err) {
+    console.error('[quick-match] Could not parse Claude response:', err, '\nRaw:', raw.slice(0, 500))
+    return NextResponse.json(
+      { error: 'AI returned a response we could not parse — please try again' },
+      { status: 502 }
+    )
+  }
+
+  if (usage) {
+    await supabase.from('match_check_usage').update({ usage_count: used + 1 }).eq('id', usage.id)
+  } else {
+    await supabase
+      .from('match_check_usage')
+      .insert({ user_id: user.id, month_key: monthKey, usage_count: 1 })
+  }
+
+  return NextResponse.json({
+    ...result,
+    used: used + 1,
+    limit: FREE_MATCH_CHECK_LIMIT,
+  })
 }

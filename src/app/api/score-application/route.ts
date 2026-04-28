@@ -4,7 +4,7 @@ import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { buildScorePrompt, parseScoreResponse } from '@/lib/scoring'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-const MODEL = 'claude-opus-4-7'
+const MODEL = 'claude-haiku-4-5'
 
 export async function POST(request: Request) {
   let application_id: string
@@ -57,49 +57,68 @@ export async function POST(request: Request) {
     coverNote: app.cover_note ?? undefined,
   })
 
+  let raw = ''
   try {
     const response = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 1000,
+      max_tokens: 2048,
       messages: [{ role: 'user', content: prompt }],
     })
-
     const block = response.content[0]
-    const raw = block.type === 'text' ? block.text : ''
-    const result = parseScoreResponse(raw)
-
-    await supabase.from('match_scores').upsert(
-      {
-        application_id,
-        overall_score: result.overall_score,
-        grade: result.grade,
-        skills_score: result.skills_score,
-        experience_score: result.experience_score,
-        relevance_score: result.relevance_score,
-        education_score: result.education_score,
-        cover_note_score: result.cover_note_score,
-        keyword_score: result.keyword_score,
-        matched_skills: result.matched_skills,
-        missing_skills: result.missing_skills,
-        ai_summary: result.ai_summary,
-        improvement_tips: result.improvement_tips,
-        scored_at: new Date().toISOString(),
-        model_version: MODEL,
-      },
-      { onConflict: 'application_id' }
+    raw = block.type === 'text' ? block.text : ''
+  } catch (err) {
+    console.error('[score-application] Anthropic call failed:', err)
+    if (err instanceof Anthropic.APIError) {
+      return NextResponse.json(
+        { error: `Claude API ${err.status}: ${err.message}` },
+        { status: 502 }
+      )
+    }
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Anthropic call failed' },
+      { status: 502 }
     )
+  }
 
-    await supabase
-      .from('applications')
-      .update({ match_score: result.overall_score, match_grade: result.grade })
-      .eq('id', application_id)
+  let result
+  try {
+    result = parseScoreResponse(raw)
+  } catch (err) {
+    console.error('[score-application] Could not parse Claude response:', err, '\nRaw:', raw.slice(0, 500))
+    return NextResponse.json(
+      { error: 'AI returned a response we could not parse' },
+      { status: 502 }
+    )
+  }
 
-    return NextResponse.json({
+  await supabase.from('match_scores').upsert(
+    {
+      application_id,
       overall_score: result.overall_score,
       grade: result.grade,
-    })
-  } catch (err) {
-    console.error('Scoring failed:', err)
-    return NextResponse.json({ error: 'Scoring failed' }, { status: 500 })
-  }
+      skills_score: result.skills_score,
+      experience_score: result.experience_score,
+      relevance_score: result.relevance_score,
+      education_score: result.education_score,
+      cover_note_score: result.cover_note_score,
+      keyword_score: result.keyword_score,
+      matched_skills: result.matched_skills,
+      missing_skills: result.missing_skills,
+      ai_summary: result.ai_summary,
+      improvement_tips: result.improvement_tips,
+      scored_at: new Date().toISOString(),
+      model_version: MODEL,
+    },
+    { onConflict: 'application_id' }
+  )
+
+  await supabase
+    .from('applications')
+    .update({ match_score: result.overall_score, match_grade: result.grade })
+    .eq('id', application_id)
+
+  return NextResponse.json({
+    overall_score: result.overall_score,
+    grade: result.grade,
+  })
 }
