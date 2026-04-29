@@ -62,11 +62,29 @@ export function PostJobForm({ userId }: { userId: string }) {
       })
       .select('id')
       .single()
-    setLoading(false)
     if (error) {
+      setLoading(false)
       toast.error(error.message)
       return
     }
+
+    // Best-effort: stamp the referrer's profile with this company on their
+    // first job post. Powers the "Verified employee at <Company>" badge and
+    // the wallet/dashboard headers. We only set it when missing — if the
+    // referrer manually edited their company in Settings later, don't clobber.
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('company_name')
+      .eq('id', userId)
+      .single()
+    if (!profile?.company_name) {
+      await supabase
+        .from('profiles')
+        .update({ company_name: companyName })
+        .eq('id', userId)
+    }
+
+    setLoading(false)
     toast.success(status === 'active' ? 'Job posted!' : 'Saved as draft')
     router.push(`/jobs/${data!.id}`)
   }
