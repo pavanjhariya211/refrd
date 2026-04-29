@@ -119,7 +119,7 @@ create table public.match_scores (
   ai_summary text,
   improvement_tips text[],
   scored_at timestamptz default now(),
-  model_version text default 'claude-haiku-4-5'
+  model_version text default 'gpt-4o-mini'
 );
 
 -- ─── REFERRALS ───────────────────────────────────────────────────────────────

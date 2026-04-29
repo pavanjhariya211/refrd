@@ -4,7 +4,7 @@ A competitive auction marketplace where job seekers bid for referrals from verif
 employees. Highest bid is reviewed first. Full refund if not selected. AI score is
 fully visible to both sides.
 
-Built with **Next.js 14 (App Router) · Supabase · TypeScript · Tailwind CSS · Claude API · Razorpay**.
+Built with **Next.js 14 (App Router) · Supabase · TypeScript · Tailwind CSS · OpenAI · Razorpay**.
 
 ## The three rules this codebase is built around
 
@@ -22,7 +22,7 @@ npm install
 # 1. Configure Supabase + secrets
 cp .env.example .env.local
 # Fill in NEXT_PUBLIC_SUPABASE_URL, anon key, service role key,
-# ANTHROPIC_API_KEY, Razorpay keys, CRON_SECRET.
+# OPENAI_API_KEY, Razorpay keys, CRON_SECRET.
 
 # 2. Apply the database schema
 # Open supabase/schema.sql in the Supabase SQL Editor and run it.
@@ -41,7 +41,7 @@ npm run dev
 src/
   app/                       Next.js App Router routes
     api/
-      score-application/     Claude scoring (server-side, uses resume_text)
+      score-application/     OpenAI scoring (server-side, uses resume_text)
       score-status/[id]/     Polled by ApplyModal after payment success
       quick-match/           Pre-apply free score check (5/month)
       extract-resume/        PDF text extraction
@@ -170,8 +170,8 @@ Cron /api/payments/auto-refund (daily 02:00 UTC):
 
 ## AI scoring
 
-One prompt, two entry points. Both call Claude with the same
-`buildScorePrompt()` from `src/lib/scoring.ts`:
+One prompt, two entry points. Both call OpenAI (gpt-4o-mini, JSON mode)
+with the same `buildScorePrompt()` from `src/lib/scoring.ts`:
 
 - `POST /api/score-application` — runs after payment verification, writes
   `match_scores` row visible to both parties via RLS.

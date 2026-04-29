@@ -1,15 +1,18 @@
-import Anthropic from '@anthropic-ai/sdk'
+import OpenAI from 'openai'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { buildScorePrompt, parseScoreResponse } from '@/lib/scoring'
 import { FREE_MATCH_CHECK_LIMIT } from '@/lib/constants'
 import { getMonthKey } from '@/lib/utils'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+const MODEL = 'gpt-4o-mini'
 
 export async function POST(request: Request) {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await request.json().catch(() => null)
@@ -52,23 +55,31 @@ export async function POST(request: Request) {
 
   let raw = ''
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5',
-      max_tokens: 2048,
-      messages: [{ role: 'user', content: prompt }],
+    const response = await openai.chat.completions.create({
+      model: MODEL,
+      max_tokens: 1024,
+      // JSON mode — guarantees the response parses as valid JSON.
+      response_format: { type: 'json_object' },
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a senior technical recruiter. Always respond with a single valid JSON object — no preamble, no markdown.',
+        },
+        { role: 'user', content: prompt },
+      ],
     })
-    const block = response.content[0]
-    raw = block.type === 'text' ? block.text : ''
+    raw = response.choices[0]?.message?.content ?? ''
   } catch (err) {
-    console.error('[quick-match] Anthropic call failed:', err)
-    if (err instanceof Anthropic.APIError) {
+    console.error('[quick-match] OpenAI call failed:', err)
+    if (err instanceof OpenAI.APIError) {
       return NextResponse.json(
-        { error: `Claude API ${err.status}: ${err.message}` },
+        { error: `OpenAI ${err.status}: ${err.message}` },
         { status: 502 }
       )
     }
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'Anthropic call failed' },
+      { error: err instanceof Error ? err.message : 'OpenAI call failed' },
       { status: 502 }
     )
   }
@@ -77,7 +88,7 @@ export async function POST(request: Request) {
   try {
     result = parseScoreResponse(raw)
   } catch (err) {
-    console.error('[quick-match] Could not parse Claude response:', err, '\nRaw:', raw.slice(0, 500))
+    console.error('[quick-match] Could not parse OpenAI response:', err, '\nRaw:', raw.slice(0, 500))
     return NextResponse.json(
       { error: 'AI returned a response we could not parse — please try again' },
       { status: 502 }
