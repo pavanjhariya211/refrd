@@ -109,7 +109,7 @@ export default async function HomePage() {
               <BadgeCheck className="h-6 w-6 text-accent" />
               <h3 className="mt-3 text-lg font-semibold">2. AI scores both sides</h3>
               <p className="mt-1 text-sm text-slate-300">
-                A full Claude-powered match score — both you and the referrer see the breakdown.
+                A full match score — both you and the referrer see the same breakdown.
               </p>
             </div>
             <div className="rounded-card bg-slate-800 p-6">

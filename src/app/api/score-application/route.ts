@@ -76,15 +76,15 @@ export async function POST(request: Request) {
     })
     raw = response.choices[0]?.message?.content ?? ''
   } catch (err) {
-    console.error('[score-application] OpenAI call failed:', err)
+    console.error('[score-application] scoring service call failed:', err)
     if (err instanceof OpenAI.APIError) {
       return NextResponse.json(
-        { error: `OpenAI ${err.status}: ${err.message}` },
+        { error: `Scoring service error (${err.status}): ${err.message}` },
         { status: 502 }
       )
     }
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'OpenAI call failed' },
+      { error: err instanceof Error ? err.message : 'Scoring service unavailable' },
       { status: 502 }
     )
   }
@@ -93,9 +93,9 @@ export async function POST(request: Request) {
   try {
     result = parseScoreResponse(raw)
   } catch (err) {
-    console.error('[score-application] Could not parse OpenAI response:', err, '\nRaw:', raw.slice(0, 500))
+    console.error('[score-application] Could not parse scoring response:', err, '\nRaw:', raw.slice(0, 500))
     return NextResponse.json(
-      { error: 'AI returned a response we could not parse' },
+      { error: 'Scoring response was malformed' },
       { status: 502 }
     )
   }

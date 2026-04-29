@@ -112,9 +112,9 @@ Respond ONLY with valid JSON. No markdown, no preamble:
 export function parseScoreResponse(raw: string): ScoreResult {
   // Strip markdown fences first.
   let cleaned = raw.replace(/```json|```/g, '').trim()
-  // Extract the first balanced {...} block. Claude sometimes adds a
-  // sentence of preamble or a trailing note despite "no preamble" in
-  // the prompt, so don't insist the entire response be JSON.
+  // Extract the first balanced {...} block. The scoring model occasionally
+  // wraps the JSON with prose despite the "no preamble" instruction, so
+  // don't insist the entire response be JSON.
   const firstBrace = cleaned.indexOf('{')
   const lastBrace = cleaned.lastIndexOf('}')
   if (firstBrace !== -1 && lastBrace > firstBrace) {

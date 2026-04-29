@@ -105,7 +105,7 @@ export function SeekerDashboardClient({ applications }: Props) {
           ) : (
             <>
               <p className="mb-3 text-sm text-slate-500">
-                Scoring in progress — results appear here once Claude finishes.
+                Scoring in progress — your match breakdown will appear here in a few seconds.
               </p>
               <ScorePanelSkeleton />
             </>

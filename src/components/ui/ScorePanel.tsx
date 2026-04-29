@@ -139,7 +139,7 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
       )}
 
       <p className="text-center text-xs text-slate-400">
-        Scored by Claude · {new Date(score.scored_at).toLocaleString()}
+        Scored on {new Date(score.scored_at).toLocaleString()}
       </p>
     </div>
   )
