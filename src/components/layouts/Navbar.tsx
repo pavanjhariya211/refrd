@@ -62,11 +62,6 @@ export function Navbar() {
             <Link href="/post-job" className="text-sm font-medium text-slate-700 hover:text-primary">
               Post a Job
             </Link>
-            {user && (
-              <Link href="/messages" className="text-sm font-medium text-slate-700 hover:text-primary">
-                Messages
-              </Link>
-            )}
           </nav>
         </div>
 
