@@ -56,29 +56,23 @@ export function calculateReferrerPayout(bidAmount: number): number {
   return bidAmount - calculatePlatformFee(bidAmount)
 }
 
-export function buildScorePrompt(args: {
-  jobTitle: string
-  jobDepartment?: string
-  jobExperienceLevel?: string
-  jobSkills: string[]
-  jobDescription?: string
-  resumeText?: string
-  coverNote?: string
-}): string {
-  return `You are a senior technical recruiter with 15 years of experience. Score this job application with precision.
+// ─── Prompt construction ──────────────────────────────────────────────────
+//
+// OpenAI auto-caches the longest stable byte-prefix of the assembled prompt
+// (system + start of first user message) for ~5–10 minutes when the prefix
+// is ≥1024 tokens. To make that fire, we structure every scoring call as:
+//
+//   system  = SCORING_SYSTEM_PROMPT          (constant — same every call)
+//   user    = buildJobContextMessage(...)    (constant per job)
+//          + '\n\n'
+//          + buildApplicantMessage(...)      (volatile per applicant)
+//
+// The {system + jobContext} prefix is identical for every applicant on a
+// given job, so the 2nd…Nth applicant for the same job hits the cache.
+// Verify with `usage.prompt_tokens_details.cached_tokens > 0` on the
+// second call.
 
-JOB DESCRIPTION:
-Title: ${args.jobTitle}
-Department: ${args.jobDepartment || 'Not specified'}
-Experience Required: ${args.jobExperienceLevel || 'Not specified'}
-Required Skills: ${args.jobSkills?.join(', ') || 'Not specified'}
-Full Description: ${args.jobDescription || 'Not provided'}
-
-APPLICANT RESUME:
-${args.resumeText || 'Not provided'}
-
-COVER NOTE:
-${args.coverNote || 'Not provided'}
+export const SCORING_SYSTEM_PROMPT = `You are a senior technical recruiter with 15 years of experience. Score job applications with precision.
 
 Score on 6 dimensions (0-100 each):
 1. skills_score (weight 30%): Exact + semantic match of required skills vs resume. React ≈ React.js, Postgres ≈ PostgreSQL.
@@ -94,7 +88,7 @@ Also provide:
 - ai_summary: 2-3 sentence plain English explanation of the overall score
 - improvement_tips: 2-4 specific actionable suggestions to improve the score
 
-Respond ONLY with valid JSON. No markdown, no preamble:
+Respond with a single valid JSON object matching this schema exactly. No preamble, no markdown:
 {
   "skills_score": 0-100,
   "experience_score": 0-100,
@@ -106,8 +100,99 @@ Respond ONLY with valid JSON. No markdown, no preamble:
   "missing_skills": [],
   "ai_summary": "",
   "improvement_tips": []
-}`
+}` as const
+
+// ─── Server-side trims (#6, #6a, #6b) ──────────────────────────────────────
+
+const RESUME_MAX_CHARS = 6_000
+const COVER_NOTE_MAX_CHARS = 500
+const JOB_DESCRIPTION_MAX_CHARS = 2_000
+
+function normaliseWhitespace(text: string): string {
+  return text.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim()
 }
+
+// Boilerplate tails commonly appended to PDF resumes — once we hit one,
+// nothing useful follows. Anchored to the end so we don't accidentally
+// truncate a resume that mentions "references" mid-sentence.
+const RESUME_BOILERPLATE_TAIL_PATTERNS = [
+  /references\s+(?:are\s+)?available\s+(?:up)?on\s+request[\s\S]*$/i,
+  /\bhobbies?\s*[:\-—][\s\S]{0,500}$/i,
+]
+
+export function trimResume(text: string | null | undefined): string {
+  if (!text) return ''
+  let out = normaliseWhitespace(text)
+  for (const re of RESUME_BOILERPLATE_TAIL_PATTERNS) out = out.replace(re, '').trim()
+  return out.slice(0, RESUME_MAX_CHARS)
+}
+
+// HR boilerplate that usually appears at the END of a JD — equal-opportunity
+// statements, "About us", company culture blurbs. Cheap to drop.
+const JD_BOILERPLATE_TAIL_PATTERNS = [
+  /\bequal\s+opportunity\b[\s\S]*$/i,
+  /\babout\s+(?:us|the\s+company)\b[\s\S]*$/i,
+  /\bour\s+(?:culture|values|mission)\b[\s\S]*$/i,
+]
+
+export function trimJobDescription(text: string | null | undefined): string {
+  if (!text) return ''
+  let out = normaliseWhitespace(text)
+  for (const re of JD_BOILERPLATE_TAIL_PATTERNS) out = out.replace(re, '').trim()
+  return out.slice(0, JOB_DESCRIPTION_MAX_CHARS)
+}
+
+export function trimCoverNote(text: string | null | undefined): string {
+  if (!text) return ''
+  return normaliseWhitespace(text).slice(0, COVER_NOTE_MAX_CHARS)
+}
+
+// ─── Cacheable per-job context ────────────────────────────────────────────
+// Identical for every applicant on a given job → forms the cached prefix
+// when concatenated after SCORING_SYSTEM_PROMPT.
+
+export interface JobContext {
+  jobTitle: string
+  jobDepartment?: string
+  jobExperienceLevel?: string
+  jobSkills: string[]
+  jobDescription?: string
+}
+
+export function buildJobContextMessage(job: JobContext): string {
+  return `JOB DESCRIPTION:
+Title: ${job.jobTitle}
+Department: ${job.jobDepartment || 'Not specified'}
+Experience Required: ${job.jobExperienceLevel || 'Not specified'}
+Required Skills: ${job.jobSkills?.join(', ') || 'Not specified'}
+Full Description: ${trimJobDescription(job.jobDescription) || 'Not provided'}`
+}
+
+// ─── Volatile per-applicant content ───────────────────────────────────────
+
+export interface ApplicantContent {
+  resumeText?: string
+  coverNote?: string
+}
+
+export function buildApplicantMessage(applicant: ApplicantContent): string {
+  return `APPLICANT RESUME:
+${trimResume(applicant.resumeText) || 'Not provided'}
+
+COVER NOTE:
+${trimCoverNote(applicant.coverNote) || 'Not provided'}`
+}
+
+// ─── Compose the full user message in cache-friendly order ────────────────
+
+export function buildScoringUserMessage(
+  job: JobContext,
+  applicant: ApplicantContent
+): string {
+  return `${buildJobContextMessage(job)}\n\n${buildApplicantMessage(applicant)}`
+}
+
+// ─── Response parsing ─────────────────────────────────────────────────────
 
 export function parseScoreResponse(raw: string): ScoreResult {
   // Strip markdown fences first.

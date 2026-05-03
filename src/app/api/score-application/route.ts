@@ -1,7 +1,11 @@
 import OpenAI from 'openai'
 import { NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { buildScorePrompt, parseScoreResponse } from '@/lib/scoring'
+import {
+  SCORING_SYSTEM_PROMPT,
+  buildScoringUserMessage,
+  parseScoreResponse,
+} from '@/lib/scoring'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 const MODEL = 'gpt-4o-mini'
@@ -49,15 +53,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const prompt = buildScorePrompt({
-    jobTitle: job.title,
-    jobDepartment: job.department,
-    jobExperienceLevel: job.experience_level,
-    jobSkills: job.skills ?? [],
-    jobDescription: job.description,
-    resumeText: app.resume_text ?? undefined,
-    coverNote: app.cover_note ?? undefined,
-  })
+  const userMessage = buildScoringUserMessage(
+    {
+      jobTitle: job.title,
+      jobDepartment: job.department,
+      jobExperienceLevel: job.experience_level,
+      jobSkills: job.skills ?? [],
+      jobDescription: job.description,
+    },
+    {
+      resumeText: app.resume_text ?? undefined,
+      coverNote: app.cover_note ?? undefined,
+    }
+  )
 
   let raw = ''
   try {
@@ -66,12 +74,8 @@ export async function POST(request: Request) {
       max_tokens: 1024,
       response_format: { type: 'json_object' },
       messages: [
-        {
-          role: 'system',
-          content:
-            'You are a senior technical recruiter. Always respond with a single valid JSON object — no preamble, no markdown.',
-        },
-        { role: 'user', content: prompt },
+        { role: 'system', content: SCORING_SYSTEM_PROMPT },
+        { role: 'user', content: userMessage },
       ],
     })
     raw = response.choices[0]?.message?.content ?? ''

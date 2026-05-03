@@ -1,7 +1,11 @@
 import OpenAI from 'openai'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { buildScorePrompt, parseScoreResponse } from '@/lib/scoring'
+import {
+  SCORING_SYSTEM_PROMPT,
+  buildScoringUserMessage,
+  parseScoreResponse,
+} from '@/lib/scoring'
 import { FREE_MATCH_CHECK_LIMIT } from '@/lib/constants'
 import { getMonthKey } from '@/lib/utils'
 
@@ -43,15 +47,19 @@ export async function POST(request: Request) {
     .single()
   if (!job) return NextResponse.json({ error: 'Job not found' }, { status: 404 })
 
-  const prompt = buildScorePrompt({
-    jobTitle: job.title,
-    jobDepartment: job.department,
-    jobExperienceLevel: job.experience_level,
-    jobSkills: job.skills ?? [],
-    jobDescription: job.description,
-    resumeText: body.resume_text,
-    coverNote: body.cover_note,
-  })
+  const userMessage = buildScoringUserMessage(
+    {
+      jobTitle: job.title,
+      jobDepartment: job.department,
+      jobExperienceLevel: job.experience_level,
+      jobSkills: job.skills ?? [],
+      jobDescription: job.description,
+    },
+    {
+      resumeText: body.resume_text,
+      coverNote: body.cover_note,
+    }
+  )
 
   let raw = ''
   try {
@@ -61,12 +69,8 @@ export async function POST(request: Request) {
       // JSON mode — guarantees the response parses as valid JSON.
       response_format: { type: 'json_object' },
       messages: [
-        {
-          role: 'system',
-          content:
-            'You are a senior technical recruiter. Always respond with a single valid JSON object — no preamble, no markdown.',
-        },
-        { role: 'user', content: prompt },
+        { role: 'system', content: SCORING_SYSTEM_PROMPT },
+        { role: 'user', content: userMessage },
       ],
     })
     raw = response.choices[0]?.message?.content ?? ''
