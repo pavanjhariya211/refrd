@@ -18,7 +18,8 @@ export default async function SeekerDashboardPage() {
     .select(
       `id, job_id, applicant_id, resume_url, cover_note, linkedin_url, portfolio_url, status, bid_amount, payment_status, match_score, match_grade, referrer_notes, created_at, updated_at,
       job:job_posts!job_id(*, referrer:profiles!referrer_id(${PUBLIC_REFERRER_FIELDS})),
-      match:match_scores(*)`
+      match:match_scores(*),
+      proof:referral_proofs(id, status, ocr_reasoning, created_at)`
     )
     .eq('applicant_id', user.id)
     .order('created_at', { ascending: false })

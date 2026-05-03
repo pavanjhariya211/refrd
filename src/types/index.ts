@@ -134,6 +134,7 @@ export interface Application {
     'id' | 'name' | 'headline' | 'profile_photo' | 'linkedin_url' | 'skills'
   >
   match?: MatchScore
+  proof?: ReferralProof | null
 }
 
 export interface MatchScore {
@@ -183,6 +184,26 @@ export interface WalletTransaction {
   amount: number
   description?: string
   created_at: string
+}
+
+export type ReferralProofStatus = 'approved' | 'needs_review' | 'rejected'
+
+export interface ReferralProof {
+  id: string
+  application_id: string
+  referrer_id: string
+  proof_url: string
+  // proof_path is server-side only — never read on the client
+  status: ReferralProofStatus
+  ocr_extracted_company?: string
+  ocr_extracted_candidate?: string
+  ocr_sender?: string
+  ocr_reasoning?: string
+  ocr_model?: string
+  reviewed_by?: string
+  reviewed_at?: string
+  created_at: string
+  updated_at: string
 }
 
 export interface Message {

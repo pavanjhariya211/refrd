@@ -150,6 +150,52 @@ create policy "Users can read own resumes" on storage.objects
 The upload path is `${userId}/${jobId}/${filename}` so the first folder
 matches `auth.uid()`.
 
+## Storage bucket (proofs)
+
+Used for the referrer-uploaded screenshots of referral confirmation emails.
+Same RLS pattern as `resumes`. Create a private bucket named `proofs`
+(Storage → New bucket → public OFF), then:
+
+```sql
+create policy "Users can upload own proofs" on storage.objects
+  for insert to authenticated
+  with check (
+    bucket_id = 'proofs'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+
+create policy "Users can read own proofs" on storage.objects
+  for select to authenticated
+  using (
+    bucket_id = 'proofs'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+```
+
+If you want a different bucket name, edit `PROOFS_BUCKET` in
+`src/lib/constants.ts` and keep the SQL `bucket_id` in sync.
+
+## Referral proof verification flow
+
+After a referrer clicks "Refer" on an applicant:
+
+1. The Refer modal asks for a screenshot of the referral confirmation email
+   from the company's ATS (Greenhouse, Lever, Workday, etc.) or directly
+   from the company.
+2. The screenshot uploads to the `proofs` bucket and `POST /api/referrals/submit-proof`
+   runs gpt-4o-mini Vision against it.
+3. The model decides `approved` / `needs_review` / `rejected` based on whether
+   the candidate name and company match the application.
+4. **Approved** → wallet credit happens immediately (15% platform fee).
+5. **Needs review** → row lands in `referral_proofs` with `status='needs_review'`;
+   admin manually approves later (today: via Supabase table editor; a dedicated
+   admin queue page is on the roadmap).
+6. **Rejected** → referrer sees a clear error and can retry with a clearer
+   screenshot.
+
+This gates payouts on actual proof of referral, which means a spammer can't
+collect bid money for fake job posts.
+
 ## Money flow
 
 ```

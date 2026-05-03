@@ -3,15 +3,16 @@
 import { useMemo, useState } from 'react'
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { toast } from 'sonner'
-import { ExternalLink, MessageSquare, X, Check } from 'lucide-react'
+import { ExternalLink, MessageSquare, X, Check, FileUp, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { CompanyAvatar } from '@/components/ui/CompanyAvatar'
 import { MatchGradeBadge } from '@/components/ui/MatchGradeBadge'
 import { ScorePanel } from '@/components/ui/ScorePanel'
 import { Textarea } from '@/components/ui/Textarea'
-import { KANBAN_COLUMNS, DECLINE_REASONS } from '@/lib/constants'
+import { KANBAN_COLUMNS, DECLINE_REASONS, PROOFS_BUCKET } from '@/lib/constants'
 import { calculatePlatformFee, calculateReferrerPayout } from '@/lib/scoring'
 import { formatINR } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
 import type { Application, ApplicationStatus } from '@/types'
 
 type SortKey = 'bid' | 'score' | 'date'
@@ -28,6 +29,13 @@ export function ApplicantsKanban({ applications: initial, jobTitle }: Props) {
   const [referFor, setReferFor] = useState<Application | null>(null)
   const [declineFor, setDeclineFor] = useState<Application | null>(null)
   const [referNotes, setReferNotes] = useState('')
+  const [proofFile, setProofFile] = useState<File | null>(null)
+  const [proofResult, setProofResult] = useState<
+    | { status: 'approved'; payout: number }
+    | { status: 'needs_review'; reasoning?: string }
+    | { status: 'rejected'; reasoning?: string }
+    | null
+  >(null)
   const [declineReason, setDeclineReason] = useState<string>(DECLINE_REASONS[0])
   const [declineNotes, setDeclineNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -79,23 +87,57 @@ export function ApplicantsKanban({ applications: initial, jobTitle }: Props) {
     moveTo(app, target)
   }
 
-  async function confirmRefer() {
-    if (!referFor) return
+  function closeReferModal() {
+    setReferFor(null)
+    setReferNotes('')
+    setProofFile(null)
+    setProofResult(null)
+  }
+
+  async function submitProof() {
+    if (!referFor || !proofFile) return
+    if (proofFile.size > 5 * 1024 * 1024) {
+      toast.error('Screenshot must be under 5MB')
+      return
+    }
     setSubmitting(true)
     try {
-      const res = await fetch('/api/payments/release', {
+      const supabase = createClient()
+      // Resolve current user once (auth lives in cookies; this returns instantly)
+      const { data: userData } = await supabase.auth.getUser()
+      const userId = userData.user?.id
+      if (!userId) {
+        toast.error('Session expired — please refresh')
+        return
+      }
+
+      const path = `${userId}/${referFor.id}/${Date.now()}-${proofFile.name.replace(/\s+/g, '_')}`
+      const { error: upErr } = await supabase.storage
+        .from(PROOFS_BUCKET)
+        .upload(path, proofFile, { upsert: true })
+      if (upErr) throw upErr
+
+      const res = await fetch('/api/referrals/submit-proof', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ application_id: referFor.id, notes: referNotes }),
+        body: JSON.stringify({ application_id: referFor.id, proof_path: path }),
       })
       const json = await res.json()
-      if (!res.ok) throw new Error(json.error ?? 'Failed')
-      setApps((prev) =>
-        prev.map((a) => (a.id === referFor.id ? { ...a, status: 'referred' } : a))
-      )
-      toast.success(`Referred! ${formatINR(json.payout)} added to your wallet.`)
-      setReferFor(null)
-      setReferNotes('')
+      if (!res.ok) throw new Error(json.error ?? 'Could not submit proof')
+
+      if (json.status === 'approved') {
+        setApps((prev) =>
+          prev.map((a) => (a.id === referFor.id ? { ...a, status: 'referred' } : a))
+        )
+        setProofResult({ status: 'approved', payout: json.payout })
+        toast.success(`Approved! ${formatINR(json.payout)} added to your wallet.`)
+      } else if (json.status === 'needs_review') {
+        setProofResult({ status: 'needs_review', reasoning: json.reasoning })
+        toast.message('Submitted for review — payout releases on approval.')
+      } else {
+        setProofResult({ status: 'rejected', reasoning: json.reasoning })
+        toast.error('Could not validate the proof. Try a clearer screenshot.')
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed')
     } finally {
@@ -299,40 +341,82 @@ export function ApplicantsKanban({ applications: initial, jobTitle }: Props) {
       )}
 
       {referFor && (
-        <Modal onClose={() => setReferFor(null)} title="Submit referral">
-          <p className="text-sm text-slate-700">
-            Refer <strong>{referFor.applicant?.name}</strong> for{' '}
-            <strong>{jobTitle}</strong>?
-          </p>
-          <div className="mt-4 rounded-card bg-slate-50 p-4 text-sm">
-            <div className="flex justify-between">
-              <span>Bid amount</span>
-              <strong>{formatINR(referFor.bid_amount)}</strong>
-            </div>
-            <div className="flex justify-between text-slate-500">
-              <span>Platform fee (15%, min ₹50)</span>
-              <span>− {formatINR(calculatePlatformFee(referFor.bid_amount))}</span>
-            </div>
-            <div className="mt-2 flex justify-between border-t border-slate-200 pt-2 text-base">
-              <span className="font-semibold">You earn</span>
-              <strong className="text-success">
-                {formatINR(calculateReferrerPayout(referFor.bid_amount))}
-              </strong>
-            </div>
-          </div>
-          <Textarea
-            label="Optional note for the candidate"
-            value={referNotes}
-            onChange={(e) => setReferNotes(e.target.value)}
-            className="mt-3"
-            placeholder="I'll send your resume to my hiring manager today."
-          />
-          <div className="mt-4 flex justify-end gap-2">
-            <Button variant="ghost" onClick={() => setReferFor(null)}>Cancel</Button>
-            <Button variant="success" loading={submitting} onClick={confirmRefer}>
-              Confirm &amp; earn {formatINR(calculateReferrerPayout(referFor.bid_amount))}
-            </Button>
-          </div>
+        <Modal onClose={closeReferModal} title="Submit referral">
+          {proofResult ? (
+            <ProofResultPanel result={proofResult} onClose={closeReferModal} />
+          ) : (
+            <>
+              <p className="text-sm text-slate-700">
+                Refer <strong>{referFor.applicant?.name}</strong> for{' '}
+                <strong>{jobTitle}</strong>?
+              </p>
+
+              <ol className="mt-3 space-y-1 rounded-card bg-blue-50 p-3 text-sm text-primary">
+                <li>1. Submit the candidate on your company&apos;s referral system.</li>
+                <li>2. Wait for the confirmation email from your ATS.</li>
+                <li>3. Upload a screenshot of that email below.</li>
+              </ol>
+
+              <div className="mt-4 rounded-card bg-slate-50 p-4 text-sm">
+                <div className="flex justify-between">
+                  <span>Bid amount</span>
+                  <strong>{formatINR(referFor.bid_amount)}</strong>
+                </div>
+                <div className="flex justify-between text-slate-500">
+                  <span>Platform fee (15%, min ₹50)</span>
+                  <span>− {formatINR(calculatePlatformFee(referFor.bid_amount))}</span>
+                </div>
+                <div className="mt-2 flex justify-between border-t border-slate-200 pt-2 text-base">
+                  <span className="font-semibold">You earn (on approval)</span>
+                  <strong className="text-success">
+                    {formatINR(calculateReferrerPayout(referFor.bid_amount))}
+                  </strong>
+                </div>
+              </div>
+
+              <label className="mt-3 flex cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center hover:border-primary">
+                <FileUp className="h-6 w-6 text-slate-400" />
+                <p className="mt-2 text-sm font-semibold text-slate-700">
+                  {proofFile ? proofFile.name : 'Upload screenshot of the confirmation email'}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">PNG / JPG, up to 5 MB</p>
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
+                  className="hidden"
+                  onChange={(e) => setProofFile(e.target.files?.[0] ?? null)}
+                />
+              </label>
+
+              <Textarea
+                label="Optional note for the candidate"
+                value={referNotes}
+                onChange={(e) => setReferNotes(e.target.value)}
+                className="mt-3"
+                placeholder="I'll send your resume to my hiring manager today."
+              />
+
+              <div className="mt-4 flex justify-end gap-2">
+                <Button variant="ghost" onClick={closeReferModal}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="success"
+                  loading={submitting}
+                  onClick={submitProof}
+                  disabled={!proofFile || submitting}
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Verifying…
+                    </>
+                  ) : (
+                    'Submit proof & request payout'
+                  )}
+                </Button>
+              </div>
+            </>
+          )}
         </Modal>
       )}
 
@@ -393,6 +477,74 @@ function SidePanel({
         </header>
         <div className="flex-1 overflow-y-auto p-5">{children}</div>
       </div>
+    </div>
+  )
+}
+
+function ProofResultPanel({
+  result,
+  onClose,
+}: {
+  result:
+    | { status: 'approved'; payout: number }
+    | { status: 'needs_review'; reasoning?: string }
+    | { status: 'rejected'; reasoning?: string }
+  onClose: () => void
+}) {
+  if (result.status === 'approved') {
+    return (
+      <div className="space-y-4 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-success">
+          <Check className="h-8 w-8" />
+        </div>
+        <div>
+          <h3 className="text-xl font-extrabold text-slate-900">Referred!</h3>
+          <p className="mt-1 text-sm text-slate-600">
+            <strong className="text-success">{formatINR(result.payout)}</strong> credited to your wallet.
+          </p>
+        </div>
+        <Button onClick={onClose} fullWidth>Done</Button>
+      </div>
+    )
+  }
+  if (result.status === 'needs_review') {
+    return (
+      <div className="space-y-4 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-warning">
+          <Loader2 className="h-8 w-8" />
+        </div>
+        <div>
+          <h3 className="text-xl font-extrabold text-slate-900">Submitted for review</h3>
+          <p className="mt-1 text-sm text-slate-600">
+            Our team will verify your screenshot within 24 hours. Payout releases on approval.
+          </p>
+        </div>
+        {result.reasoning && (
+          <p className="rounded-input bg-slate-50 p-2 text-left text-xs text-slate-600">
+            <strong>Reason:</strong> {result.reasoning}
+          </p>
+        )}
+        <Button onClick={onClose} fullWidth>Got it</Button>
+      </div>
+    )
+  }
+  return (
+    <div className="space-y-4 text-center">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-error">
+        <X className="h-8 w-8" />
+      </div>
+      <div>
+        <h3 className="text-xl font-extrabold text-slate-900">Could not validate</h3>
+        <p className="mt-1 text-sm text-slate-600">
+          The screenshot doesn&apos;t look like a referral confirmation. Try a clearer image showing the candidate name and company.
+        </p>
+      </div>
+      {result.reasoning && (
+        <p className="rounded-input bg-slate-50 p-2 text-left text-xs text-slate-600">
+          <strong>Reason:</strong> {result.reasoning}
+        </p>
+      )}
+      <Button onClick={onClose} fullWidth variant="outline">Close</Button>
     </div>
   )
 }

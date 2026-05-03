@@ -104,6 +104,18 @@ export function ApplicationRow({ app, onViewScore }: Props) {
       </td>
       <td className="px-4 py-3">
         <StatusBadge status={app.status} />
+        {app.proof && app.proof.status !== 'approved' && app.status !== 'referred' && (
+          <p
+            className={
+              'mt-1 text-[11px] ' +
+              (app.proof.status === 'rejected' ? 'text-error' : 'text-warning')
+            }
+          >
+            {app.proof.status === 'needs_review'
+              ? 'Referrer submitted proof — awaiting verification'
+              : 'Proof rejected — referrer will retry'}
+          </p>
+        )}
       </td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">

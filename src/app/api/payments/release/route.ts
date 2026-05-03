@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { calculatePlatformFee, calculateReferrerPayout } from '@/lib/scoring'
+import { releasePayout } from '@/lib/payments'
 
 export const runtime = 'nodejs'
 
+/**
+ * Direct payout release. Kept for admin/manual use only — the seeker-facing
+ * referrer flow goes through /api/referrals/submit-proof now, which gates
+ * release on an approved referral_proof. This route still requires the
+ * caller to be the job's referrer AND for an approved proof to exist.
+ */
 export async function POST(request: Request) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -18,94 +24,40 @@ export async function POST(request: Request) {
 
   const { data: app } = await service
     .from('applications')
-    .select(
-      'id, applicant_id, bid_amount, payment_status, status, job:job_posts!job_id(id, title, referrer_id)'
-    )
+    .select('id, job:job_posts!job_id(referrer_id)')
     .eq('id', application_id)
     .single()
   if (!app) return NextResponse.json({ error: 'Application not found' }, { status: 404 })
 
-  const job = app.job as unknown as { id: string; title: string; referrer_id: string }
+  const job = app.job as unknown as { referrer_id: string }
   if (job.referrer_id !== user.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const { data: payment } = await service
-    .from('payments')
-    .select('id, status, amount')
+  // Gate: an approved referral_proof must exist before we release payout.
+  const { data: proof } = await service
+    .from('referral_proofs')
+    .select('status')
     .eq('application_id', application_id)
-    .single()
-  if (!payment || payment.status !== 'captured') {
-    return NextResponse.json({ error: 'No captured payment' }, { status: 400 })
-  }
-
-  const platform_fee = calculatePlatformFee(payment.amount)
-  const referrer_payout = calculateReferrerPayout(payment.amount)
-
-  await service
-    .from('payments')
-    .update({ platform_fee, referrer_payout })
-    .eq('id', payment.id)
-
-  // Ensure wallet exists
-  const { data: wallet } = await service
-    .from('referrer_wallets')
-    .select('id, balance, total_earned')
-    .eq('referrer_id', user.id)
     .maybeSingle()
-
-  let walletId = wallet?.id
-  if (!walletId) {
-    const { data: created } = await service
-      .from('referrer_wallets')
-      .insert({ referrer_id: user.id, balance: 0, total_earned: 0 })
-      .select('id, balance, total_earned')
-      .single()
-    walletId = created?.id
-    if (!walletId) return NextResponse.json({ error: 'Wallet error' }, { status: 500 })
+  if (!proof || proof.status !== 'approved') {
+    return NextResponse.json(
+      { error: 'Approved referral proof required before payout' },
+      { status: 412 }
+    )
   }
 
-  await service
-    .from('referrer_wallets')
-    .update({
-      balance: (wallet?.balance ?? 0) + referrer_payout,
-      total_earned: (wallet?.total_earned ?? 0) + referrer_payout,
-      updated_at: new Date().toISOString(),
+  try {
+    const result = await releasePayout(service, {
+      applicationId: application_id,
+      referrerId: user.id,
+      notes,
     })
-    .eq('id', walletId)
-
-  await service.from('wallet_transactions').insert({
-    wallet_id: walletId,
-    type: 'credit',
-    amount: referrer_payout,
-    reference_id: application_id,
-    description: `Referral: ${job.title}`,
-  })
-
-  await service
-    .from('applications')
-    .update({ status: 'referred', referrer_notes: notes ?? null })
-    .eq('id', application_id)
-
-  await service.from('referrals').insert({
-    application_id,
-    referrer_id: user.id,
-    notes: notes ?? null,
-  })
-
-  // Bump referrer profile stats
-  const { data: prof } = await service
-    .from('profiles')
-    .select('total_referrals, successful_referrals')
-    .eq('id', user.id)
-    .single()
-  await service
-    .from('profiles')
-    .update({
-      total_referrals: (prof?.total_referrals ?? 0) + 1,
-      successful_referrals: (prof?.successful_referrals ?? 0) + 1,
-    })
-    .eq('id', user.id)
-
-  return NextResponse.json({ payout: referrer_payout, platform_fee })
+    return NextResponse.json(result)
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Payout failed' },
+      { status: 500 }
+    )
+  }
 }

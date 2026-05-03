@@ -132,6 +132,30 @@ create table public.referrals (
   created_at timestamptz default now()
 );
 
+-- ─── REFERRAL PROOFS ─────────────────────────────────────────────────────────
+-- One-to-one with applications. Created when the referrer uploads a screenshot
+-- of the company-side referral confirmation email. OCR (gpt-4o-mini vision)
+-- auto-decides; ambiguous cases land in `needs_review` for an admin to clear.
+create table public.referral_proofs (
+  id uuid default uuid_generate_v4() primary key,
+  application_id uuid references public.applications(id) on delete cascade not null unique,
+  referrer_id uuid references public.profiles(id) on delete cascade not null,
+  proof_url text not null,                 -- signed URL with TTL
+  proof_path text not null,                -- storage path; service-side reads
+  status text check (status in ('approved','needs_review','rejected')) not null,
+  ocr_extracted_company text,
+  ocr_extracted_candidate text,
+  ocr_sender text,
+  ocr_reasoning text,
+  ocr_model text,
+  reviewed_by uuid references public.profiles(id),
+  reviewed_at timestamptz,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index idx_referral_proofs_status on public.referral_proofs(status);
+
 -- ─── REFERRER WALLETS ────────────────────────────────────────────────────────
 create table public.referrer_wallets (
   id uuid default uuid_generate_v4() primary key,
@@ -197,6 +221,7 @@ alter table public.wallet_transactions enable row level security;
 alter table public.messages enable row level security;
 alter table public.saved_jobs enable row level security;
 alter table public.match_check_usage enable row level security;
+alter table public.referral_proofs enable row level security;
 
 -- Profiles
 create policy "Profiles viewable by all" on public.profiles for select using (true);
@@ -263,6 +288,18 @@ create policy "Authenticated users send" on public.messages
 -- Saved jobs / match usage
 create policy "Own saved jobs" on public.saved_jobs for all using (auth.uid() = user_id);
 create policy "Own match usage" on public.match_check_usage for all using (auth.uid() = user_id);
+
+-- Referral proofs: visible to the referrer (they uploaded it) and the
+-- applicant (so the seeker can see their own status). Only the referrer
+-- can create a row. Updates happen via the service role from the
+-- submit-proof / admin-review routes, so no public update policy.
+create policy "Proof visible to parties" on public.referral_proofs
+  for select using (
+    referrer_id = auth.uid()
+    or application_id in (select id from public.applications where applicant_id = auth.uid())
+  );
+create policy "Referrer creates proof" on public.referral_proofs
+  for insert with check (auth.uid() = referrer_id);
 
 -- ─── DATABASE FUNCTIONS ──────────────────────────────────────────────────────
 

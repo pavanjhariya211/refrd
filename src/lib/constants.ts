@@ -6,6 +6,11 @@ export const APP_NAME = 'Refrd'
 // Supabase and the bucket_id used in the storage RLS policies.
 export const RESUMES_BUCKET = 'Resume-2'
 
+// Storage bucket name for referral confirmation screenshots that referrers
+// upload after submitting the candidate on their company ATS. Same RLS
+// pattern as resumes — first folder = auth.uid().
+export const PROOFS_BUCKET = 'proofs'
+
 export const FREE_MATCH_CHECK_LIMIT = 5
 
 export const APPLY_AUTO_REFUND_DAYS = 7
