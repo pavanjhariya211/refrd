@@ -20,6 +20,7 @@ export function Footer() {
           <div>
             <h4 className="mb-3 text-sm font-semibold text-slate-900">Job Seekers</h4>
             <ul className="space-y-2 text-sm text-slate-600">
+              <li><Link href="/for-job-seekers" className="hover:text-primary">How it works</Link></li>
               <li><Link href="/jobs" className="hover:text-primary">Browse jobs</Link></li>
               <li><Link href="/dashboard/seeker" className="hover:text-primary">My applications</Link></li>
               <li><Link href="/messages" className="hover:text-primary">Messages</Link></li>
@@ -28,6 +29,7 @@ export function Footer() {
           <div>
             <h4 className="mb-3 text-sm font-semibold text-slate-900">Referrers</h4>
             <ul className="space-y-2 text-sm text-slate-600">
+              <li><Link href="/for-referrers" className="hover:text-primary">How it works</Link></li>
               <li><Link href="/post-job" className="hover:text-primary">Post a job</Link></li>
               <li><Link href="/verify" className="hover:text-primary">Get verified</Link></li>
               <li><Link href="/dashboard/referrer/wallet" className="hover:text-primary">Wallet</Link></li>

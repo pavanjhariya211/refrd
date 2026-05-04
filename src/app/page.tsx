@@ -116,9 +116,25 @@ export default async function HomePage() {
               <ShieldCheck className="h-6 w-6 text-accent" />
               <h3 className="mt-3 text-lg font-semibold">3. Get referred or refunded</h3>
               <p className="mt-1 text-sm text-slate-300">
-                Referrer pays out instantly if they refer you. If they decline, you get refunded.
+                Referrer pays out only after they upload proof of the
+                referral. If they decline or don&apos;t act in 7 days, you get refunded.
               </p>
             </div>
+          </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm">
+            <Link
+              href="/for-job-seekers"
+              className="font-semibold text-accent hover:underline"
+            >
+              Full guide for job seekers →
+            </Link>
+            <span className="text-slate-600">·</span>
+            <Link
+              href="/for-referrers"
+              className="font-semibold text-accent hover:underline"
+            >
+              Full guide for referrers →
+            </Link>
           </div>
         </div>
       </section>
