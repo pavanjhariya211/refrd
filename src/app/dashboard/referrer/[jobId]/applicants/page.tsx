@@ -44,7 +44,7 @@ export default async function ApplicantsPage({ params }: { params: { jobId: stri
             {job.current_highest_bid > 0 ? `₹${job.current_highest_bid.toLocaleString('en-IN')}` : '—'}
           </p>
         </div>
-        <ApplicantsKanban applications={apps} jobTitle={job.title} />
+        <ApplicantsKanban applications={apps} jobId={job.id} jobTitle={job.title} />
       </main>
       <Footer />
     </div>

@@ -375,3 +375,4 @@ create trigger on_bid_paid
 alter publication supabase_realtime add table public.messages;
 alter publication supabase_realtime add table public.applications;
 alter publication supabase_realtime add table public.job_posts;
+alter publication supabase_realtime add table public.referral_proofs;

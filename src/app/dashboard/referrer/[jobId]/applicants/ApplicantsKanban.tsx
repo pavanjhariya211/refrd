@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useId, useMemo, useState } from 'react'
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { toast } from 'sonner'
 import { ExternalLink, MessageSquare, X, Check, FileUp, Loader2 } from 'lucide-react'
@@ -19,11 +19,45 @@ type SortKey = 'bid' | 'score' | 'date'
 
 interface Props {
   applications: Application[]
+  jobId: string
   jobTitle: string
 }
 
-export function ApplicantsKanban({ applications: initial, jobTitle }: Props) {
+export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Props) {
   const [apps, setApps] = useState<Application[]>(initial)
+  const subId = useId()
+
+  // Realtime: when an application on this job changes (admin approves a
+  // proof → status flips to 'referred', cron auto-refunds → status flips
+  // to 'rejected', etc.), merge the update into local state so the card
+  // moves to the right column without a refresh. We keep local state
+  // (instead of router.refresh) so drag-and-drop optimistic updates
+  // aren't blown away mid-interaction.
+  useEffect(() => {
+    if (!jobId) return
+    const supabase = createClient()
+    const ch = supabase
+      .channel(`kanban:${jobId}:${subId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'applications',
+          filter: `job_id=eq.${jobId}`,
+        },
+        (payload) => {
+          const next = payload.new as Partial<Application> & { id: string }
+          setApps((prev) =>
+            prev.map((a) => (a.id === next.id ? { ...a, ...next } : a))
+          )
+        }
+      )
+      .subscribe()
+    return () => {
+      supabase.removeChannel(ch)
+    }
+  }, [jobId, subId])
   const [sort, setSort] = useState<SortKey>('bid')
   const [openScoreFor, setOpenScoreFor] = useState<Application | null>(null)
   const [referFor, setReferFor] = useState<Application | null>(null)

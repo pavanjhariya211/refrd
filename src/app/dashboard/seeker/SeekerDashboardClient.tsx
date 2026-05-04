@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useId, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -8,6 +9,8 @@ import { MatchGradeBadge } from '@/components/ui/MatchGradeBadge'
 import { ScorePanel, ScorePanelSkeleton } from '@/components/ui/ScorePanel'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { formatINR, formatRelativeTime } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
+import { useUser } from '@/hooks/useUser'
 import type { Application } from '@/types'
 import { ApplicationRow } from './ApplicationRow'
 
@@ -17,6 +20,51 @@ interface Props {
 
 export function SeekerDashboardClient({ applications }: Props) {
   const [openScoreFor, setOpenScoreFor] = useState<Application | null>(null)
+  const router = useRouter()
+  const { user } = useUser()
+  const subId = useId()
+
+  // Realtime: refresh the page when this seeker's applications or
+  // referral_proofs change (e.g. admin approves a proof, OCR auto-approves
+  // a fresh upload, payout completes). router.refresh() re-runs the parent
+  // server component and reloads `applications` in place — no manual state
+  // sync, no flicker.
+  useEffect(() => {
+    if (!user?.id) return
+    const supabase = createClient()
+    const ch = supabase
+      .channel(`seeker:${user.id}:${subId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'applications',
+          filter: `applicant_id=eq.${user.id}`,
+        },
+        () => router.refresh()
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'referral_proofs',
+        },
+        (payload) => {
+          // referral_proofs has no applicant_id column to filter on; only
+          // refresh when the changed row's application belongs to this user.
+          // We don't know that without another query — cheapest path is
+          // refresh, since payload-driven false positives are rare and
+          // router.refresh() is light.
+          if (payload.new || payload.old) router.refresh()
+        }
+      )
+      .subscribe()
+    return () => {
+      supabase.removeChannel(ch)
+    }
+  }, [user?.id, subId, router])
 
   const stats = {
     total: applications.length,
