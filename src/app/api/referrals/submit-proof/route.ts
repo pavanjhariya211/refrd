@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { releasePayout } from '@/lib/payments'
 import { PROOFS_BUCKET } from '@/lib/constants'
+import { sendEmail, emailLayout } from '@/lib/email'
 
 export const runtime = 'nodejs'
 export const maxDuration = 30
@@ -217,6 +218,39 @@ Respond with JSON exactly matching:
     }
   }
 
-  // needs_review or rejected — no payout, just acknowledge.
+  // needs_review or rejected — no payout. Email any admins so the queue
+  // doesn't sit unattended; falls back to a no-op log if email isn't
+  // configured or no admins are listed.
+  if (finalDecision === 'needs_review') {
+    const adminIds = (process.env.ADMIN_USER_IDS ?? '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+    if (adminIds.length > 0) {
+      const { data: admins } = await service
+        .from('profiles')
+        .select('email')
+        .in('id', adminIds)
+      const adminEmails = (admins ?? [])
+        .map((a) => a.email as string | null)
+        .filter((e): e is string => !!e)
+      if (adminEmails.length > 0) {
+        const queueUrl =
+          (process.env.NEXT_PUBLIC_APP_URL ?? '') + '/admin/proof-queue'
+        void sendEmail({
+          to: adminEmails,
+          subject: `Proof needs review — ${expectedCompany}`,
+          html: emailLayout(`
+            <p>A referral proof was uploaded that the OCR could not auto-approve.</p>
+            <p><strong>Candidate:</strong> ${candidateName || '—'}<br/>
+               <strong>Company:</strong> ${expectedCompany || '—'}<br/>
+               <strong>OCR reason:</strong> ${ocr.reasoning}</p>
+            <p><a href="${queueUrl}" style="color:#1A56DB">Open review queue →</a></p>
+          `),
+        })
+      }
+    }
+  }
+
   return NextResponse.json({ status: finalDecision, reasoning: ocr.reasoning })
 }

@@ -175,6 +175,43 @@ create policy "Users can read own proofs" on storage.objects
 If you want a different bucket name, edit `PROOFS_BUCKET` in
 `src/lib/constants.ts` and keep the SQL `bucket_id` in sync.
 
+## Admin access (proof review queue)
+
+The `/admin/proof-queue` page and the `/api/admin/*` routes are gated
+on the `ADMIN_USER_IDS` env var — a comma-separated list of Supabase
+user UUIDs.
+
+To make yourself an admin:
+
+1. Sign in to Refrd at least once via LinkedIn (this provisions your
+   profile row).
+2. Find your UUID in Supabase SQL editor:
+   ```sql
+   select id, email from auth.users where email = 'you@example.com';
+   ```
+3. Vercel → Settings → Environment Variables → add
+   `ADMIN_USER_IDS=<your-uuid>` (comma-separated for multiple).
+4. Redeploy.
+5. Visit `/admin/proof-queue` — non-admins get a 404, admins see the queue.
+
+## Email notifications (optional, via Resend)
+
+If `RESEND_API_KEY` and `EMAIL_FROM` are set in env vars, transactional
+emails fire automatically:
+
+- **Admin alert** when a proof lands in `needs_review` (so you don't
+  have to babysit the queue)
+- **Referrer email** on approve — "your payout was credited"
+- **Seeker email** on reject — "your bid was refunded"
+
+If either env var is missing the email step logs to the Vercel function
+console and continues — nothing breaks. Get a key at
+[resend.com](https://resend.com); the free tier covers 3K emails/month.
+
+`EMAIL_FROM` must use a domain you've verified in Resend
+(`Refrd <noreply@yourdomain.com>`). For testing without verification,
+use `onboarding@resend.dev` and pass any to-address you control.
+
 ## Referral proof verification flow
 
 After a referrer clicks "Refer" on an applicant:
@@ -186,15 +223,22 @@ After a referrer clicks "Refer" on an applicant:
    runs gpt-4o-mini Vision against it.
 3. The model decides `approved` / `needs_review` / `rejected` based on whether
    the candidate name and company match the application.
-4. **Approved** → wallet credit happens immediately (15% platform fee).
-5. **Needs review** → row lands in `referral_proofs` with `status='needs_review'`;
-   admin manually approves later (today: via Supabase table editor; a dedicated
-   admin queue page is on the roadmap).
-6. **Rejected** → referrer sees a clear error and can retry with a clearer
-   screenshot.
+4. **Approved** → wallet credit happens immediately (15% platform fee);
+   referrer + seeker get an email if Resend is configured.
+5. **Needs review** → row lands in `referral_proofs` with
+   `status='needs_review'`; admins are emailed and clear the queue at
+   `/admin/proof-queue` (one-click Approve releases the payout, Reject
+   refunds the seeker via Razorpay).
+6. **Rejected** → referrer sees a clear error and can retry with a
+   clearer screenshot. If they don't retry within 3 days the seeker is
+   auto-refunded by the daily cron.
 
-This gates payouts on actual proof of referral, which means a spammer can't
-collect bid money for fake job posts.
+If a `needs_review` row sits in the queue for more than 7 days without
+an admin decision, the daily auto-refund cron refunds the seeker on
+its own — no payout is ever stuck indefinitely.
+
+This gates payouts on actual proof of referral, which means a spammer
+can't collect bid money for fake job posts.
 
 ## Money flow
 
