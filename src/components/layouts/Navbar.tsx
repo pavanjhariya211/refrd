@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { Briefcase, MessageSquare, LogOut, User as UserIcon, Wallet, LayoutDashboard, Menu, X, ChevronDown, Search, Sparkles } from 'lucide-react'
+import { MessageSquare, LogOut, User as UserIcon, Wallet, LayoutDashboard, Menu, X, ChevronDown, Search, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
@@ -49,11 +50,15 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-btn bg-primary text-white">
-            <Briefcase className="h-4 w-4" />
-          </div>
-          <span className="text-lg font-extrabold tracking-tight text-slate-900">Refrd</span>
+        <Link href="/" className="flex items-center" aria-label="Refrd home">
+          <Image
+            src="/logo.png"
+            alt="Refrd.ai"
+            width={160}
+            height={36}
+            priority
+            className="h-9 w-auto"
+          />
         </Link>
 
         <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-6 md:flex">

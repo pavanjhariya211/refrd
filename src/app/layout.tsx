@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   description:
     'A competitive auction marketplace where job seekers bid for referrals from verified employees. Upfront payment. Full refund if not selected.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
+  icons: {
+    // Next.js auto-detects src/app/icon.png and src/app/apple-icon.png. The
+    // explicit entries below are redundant for the favicon itself but make
+    // the icon discoverable to OG-card crawlers and older browsers.
+    icon: '/icon.png',
+    apple: '/apple-icon.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

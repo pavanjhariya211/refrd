@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { Briefcase, Linkedin } from 'lucide-react'
+import Image from 'next/image'
+import { Linkedin } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/Button'
 
@@ -31,11 +32,8 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-brand-50 to-white">
       <header className="px-4 py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-btn bg-primary text-white">
-            <Briefcase className="h-4 w-4" />
-          </div>
-          <span className="text-lg font-extrabold tracking-tight">Refrd</span>
+        <Link href="/" className="flex items-center" aria-label="Refrd home">
+          <Image src="/logo.png" alt="Refrd.ai" width={160} height={36} priority className="h-9 w-auto" />
         </Link>
       </header>
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-12">

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Briefcase } from 'lucide-react'
+import Image from 'next/image'
 
 export function Footer() {
   return (
@@ -7,11 +7,14 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12">
         <div className="grid gap-8 md:grid-cols-4">
           <div>
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-btn bg-primary text-white">
-                <Briefcase className="h-4 w-4" />
-              </div>
-              <span className="text-lg font-extrabold tracking-tight text-slate-900">Refrd</span>
+            <Link href="/" className="flex items-center" aria-label="Refrd home">
+              <Image
+                src="/logo.png"
+                alt="Refrd.ai"
+                width={140}
+                height={32}
+                className="h-8 w-auto"
+              />
             </Link>
             <p className="mt-3 text-sm text-slate-600">
               Get referred by verified employees. Bid, get reviewed first, get refunded if not selected.
