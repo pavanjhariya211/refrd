@@ -39,6 +39,18 @@ export function JobApplyPanel({ job }: Props) {
   // separate LinkedIn API approval. Posting the job IS the attestation.
   const isVerifiedEmployee = job.referrer?.verification_status === 'verified'
 
+  // Server-side check on /api/payments/create-order will 400 with
+  // "Deadline passed" if we let users bid on an expired job, so mirror that
+  // here to give them a clean closed state instead of a failed payment.
+  const deadlineDate = job.deadline ? new Date(job.deadline) : null
+  const isClosed = job.status !== 'active' || (!!deadlineDate && deadlineDate.getTime() < Date.now())
+  const closedReason: 'deadline' | 'closed' | null =
+    job.status !== 'active'
+      ? 'closed'
+      : deadlineDate && deadlineDate.getTime() < Date.now()
+        ? 'deadline'
+        : null
+
   return (
     <>
       <div className="card space-y-4">
@@ -63,12 +75,34 @@ export function JobApplyPanel({ job }: Props) {
           </div>
         )}
 
-        <Button size="lg" fullWidth onClick={onApply}>
-          Apply &amp; place bid →
-        </Button>
-        <p className="text-center text-xs text-slate-500">
-          Full refund if not selected · Bids reviewed highest first
-        </p>
+        {isClosed ? (
+          <>
+            <div className="rounded-card bg-slate-100 p-4 text-center text-sm text-slate-700">
+              <p className="font-semibold">Applications closed</p>
+              <p className="mt-1 text-xs text-slate-500">
+                {closedReason === 'deadline' && deadlineDate
+                  ? `The deadline passed on ${deadlineDate.toLocaleDateString(undefined, {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}.`
+                  : 'The referrer has stopped accepting new applications.'}
+              </p>
+            </div>
+            <Button size="lg" fullWidth disabled>
+              Closed to new bids
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button size="lg" fullWidth onClick={onApply}>
+              Apply &amp; place bid →
+            </Button>
+            <p className="text-center text-xs text-slate-500">
+              Full refund if not selected · Bids reviewed highest first
+            </p>
+          </>
+        )}
       </div>
       {open && (
         <ApplyModal
