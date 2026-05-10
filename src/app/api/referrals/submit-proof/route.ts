@@ -85,7 +85,12 @@ export async function POST(request: Request) {
     .createSignedUrl(body.proof_path, 60 * 10) // 10 minutes
   if (signedErr || !signed?.signedUrl) {
     console.error('[submit-proof] could not sign proof URL:', signedErr)
-    return NextResponse.json({ error: 'Could not access proof image' }, { status: 500 })
+    return NextResponse.json(
+      {
+        error: `Sign proof URL failed: ${signedErr?.message ?? 'unknown error'}`,
+      },
+      { status: 500 }
+    )
   }
 
   // ─── OCR + analysis ──────────────────────────────────────────────────────
@@ -185,8 +190,15 @@ Respond with JSON exactly matching:
   }
   const { error: insertErr } = await service.from('referral_proofs').insert(proofRow)
   if (insertErr) {
+    // Surface the actual Postgres error so the toast tells us whether the
+    // referral_proofs table is missing, an RLS policy rejected the write,
+    // a constraint failed, etc. Pure config issues are way easier to fix
+    // when the database tells us its own complaint verbatim.
     console.error('[submit-proof] insert proof failed:', insertErr)
-    return NextResponse.json({ error: 'Could not save proof' }, { status: 500 })
+    return NextResponse.json(
+      { error: `Save proof failed: ${insertErr.message ?? 'unknown error'}` },
+      { status: 500 }
+    )
   }
 
   if (finalDecision === 'approved') {
