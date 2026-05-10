@@ -58,7 +58,24 @@ export async function POST(request: Request) {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     })
   } catch (err) {
-    console.error('Razorpay order failed:', err)
-    return NextResponse.json({ error: 'Could not create order' }, { status: 500 })
+    // Surface the actual Razorpay error so the client banner says
+    // something useful (e.g. "Razorpay 401: invalid api key", "amount
+    // must be at least 100 paise"). Generic 500 forces guesswork.
+    console.error('[create-order] Razorpay order failed:', err)
+    type RazorpayError = {
+      statusCode?: number
+      error?: { description?: string; code?: string; reason?: string }
+      message?: string
+    }
+    const e = err as RazorpayError
+    const status = typeof e?.statusCode === 'number' ? e.statusCode : 502
+    const description =
+      e?.error?.description ||
+      e?.message ||
+      (err instanceof Error ? err.message : 'unknown error')
+    return NextResponse.json(
+      { error: `Razorpay ${status}: ${description}` },
+      { status: 502 }
+    )
   }
 }
