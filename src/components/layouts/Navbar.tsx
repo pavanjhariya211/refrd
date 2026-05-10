@@ -49,15 +49,15 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
-      <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20">
+      <div className="relative mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:h-24">
         <Link href="/" className="flex items-center" aria-label="Refrd home">
           <Image
             src="/logo.png"
             alt="Refrd.ai"
-            width={220}
-            height={48}
+            width={300}
+            height={64}
             priority
-            className="h-12 w-auto"
+            className="h-16 w-auto"
           />
         </Link>
 
