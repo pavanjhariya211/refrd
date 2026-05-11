@@ -15,10 +15,9 @@ export function VerifiedBadge({ status, size = 'sm', showLabel, className }: Pro
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-pill border border-accent/40 bg-chip px-2 py-0.5 text-[10px] font-medium uppercase tracking-widest text-accent',
+        'inline-flex items-center gap-1 rounded-pill bg-blue-50 px-2 py-0.5 text-xs font-semibold text-primary',
         className
       )}
-      style={{ fontFamily: 'var(--font-mono)' }}
       title="Verified employee"
     >
       <BadgeCheck className={iconSize} />

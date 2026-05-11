@@ -8,10 +8,10 @@ interface Props {
   onRemove?: () => void
 }
 
-const variants: Record<NonNullable<Props['variant']>, string> = {
-  default: 'bg-chip border-line2 text-muted',
-  matched: 'bg-chip border-accent/40 text-accent',
-  missing: 'bg-chip border-error/40 text-error',
+const variants = {
+  default: 'bg-slate-100 text-slate-700',
+  matched: 'bg-green-50 text-success border border-green-200',
+  missing: 'bg-red-50 text-error border border-red-200',
 }
 
 export function SkillPill({ skill, variant = 'default', size = 'sm', className, onRemove }: Props) {
@@ -20,7 +20,7 @@ export function SkillPill({ skill, variant = 'default', size = 'sm', className, 
       className={cn(
         'pill',
         variants[variant],
-        size === 'md' && 'px-3 py-1 text-[11px]',
+        size === 'md' && 'text-sm px-3 py-1',
         className
       )}
     >

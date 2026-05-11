@@ -17,17 +17,13 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
   return (
     <div className="w-full">
       {label && (
-        <label
-          htmlFor={inputId}
-          className="mb-2 block text-[11px] uppercase tracking-widest text-muted"
-          style={{ fontFamily: 'var(--font-mono)' }}
-        >
+        <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-slate-700">
           {label}
         </label>
       )}
       <div className="relative">
         {prefix && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
             {prefix}
           </span>
         )}
@@ -38,21 +34,21 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
             'input-base',
             prefix && 'pl-7',
             suffix && 'pr-10',
-            error && 'border-error focus:border-error',
+            error && 'border-error focus:border-error focus:ring-error/20',
             className
           )}
           {...rest}
         />
         {suffix && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
             {suffix}
           </span>
         )}
       </div>
       {error ? (
-        <p className="mt-1 text-[11px] text-error">{error}</p>
+        <p className="mt-1 text-xs text-error">{error}</p>
       ) : hint ? (
-        <p className="mt-1 text-[11px] text-muted">{hint}</p>
+        <p className="mt-1 text-xs text-slate-500">{hint}</p>
       ) : null}
     </div>
   )

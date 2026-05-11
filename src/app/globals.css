@@ -3,100 +3,45 @@
 @tailwind utilities;
 
 :root {
-  --color-ink: #0A0A0A;
-  --color-paper: #FAFAFA;
-  --color-accent: #E8FF47;
-  --color-card: #111111;
-  --color-line: #1F1F1F;
-  --color-line2: #2A2A2A;
-  --color-chip: #161616;
-  --color-muted: #888888;
-  --color-faint: #555555;
+  --color-primary: #1A56DB;
+  --color-accent: #0EA5E9;
+  --color-bg: #F8FAFC;
+  --color-card: #FFFFFF;
+  --color-text-primary: #1E293B;
+  --color-text-secondary: #475569;
+  --color-border: #CBD5E1;
+  --color-success: #16A34A;
+  --color-error: #DC2626;
+  --color-warning: #D97706;
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-html,
-body {
-  background: var(--color-ink);
-  color: var(--color-paper);
-  font-family: var(--font-inter), system-ui, sans-serif;
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-::selection {
-  background: var(--color-accent);
-  color: #000;
-}
-
-/* ─── Components ─────────────────────────────────────────────────────────── */
 @layer components {
-  /* Cards: sharp corners, dark fill, hover transitions border to accent */
   .card {
-    @apply bg-card border border-line p-6 transition-colors duration-150;
-    border-radius: 0;
+    @apply bg-white rounded-card shadow-card p-6 border border-slate-200/60;
   }
-  .card-hover:hover {
-    @apply border-accent;
+  .card-hover {
+    @apply transition-shadow hover:shadow-card-hover;
   }
-
-  /* Inputs: dark fill, accent focus ring */
   .input-base {
-    @apply w-full bg-card border border-line px-3 py-2.5 text-sm text-paper placeholder:text-faint focus:border-accent focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed;
-    border-radius: 0;
+    @apply w-full rounded-input border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:bg-slate-50 disabled:cursor-not-allowed;
   }
-
-  /* Pills: stay rounded, dark fill */
   .pill {
-    @apply inline-flex items-center gap-1 rounded-pill bg-chip border border-line2 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-widest;
-    font-family: var(--font-mono);
-  }
-
-  /* Small mono uppercase label utility — used for section eyebrows */
-  .mono-label {
-    @apply text-[11px] uppercase tracking-widest;
-    font-family: var(--font-mono);
-    color: var(--color-muted);
-  }
-
-  /* Thin acid-yellow underline for section headings */
-  .accent-underline::after {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 1px;
-    background: var(--color-accent);
-    margin-top: 10px;
+    @apply inline-flex items-center gap-1 rounded-pill px-2.5 py-0.5 text-xs font-medium;
   }
 }
 
-/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-line);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-line2);
-}
-
-/* ─── Page-load stagger reveal ───────────────────────────────────────────── */
-/* Each child of a .reveal-stagger container animates in sequence with a
-   100ms delay between items. The base .reveal animation handles the
-   opacity + translateY. */
-.reveal {
-  animation: reveal 400ms ease-out both;
-}
-.reveal-stagger > * {
-  animation: reveal 400ms ease-out both;
-}
-.reveal-stagger > *:nth-child(1) { animation-delay: 0ms; }
-.reveal-stagger > *:nth-child(2) { animation-delay: 100ms; }
-.reveal-stagger > *:nth-child(3) { animation-delay: 200ms; }
-.reveal-stagger > *:nth-child(4) { animation-delay: 300ms; }
-.reveal-stagger > *:nth-child(5) { animation-delay: 400ms; }
-.reveal-stagger > *:nth-child(6) { animation-delay: 500ms; }
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
