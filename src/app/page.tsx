@@ -16,8 +16,8 @@ export default async function HomePage() {
     .from('job_posts')
     .select(`*, referrer:profiles!referrer_id(${PUBLIC_REFERRER_FIELDS})`)
     .eq('status', 'active')
-    .order('current_highest_bid', { ascending: false })
-    .limit(6)
+    .order('created_at', { ascending: false })
+    .limit(4)
   const jobs = (jobsData as unknown as JobPost[]) ?? []
 
   return (
@@ -74,7 +74,7 @@ export default async function HomePage() {
         <div className="mb-6 flex items-end justify-between">
           <div>
             <h2 className="text-2xl font-extrabold text-slate-900">Active auctions</h2>
-            <p className="text-sm text-slate-600">Top live roles, sorted by current highest bid.</p>
+            <p className="text-sm text-slate-600">The latest live roles. Bid, get reviewed first.</p>
           </div>
           <Link href="/jobs" className="text-sm font-semibold text-primary hover:underline">
             View all jobs →
@@ -86,7 +86,7 @@ export default async function HomePage() {
             <Link href="/post-job" className="font-semibold text-primary">post a role</Link>.
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {jobs.map((job) => (
               <JobCard key={job.id} job={job} />
             ))}
