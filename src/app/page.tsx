@@ -1,5 +1,14 @@
 import Link from 'next/link'
-import { ArrowRight, Trophy, Wallet, Sparkles, ShieldCheck, BadgeCheck, ScrollText } from 'lucide-react'
+import {
+  ArrowRight,
+  Trophy,
+  Wallet,
+  Sparkles,
+  Target,
+  Bot,
+  Eye,
+  Coins,
+} from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { PUBLIC_REFERRER_FIELDS } from '@/lib/constants'
 import { Navbar } from '@/components/layouts/Navbar'
@@ -9,6 +18,48 @@ import { JobCard } from '@/components/ui/JobCard'
 import type { JobPost } from '@/types'
 
 export const dynamic = 'force-dynamic'
+
+const HOW_STEPS = [
+  {
+    n: '01',
+    title: 'Bid to Apply',
+    description:
+      'Upload your resume, place a bid, pay upfront. Higher bids float to the top of the review queue.',
+    Icon: Target,
+    iconClass: 'bg-orange-100 text-orange-600',
+  },
+  {
+    n: '02',
+    title: 'AI Scores Both Sides',
+    description:
+      'Full match score — skills, experience, profile completeness. Both you and the referrer see the same breakdown.',
+    Icon: Bot,
+    iconClass: 'bg-violet-100 text-violet-600',
+  },
+  {
+    n: '03',
+    title: 'Get Reviewed First',
+    description:
+      'The verified employee reviews top bids. Your AI score and profile are front and center — no mystery criteria.',
+    Icon: Eye,
+    iconClass: 'bg-purple-100 text-purple-600',
+  },
+  {
+    n: '04',
+    title: 'Referral or Refund',
+    description:
+      'Referred? The employee earns only after proof of referral. Declined or 7 days pass? Full refund, no questions.',
+    Icon: Coins,
+    iconClass: 'bg-emerald-100 text-emerald-600',
+  },
+] as const
+
+const SCORE_ROWS = [
+  { label: 'Skills Match', value: 85, bar: 'bg-amber-400' },
+  { label: 'Experience Match', value: 70, bar: 'bg-emerald-400' },
+  { label: 'Profile Completeness', value: 72, bar: 'bg-sky-400' },
+  { label: 'Overall Match', value: 78, bar: 'bg-amber-400' },
+] as const
 
 export default async function HomePage() {
   const supabase = createClient()
@@ -24,6 +75,7 @@ export default async function HomePage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
 
+      {/* ─── HERO ────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 via-white to-white">
         <div className="mx-auto max-w-7xl px-4 py-20 text-center">
           <span className="pill bg-brand-100 text-primary">
@@ -70,6 +122,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ─── ACTIVE AUCTIONS ────────────────────────────────────── */}
       <section className="mx-auto w-full max-w-7xl px-4 py-16">
         <div className="mb-6 flex items-end justify-between">
           <div>
@@ -94,44 +147,138 @@ export default async function HomePage() {
         )}
       </section>
 
+      {/* ─── HOW IT WORKS — 4-card light grid ─────────────────── */}
+      <section className="mx-auto w-full max-w-7xl px-4 py-20">
+        <p className="text-xs font-bold uppercase tracking-widest text-primary">
+          How it works
+        </p>
+        <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+          Simple. Fair. Transparent.
+        </h2>
+
+        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {HOW_STEPS.map(({ n, title, description, Icon, iconClass }) => (
+            <div
+              key={n}
+              className="relative overflow-hidden card card-hover"
+            >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute right-4 top-2 select-none text-6xl font-extrabold leading-none text-slate-100"
+              >
+                {n}
+              </span>
+              <div
+                className={
+                  'relative inline-flex h-10 w-10 items-center justify-center rounded-card ' +
+                  iconClass
+                }
+              >
+                <Icon className="h-5 w-5" />
+              </div>
+              <h3 className="relative mt-5 text-lg font-bold text-slate-900">
+                {title}
+              </h3>
+              <p className="relative mt-2 text-sm leading-relaxed text-slate-600">
+                {description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── POWERED BY AI — dark contrast block ─────────────── */}
       <section className="bg-slate-900 text-white">
-        <div className="mx-auto max-w-7xl px-4 py-16">
-          <h2 className="text-3xl font-extrabold">How it works</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-            <div className="rounded-card bg-slate-800 p-6">
-              <ScrollText className="h-6 w-6 text-accent" />
-              <h3 className="mt-3 text-lg font-semibold">1. Bid to apply</h3>
-              <p className="mt-1 text-sm text-slate-300">
-                Upload your resume, place a bid, and pay upfront. Higher bids are reviewed first.
+        <div className="mx-auto max-w-7xl px-4 py-20">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+            {/* Left column: copy + CTAs */}
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-amber-300">
+                Powered by AI
               </p>
+              <h2 className="mt-3 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+                Both sides see
+                <br />
+                the{' '}
+                <span className="italic text-amber-300">same</span>{' '}
+                score.
+              </h2>
+              <p className="mt-6 max-w-md text-base leading-relaxed text-slate-300">
+                No hidden criteria. No mystery. Our AI generates a full match
+                breakdown visible to both job seekers and referrers — before
+                any bid is accepted.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/for-job-seekers">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-white/40 bg-transparent text-white hover:bg-white/10"
+                  >
+                    See how scoring works
+                  </Button>
+                </Link>
+                <Link href="/jobs">
+                  <Button
+                    size="lg"
+                    variant="ghost"
+                    className="text-white hover:bg-white/10"
+                  >
+                    Browse jobs
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <div className="rounded-card bg-slate-800 p-6">
-              <BadgeCheck className="h-6 w-6 text-accent" />
-              <h3 className="mt-3 text-lg font-semibold">2. AI scores both sides</h3>
-              <p className="mt-1 text-sm text-slate-300">
-                A full match score — both you and the referrer see the same breakdown.
-              </p>
-            </div>
-            <div className="rounded-card bg-slate-800 p-6">
-              <ShieldCheck className="h-6 w-6 text-accent" />
-              <h3 className="mt-3 text-lg font-semibold">3. Get referred or refunded</h3>
-              <p className="mt-1 text-sm text-slate-300">
-                Referrer pays out only after they upload proof of the
-                referral. If they decline or don&apos;t act in 7 days, you get refunded.
-              </p>
+
+            {/* Right column: example score card */}
+            <div className="lg:pl-8">
+              <div className="rounded-card border border-slate-800 bg-slate-950/60 p-6 sm:p-8">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                    Example score
+                  </p>
+                  <span className="rounded-card bg-amber-300 px-3 py-1 text-base font-extrabold text-slate-900">
+                    78%
+                  </span>
+                </div>
+                <div className="mt-6 space-y-5">
+                  {SCORE_ROWS.map((row) => (
+                    <div key={row.label}>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold text-white">
+                          {row.label}
+                        </span>
+                        <span className="text-sm font-bold text-white">
+                          {row.value}%
+                        </span>
+                      </div>
+                      <div className="mt-1.5 h-1 overflow-hidden rounded-pill bg-slate-800">
+                        <div
+                          className={'h-full ' + row.bar}
+                          style={{ width: `${row.value}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-6 text-center text-[11px] font-medium uppercase tracking-widest text-slate-500">
+                  Example — your score varies by role
+                </p>
+              </div>
             </div>
           </div>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm">
+
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-4 text-sm">
             <Link
               href="/for-job-seekers"
-              className="font-semibold text-accent hover:underline"
+              className="font-semibold text-amber-300 hover:underline"
             >
               Full guide for job seekers →
             </Link>
             <span className="text-slate-600">·</span>
             <Link
               href="/for-referrers"
-              className="font-semibold text-accent hover:underline"
+              className="font-semibold text-amber-300 hover:underline"
             >
               Full guide for referrers →
             </Link>
