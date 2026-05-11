@@ -32,24 +32,24 @@ export const MATCH_GRADE_META: Record<
   MatchGrade,
   { label: string; color: string; bg: string }
 > = {
-  A: { label: 'Excellent Match', color: '#16A34A', bg: '#F0FDF4' },
-  B: { label: 'Good Match', color: '#1A56DB', bg: '#EFF6FF' },
-  C: { label: 'Partial Match', color: '#D97706', bg: '#FFFBEB' },
-  D: { label: 'Weak Match', color: '#DC2626', bg: '#FEF2F2' },
-  F: { label: 'Poor Match', color: '#991B1B', bg: '#FEF2F2' },
+  A: { label: 'Excellent Match', color: '#E8FF47', bg: '#111111' },
+  B: { label: 'Good Match', color: '#E8FF47', bg: '#111111' },
+  C: { label: 'Partial Match', color: '#FAFAFA', bg: '#111111' },
+  D: { label: 'Weak Match', color: '#888888', bg: '#111111' },
+  F: { label: 'Poor Match', color: '#555555', bg: '#111111' },
 }
 
 export const APPLICATION_STATUS_META: Record<
   ApplicationStatus,
   { label: string; color: string; bg: string }
 > = {
-  applied: { label: 'Applied', color: '#1A56DB', bg: '#EFF6FF' },
-  reviewing: { label: 'Under Review', color: '#D97706', bg: '#FFFBEB' },
-  accepted: { label: 'Accepted', color: '#16A34A', bg: '#F0FDF4' },
-  referred: { label: 'Referred', color: '#16A34A', bg: '#F0FDF4' },
-  interview: { label: 'Interview', color: '#0EA5E9', bg: '#E0F2FE' },
-  offer: { label: 'Offer', color: '#16A34A', bg: '#F0FDF4' },
-  rejected: { label: 'Closed', color: '#DC2626', bg: '#FEF2F2' },
+  applied: { label: 'Applied', color: '#FAFAFA', bg: '#161616' },
+  reviewing: { label: 'Under Review', color: '#E8FF47', bg: '#161616' },
+  accepted: { label: 'Accepted', color: '#E8FF47', bg: '#161616' },
+  referred: { label: 'Referred', color: '#E8FF47', bg: '#161616' },
+  interview: { label: 'Interview', color: '#E8FF47', bg: '#161616' },
+  offer: { label: 'Offer', color: '#E8FF47', bg: '#161616' },
+  rejected: { label: 'Closed', color: '#FF5C5C', bg: '#161616' },
 }
 
 export interface Profile {

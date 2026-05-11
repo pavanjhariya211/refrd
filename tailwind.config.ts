@@ -9,30 +9,54 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#1A56DB',
-        accent: '#0EA5E9',
-        success: '#16A34A',
-        error: '#DC2626',
-        warning: '#D97706',
-        brand: {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          600: '#1A56DB',
-          900: '#1E293B',
-        },
+        // Brutally minimal dark editorial palette
+        ink: '#0A0A0A',        // page background
+        paper: '#FAFAFA',      // primary text
+        accent: '#E8FF47',     // single electric accent
+        card: '#111111',       // card surface
+        line: '#1F1F1F',       // dividers + card borders
+        line2: '#2A2A2A',      // secondary borders
+        chip: '#161616',       // pill / chip surface
+        muted: '#888888',      // secondary text
+        faint: '#555555',      // tertiary text
+        // Keep state-colors for refund/error banners — adapted for dark
+        primary: '#E8FF47',
+        success: '#5EE9B5',
+        error: '#FF5C5C',
+        warning: '#E8FF47',
       },
       borderRadius: {
-        card: '12px',
-        btn: '8px',
-        input: '6px',
-        pill: '99px',
-      },
-      boxShadow: {
-        card: '0 2px 12px rgba(0,0,0,0.06)',
-        'card-hover': '0 8px 24px rgba(0,0,0,0.12)',
+        // Sharp corners everywhere; pills/tags use a separate radius
+        card: '0px',
+        btn: '0px',
+        input: '0px',
+        pill: '9999px',
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        syne: ['var(--font-syne)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+      },
+      letterSpacing: {
+        widest: '0.18em',
+      },
+      boxShadow: {
+        // No shadows in the new design language.
+        none: 'none',
+      },
+      keyframes: {
+        reveal: {
+          from: { opacity: '0', transform: 'translateY(12px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        pulseDot: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.35' },
+        },
+      },
+      animation: {
+        reveal: 'reveal 400ms ease-out both',
+        'pulse-dot': 'pulseDot 1.6s ease-in-out infinite',
       },
     },
   },

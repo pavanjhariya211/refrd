@@ -17,7 +17,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(function Textarea
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={textareaId} className="mb-1.5 block text-sm font-medium text-slate-700">
+        <label
+          htmlFor={textareaId}
+          className="mb-2 block text-[11px] uppercase tracking-widest text-muted"
+          style={{ fontFamily: 'var(--font-mono)' }}
+        >
           {label}
         </label>
       )}
@@ -28,21 +32,24 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(function Textarea
         maxLength={maxLength}
         className={cn(
           'input-base min-h-[100px] resize-y leading-relaxed',
-          error && 'border-error focus:border-error focus:ring-error/20',
+          error && 'border-error focus:border-error',
           className
         )}
         {...rest}
       />
       <div className="mt-1 flex items-start justify-between gap-2">
-        <div className="text-xs">
+        <div className="text-[11px]">
           {error ? (
             <span className="text-error">{error}</span>
           ) : hint ? (
-            <span className="text-slate-500">{hint}</span>
+            <span className="text-muted">{hint}</span>
           ) : null}
         </div>
         {showCount && (
-          <span className="text-xs text-slate-500">
+          <span
+            className="text-[11px] text-muted"
+            style={{ fontFamily: 'var(--font-mono)' }}
+          >
             {length}
             {maxLength ? `/${maxLength}` : ''}
           </span>
