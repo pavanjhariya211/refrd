@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {
   ArrowRight,
+  ArrowUpRight,
   Trophy,
   Wallet,
   Sparkles,
@@ -8,6 +9,8 @@ import {
   Bot,
   Eye,
   Coins,
+  Gem,
+  Lock,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { PUBLIC_REFERRER_FIELDS } from '@/lib/constants'
@@ -59,6 +62,41 @@ const SCORE_ROWS = [
   { label: 'Experience Match', value: 70, bar: 'bg-emerald-400' },
   { label: 'Profile Completeness', value: 72, bar: 'bg-sky-400' },
   { label: 'Overall Match', value: 78, bar: 'bg-amber-400' },
+] as const
+
+const FEATURES = [
+  {
+    title: 'Auction-Based Bidding',
+    description:
+      'Bid for referrals from verified employees. Higher bids rise to the top of the review queue — pure meritocracy, no tiers.',
+    Icon: Target,
+    iconClass: 'bg-rose-100 text-rose-600',
+    href: '/for-job-seekers',
+  },
+  {
+    title: 'AI Match Score',
+    description:
+      'Our AI generates a full match breakdown — skills, experience, profile completeness. Both sides see the exact same score.',
+    Icon: Sparkles,
+    iconClass: 'bg-sky-100 text-sky-600',
+    href: '/for-job-seekers',
+  },
+  {
+    title: 'Refund Guarantee',
+    description:
+      "Referrer doesn't act within 7 days, or declines? You get a full automatic refund. Zero risk on your side. Always.",
+    Icon: Gem,
+    iconClass: 'bg-emerald-100 text-emerald-600',
+    href: '/for-job-seekers',
+  },
+  {
+    title: 'Razorpay Secured',
+    description:
+      'All payments handled by Razorpay. Referrers earn only after they upload proof of the referral submission. Fully escrow-style.',
+    Icon: Lock,
+    iconClass: 'bg-amber-100 text-amber-600',
+    href: '/for-referrers',
+  },
 ] as const
 
 export default async function HomePage() {
@@ -283,6 +321,50 @@ export default async function HomePage() {
               Full guide for referrers →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* ─── OUR FEATURES — 2x2 light grid ─────────────────────── */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-20">
+        <div className="text-center">
+          <span className="pill bg-violet-100 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-violet-700">
+            Our Features
+          </span>
+          <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+            Powerful features to boost
+            <br className="hidden sm:block" /> your{' '}
+            <span className="italic text-primary">job search</span>
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base text-slate-600">
+            Refrd.ai gives both job seekers and referrers the tools to make
+            every referral count — with full transparency on both sides.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          {FEATURES.map(({ title, description, Icon, iconClass, href }) => (
+            <div key={title} className="card card-hover flex flex-col">
+              <div
+                className={
+                  'inline-flex h-10 w-10 items-center justify-center rounded-card ' +
+                  iconClass
+                }
+              >
+                <Icon className="h-5 w-5" />
+              </div>
+              <h3 className="mt-5 text-lg font-bold text-slate-900">{title}</h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">
+                {description}
+              </p>
+              <Link
+                href={href}
+                className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+              >
+                Explore feature
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          ))}
         </div>
       </section>
 
