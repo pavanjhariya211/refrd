@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Search } from 'lucide-react'
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
@@ -13,7 +14,13 @@ import { useJobs } from '@/hooks/useJobs'
 const EMPTY: JobFilters = { q: '' }
 
 export default function JobsPage() {
-  const [filters, setFilters] = useState<JobFilters>(EMPTY)
+  // Seed the search from ?q= so shared/search-engine links land on a
+  // pre-filtered list. This is what makes the WebSite SearchAction
+  // schema (which points at /jobs?q={search_term_string}) honest.
+  const searchParams = useSearchParams()
+  const [filters, setFilters] = useState<JobFilters>(() => ({
+    q: searchParams.get('q') ?? '',
+  }))
   const { jobs, loading } = useJobs(filters)
 
   return (

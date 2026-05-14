@@ -13,7 +13,37 @@ import {
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { Button } from '@/components/ui/Button'
+import { JsonLd } from '@/components/JsonLd'
+import { faqPageJsonLd } from '@/lib/jsonld'
 import { FREE_MATCH_CHECK_LIMIT, APPLY_AUTO_REFUND_DAYS } from '@/lib/constants'
+
+const FAQS = [
+  {
+    question: 'How does Refrd work for job seekers?',
+    answer:
+      'Refrd is a competitive auction marketplace for job referrals. You browse open roles, place a bid, and pay upfront. Higher bids are reviewed first by the verified employee who posted the job. If they refer you, the referral is confirmed with proof. If they decline or do not act, you get a full refund.',
+  },
+  {
+    question: 'How much does it cost to apply for a referral?',
+    answer:
+      'You choose your own bid amount — there are no fixed fees or tiers. The job lists a minimum bid; you can bid that or higher. Higher bids are reviewed first. The amount is fully refundable if you are not selected.',
+  },
+  {
+    question: 'What happens if I am not selected?',
+    answer:
+      `You get a full refund. If the referrer declines, the refund is processed immediately. If the referrer does not respond within ${APPLY_AUTO_REFUND_DAYS} days, Refrd refunds you automatically. Payments are held securely through Razorpay until a referral is confirmed.`,
+  },
+  {
+    question: 'Can I see my AI match score before paying?',
+    answer:
+      `Yes. Refrd gives you up to ${FREE_MATCH_CHECK_LIMIT} free Quick Match checks each month. You upload your resume and get the same AI breakdown the referrer will see — skills matched, skills missing, and improvement tips — so you can decide whether to bid before paying anything.`,
+  },
+  {
+    question: 'Are the referrers real employees?',
+    answer:
+      'Yes. Every referrer signs up and verifies their identity through LinkedIn. You can see their reputation, number of successful referrals, and average response time before you bid. There are no anonymous "we will forward your resume" services on Refrd.',
+  },
+] as const
 
 export const metadata = {
   title: 'For Job Seekers — Refrd',
@@ -24,6 +54,7 @@ export const metadata = {
 export default function ForJobSeekersPage() {
   return (
     <div className="flex min-h-screen flex-col">
+      <JsonLd data={faqPageJsonLd([...FAQS])} />
       <Navbar />
 
       <section className="bg-gradient-to-b from-brand-50 via-white to-white">
@@ -225,6 +256,25 @@ export default function ForJobSeekersPage() {
               See the referrer guide →
             </Link>
           </p>
+        </div>
+      </section>
+
+      {/* ─── FAQ — visible content backing the FAQPage JSON-LD ──── */}
+      <section className="mx-auto w-full max-w-3xl px-4 py-16">
+        <h2 className="text-2xl font-extrabold text-slate-900">
+          Common questions
+        </h2>
+        <div className="mt-8 divide-y divide-slate-200 border-y border-slate-200">
+          {FAQS.map((faq) => (
+            <div key={faq.question} className="py-5">
+              <h3 className="text-base font-semibold text-slate-900">
+                {faq.question}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                {faq.answer}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 

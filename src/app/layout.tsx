@@ -13,17 +13,54 @@ const jakarta = Plus_Jakarta_Sans({
 
 const GTM_ID = 'GTM-5B7FV44W'
 
+const SITE_TITLE = 'Refrd — Get referred by verified employees'
+const SITE_DESCRIPTION =
+  'A competitive auction marketplace where job seekers bid for referrals from verified employees. Upfront payment. Full refund if not selected.'
+
 export const metadata: Metadata = {
-  title: 'Refrd — Get referred by verified employees',
-  description:
-    'A competitive auction marketplace where job seekers bid for referrals from verified employees. Upfront payment. Full refund if not selected.',
+  // `template` lets per-page titles render as "<page> | Refrd" without each
+  // page repeating the brand suffix. `default` is used where a page sets no
+  // title of its own.
+  title: {
+    default: SITE_TITLE,
+    template: '%s | Refrd',
+  },
+  description: SITE_DESCRIPTION,
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
+  applicationName: 'Refrd',
+  keywords: [
+    'job referral',
+    'employee referral',
+    'get referred',
+    'job referral marketplace',
+    'refer me to a job',
+    'verified employee referral',
+    'job search',
+  ],
   icons: {
     // Next.js auto-detects src/app/icon.png and src/app/apple-icon.png. The
     // explicit entries below are redundant for the favicon itself but make
     // the icon discoverable to OG-card crawlers and older browsers.
     icon: '/icon.png',
     apple: '/apple-icon.png',
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'Refrd',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: '/',
+    images: [{ url: '/logo.png' }],
+  },
+  twitter: {
+    card: 'summary',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: ['/logo.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 }
 

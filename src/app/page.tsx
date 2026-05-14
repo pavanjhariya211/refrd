@@ -18,6 +18,8 @@ import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { Button } from '@/components/ui/Button'
 import { JobCard } from '@/components/ui/JobCard'
+import { JsonLd } from '@/components/JsonLd'
+import { organizationJsonLd, websiteJsonLd } from '@/lib/jsonld'
 import type { JobPost } from '@/types'
 
 export const dynamic = 'force-dynamic'
@@ -111,6 +113,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
       <Navbar />
 
       {/* ─── HERO ────────────────────────────────────────────────── */}

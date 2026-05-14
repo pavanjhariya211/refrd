@@ -1,31 +1,102 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Briefcase, Clock, MapPin, Trophy, Users, Star, BadgeCheck, ShieldCheck } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { Briefcase, Clock, MapPin, Star, BadgeCheck, ShieldCheck } from 'lucide-react'
+import { createPublicClient } from '@/lib/supabase/server'
 import { PUBLIC_REFERRER_FIELDS } from '@/lib/constants'
-import { formatINR, formatRelativeTime } from '@/lib/utils'
+import { formatRelativeTime } from '@/lib/utils'
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { CompanyAvatar } from '@/components/ui/CompanyAvatar'
 import { SkillPill } from '@/components/ui/SkillPill'
 import { VerifiedBadge } from '@/components/ui/VerifiedBadge'
+import { JsonLd } from '@/components/JsonLd'
+import {
+  jobPostingJsonLd,
+  breadcrumbJsonLd,
+  SITE_URL,
+  SITE_NAME,
+} from '@/lib/jsonld'
 import { JobApplyPanel } from './JobApplyPanel'
 import type { JobPost } from '@/types'
 
-export const dynamic = 'force-dynamic'
+// ISR — job pages are cached HTML revalidated every 5 minutes. Live bid
+// numbers are corrected client-side by useLiveBid, so slight staleness
+// of the server render is fine, and we get crawl-budget + Core Web
+// Vitals wins over force-dynamic.
+export const revalidate = 300
 
-export default async function JobDetailPage({ params }: { params: { id: string } }) {
-  const supabase = createClient()
-  const { data: jobData } = await supabase
+// Single source for the job fetch — used by both the page and
+// generateMetadata. createPublicClient is cookie-free so the page can
+// stay ISR-rendered.
+async function getJob(id: string): Promise<JobPost | null> {
+  const supabase = createPublicClient()
+  const { data } = await supabase
     .from('job_posts')
     .select(`*, referrer:profiles!referrer_id(${PUBLIC_REFERRER_FIELDS})`)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
-  const job = jobData as unknown as JobPost | null
+  return (data as unknown as JobPost | null) ?? null
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string }
+}): Promise<Metadata> {
+  const job = await getJob(params.id)
+  if (!job) {
+    return { title: 'Job not found — Refrd' }
+  }
+
+  const title = `${job.title} at ${job.company_name} — Get referred | ${SITE_NAME}`
+  const description =
+    job.description?.trim().slice(0, 155) ||
+    `Get referred to ${job.title} at ${job.company_name} by a verified employee. Bid for priority review. Full refund if not selected.`
+  const canonical = `${SITE_URL}/jobs/${job.id}`
+
+  // Expired or closed jobs stay reachable but are de-indexed so Google
+  // for Jobs doesn't surface stale openings.
+  const isClosed =
+    job.status !== 'active' ||
+    (!!job.deadline && new Date(job.deadline).getTime() < Date.now())
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    robots: isClosed ? { index: false, follow: true } : undefined,
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      type: 'website',
+      siteName: SITE_NAME,
+      images: [{ url: '/logo.png' }],
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+      images: ['/logo.png'],
+    },
+  }
+}
+
+export default async function JobDetailPage({ params }: { params: { id: string } }) {
+  const job = await getJob(params.id)
   if (!job) notFound()
+
+  const jobLd = jobPostingJsonLd(job)
+  const breadcrumbLd = breadcrumbJsonLd([
+    { name: 'Home', url: SITE_URL },
+    { name: 'Jobs', url: `${SITE_URL}/jobs` },
+    { name: job.title, url: `${SITE_URL}/jobs/${job.id}` },
+  ])
 
   return (
     <div className="flex min-h-screen flex-col">
+      <JsonLd data={[jobLd, breadcrumbLd]} />
       <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">

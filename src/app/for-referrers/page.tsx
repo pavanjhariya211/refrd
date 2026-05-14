@@ -15,6 +15,8 @@ import {
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { Button } from '@/components/ui/Button'
+import { JsonLd } from '@/components/JsonLd'
+import { faqPageJsonLd } from '@/lib/jsonld'
 import { PLATFORM_FEE_RATE, PLATFORM_FEE_MIN } from '@/lib/scoring'
 
 export const metadata = {
@@ -25,9 +27,38 @@ export const metadata = {
 
 const PLATFORM_FEE_PCT = Math.round(PLATFORM_FEE_RATE * 100)
 
+const FAQS = [
+  {
+    question: 'How do I earn money as a referrer on Refrd?',
+    answer:
+      'You post a job at your company. Pre-screened candidates bid for your time. You review the AI match scores, refer the best fit on your company ATS, and upload a screenshot of the confirmation email. Once verified, the payout lands in your Refrd wallet automatically.',
+  },
+  {
+    question: 'How much of each bid do I keep?',
+    answer:
+      `You keep ${100 - PLATFORM_FEE_PCT}% of every bid. Refrd takes a ${PLATFORM_FEE_PCT}% platform fee (minimum ₹${PLATFORM_FEE_MIN}). There are no tiers and no subscription — the fee is flat.`,
+  },
+  {
+    question: 'When do I get paid?',
+    answer:
+      'After you submit the candidate on your company ATS and upload the confirmation-email screenshot, an AI check verifies it. On approval the payout credits your wallet immediately. If the AI cannot decide, an admin reviews it within 24 hours.',
+  },
+  {
+    question: 'What proof do I need to submit?',
+    answer:
+      'A screenshot of the referral confirmation email from your company ATS — Greenhouse, Lever, Workday, Workable, Ashby, or similar. The screenshot should show the candidate name and company so the AI check can match it to the application.',
+  },
+  {
+    question: 'Do I need to be verified to post jobs?',
+    answer:
+      'Yes. Every referrer verifies their identity through LinkedIn at signup. That is what powers the "Verified employee" badge job seekers see on your posts, and it is what lets them trust the referral is real.',
+  },
+] as const
+
 export default function ForReferrersPage() {
   return (
     <div className="flex min-h-screen flex-col">
+      <JsonLd data={faqPageJsonLd([...FAQS])} />
       <Navbar />
 
       <section className="bg-gradient-to-b from-brand-50 via-white to-white">
@@ -252,6 +283,25 @@ export default function ForReferrersPage() {
               See the seeker guide →
             </Link>
           </p>
+        </div>
+      </section>
+
+      {/* ─── FAQ — visible content backing the FAQPage JSON-LD ──── */}
+      <section className="mx-auto w-full max-w-3xl px-4 py-16">
+        <h2 className="text-2xl font-extrabold text-slate-900">
+          Common questions
+        </h2>
+        <div className="mt-8 divide-y divide-slate-200 border-y border-slate-200">
+          {FAQS.map((faq) => (
+            <div key={faq.question} className="py-5">
+              <h3 className="text-base font-semibold text-slate-900">
+                {faq.question}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                {faq.answer}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
 
