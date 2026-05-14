@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { Linkedin } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -45,6 +46,15 @@ export function Footer() {
               <li>Razorpay-secured payments</li>
               <li>Full AI score transparency</li>
             </ul>
+            <a
+              href="https://www.linkedin.com/company/refrd-ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 rounded-btn border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-[#0A66C2] hover:text-[#0A66C2]"
+            >
+              <Linkedin className="h-4 w-4" />
+              Follow on LinkedIn
+            </a>
           </div>
         </div>
         <div className="mt-10 border-t border-slate-100 pt-6 text-xs text-slate-500">
