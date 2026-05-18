@@ -206,6 +206,25 @@ export interface ReferralProof {
   updated_at: string
 }
 
+export type BlogPostStatus = 'draft' | 'published'
+
+export interface BlogPost {
+  id: string
+  slug: string
+  title: string
+  excerpt?: string | null
+  content_html: string
+  cover_image_url?: string | null
+  og_image_url?: string | null
+  meta_description?: string | null
+  tags: string[]
+  status: BlogPostStatus
+  published_at?: string | null
+  author_id?: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface Message {
   id: string
   sender_id: string

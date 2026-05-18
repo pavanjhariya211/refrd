@@ -135,6 +135,63 @@ export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
   }
 }
 
+// ─── Article (blog post) ──────────────────────────────────────────────────
+// Drives Google's Article rich result + AI-answer attribution. Headline
+// is required and capped at 110 chars by Google. We use the post's
+// cover image (or OG override) so the rich result shows a thumbnail.
+export function articleJsonLd(post: {
+  title: string
+  slug: string
+  excerpt?: string | null
+  meta_description?: string | null
+  cover_image_url?: string | null
+  og_image_url?: string | null
+  published_at?: string | null
+  updated_at: string
+  created_at: string
+}) {
+  const url = `${SITE_URL}/blogs/${post.slug}`
+  const image = post.og_image_url || post.cover_image_url || `${SITE_URL}/logo.png`
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title.slice(0, 110),
+    description:
+      post.meta_description?.trim() ||
+      post.excerpt?.trim() ||
+      `${post.title} — read on the Refrd blog.`,
+    image: [image],
+    datePublished: post.published_at ?? post.created_at,
+    dateModified: post.updated_at,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    url,
+    author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
+    },
+  }
+}
+
+// ─── Blog (index page) ────────────────────────────────────────────────────
+export function blogJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: `${SITE_NAME} Blog`,
+    url: `${SITE_URL}/blogs`,
+    description:
+      'Insights on hiring, employee referrals, and the job-search marketplace from the Refrd team.',
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: `${SITE_URL}/logo.png`,
+    },
+  }
+}
+
 // ─── FAQPage ──────────────────────────────────────────────────────────────
 export function faqPageJsonLd(faqs: { question: string; answer: string }[]) {
   return {

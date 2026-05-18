@@ -26,6 +26,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-slate-600">
               <li><Link href="/for-job-seekers" className="hover:text-primary">How it works</Link></li>
               <li><Link href="/jobs" className="hover:text-primary">Browse jobs</Link></li>
+              <li><Link href="/blogs" className="hover:text-primary">Blog</Link></li>
               <li><Link href="/dashboard/seeker" className="hover:text-primary">My applications</Link></li>
               <li><Link href="/messages" className="hover:text-primary">Messages</Link></li>
             </ul>

@@ -119,6 +119,10 @@ export function Navbar() {
           <Link href="/post-job" className="text-sm font-medium text-slate-700 hover:text-primary">
             Post a Job
           </Link>
+
+          <Link href="/blogs" className="text-sm font-medium text-slate-700 hover:text-primary">
+            Blog
+          </Link>
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -189,6 +193,7 @@ export function Navbar() {
           <nav className="flex flex-col px-4 py-2">
             <Link href="/jobs" className="py-2 text-sm font-medium">Browse Jobs</Link>
             <Link href="/post-job" className="py-2 text-sm font-medium">Post a Job</Link>
+            <Link href="/blogs" className="py-2 text-sm font-medium">Blog</Link>
             <p className="mt-2 text-[11px] font-bold uppercase tracking-wide text-slate-400">
               How it Works
             </p>

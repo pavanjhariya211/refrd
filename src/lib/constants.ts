@@ -11,6 +11,11 @@ export const RESUMES_BUCKET = 'Resume-2'
 // pattern as resumes — first folder = auth.uid().
 export const PROOFS_BUCKET = 'proofs'
 
+// Public bucket for blog cover images and inline images dropped into
+// the WYSIWYG editor. Files are served directly via the public URL so
+// OG cards and Article JSON-LD images resolve without signing.
+export const BLOG_MEDIA_BUCKET = 'blog-media'
+
 export const FREE_MATCH_CHECK_LIMIT = 5
 
 export const APPLY_AUTO_REFUND_DAYS = 7
