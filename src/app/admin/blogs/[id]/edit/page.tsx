@@ -1,6 +1,6 @@
 import { redirect, notFound } from 'next/navigation'
-import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { isAdmin } from '@/lib/admin'
+import { createServiceClient } from '@/lib/supabase/server'
+import { isBlogAdmin } from '@/lib/blog-admin-auth'
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { BlogEditor } from '../../BlogEditor'
@@ -13,12 +13,9 @@ export default async function EditBlogPostPage({
 }: {
   params: { id: string }
 }) {
-  const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect(`/auth/login?next=/admin/blogs/${params.id}/edit`)
-  if (!isAdmin(user.id)) notFound()
+  if (!isBlogAdmin()) {
+    redirect(`/admin/login?next=/admin/blogs/${params.id}/edit`)
+  }
 
   const service = createServiceClient()
   const { data } = await service

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { isAdmin } from '@/lib/admin'
+import { createServiceClient } from '@/lib/supabase/server'
+import { isBlogAdmin } from '@/lib/blog-admin-auth'
 import { BLOG_MEDIA_BUCKET } from '@/lib/constants'
 
 export const runtime = 'nodejs'
@@ -19,13 +19,8 @@ const ALLOWED_TYPES = new Set([
  * returns the public URL so the editor can inline it directly.
  */
 export async function POST(request: Request) {
-  const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!isAdmin(user.id)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (!isBlogAdmin()) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const form = await request.formData().catch(() => null)
@@ -47,9 +42,9 @@ export async function POST(request: Request) {
   }
 
   const ext = (file.name.split('.').pop() || 'png').toLowerCase()
-  // Foldered by admin uid so we can audit uploads later; filename
-  // includes a timestamp + random suffix to avoid collisions.
-  const path = `${user.id}/${Date.now()}-${Math.random()
+  // Single 'admin' folder — the blog admin auth is a shared credential,
+  // not per-user, so per-uid foldering would be misleading.
+  const path = `admin/${Date.now()}-${Math.random()
     .toString(36)
     .slice(2, 8)}.${ext}`
 

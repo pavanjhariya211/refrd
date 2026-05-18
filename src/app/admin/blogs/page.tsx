@@ -1,8 +1,9 @@
-import { redirect, notFound } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
-import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { isAdmin } from '@/lib/admin'
+import { AdminSignOutButton } from './AdminSignOutButton'
+import { createServiceClient } from '@/lib/supabase/server'
+import { isBlogAdmin } from '@/lib/blog-admin-auth'
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { Button } from '@/components/ui/Button'
@@ -13,12 +14,9 @@ import { AdminBlogList, type AdminBlogRow } from './AdminBlogList'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminBlogsPage() {
-  const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login?next=/admin/blogs')
-  if (!isAdmin(user.id)) notFound()
+  // Dedicated username/password auth (no Supabase / LinkedIn). See
+  // src/lib/blog-admin-auth.ts.
+  if (!isBlogAdmin()) redirect('/admin/login?next=/admin/blogs')
 
   const service = createServiceClient()
   const { data } = await service
@@ -41,11 +39,14 @@ export default async function AdminBlogsPage() {
               at <code className="rounded bg-slate-100 px-1">/blogs/[slug]</code>.
             </p>
           </div>
-          <Link href="/admin/blogs/new">
-            <Button>
-              <Plus className="h-4 w-4" /> New post
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <AdminSignOutButton />
+            <Link href="/admin/blogs/new">
+              <Button>
+                <Plus className="h-4 w-4" /> New post
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="mt-6">

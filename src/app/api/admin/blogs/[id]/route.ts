@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
-import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { isAdmin } from '@/lib/admin'
+import { createServiceClient } from '@/lib/supabase/server'
+import { isBlogAdmin } from '@/lib/blog-admin-auth'
 import { slugify, autoExcerpt } from '@/lib/blog'
 
 export const runtime = 'nodejs'
@@ -11,13 +11,8 @@ export async function PATCH(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!isAdmin(user.id)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (!isBlogAdmin()) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const body = await request.json().catch(() => null)
@@ -102,13 +97,8 @@ export async function DELETE(
   _request: Request,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!isAdmin(user.id)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (!isBlogAdmin()) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const service = createServiceClient()

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
-import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { isAdmin } from '@/lib/admin'
+import { createServiceClient } from '@/lib/supabase/server'
+import { isBlogAdmin } from '@/lib/blog-admin-auth'
 import { slugify, autoExcerpt } from '@/lib/blog'
 
 export const runtime = 'nodejs'
@@ -9,17 +9,12 @@ export const runtime = 'nodejs'
 /**
  * POST /api/admin/blogs — create a new blog post (draft by default,
  * or published immediately if the editor sent status='published').
- * Admin-only. Writes via service role so the table can keep RLS
- * locked to public-read-only.
+ * Gated by the standalone blog-admin session cookie. Writes via
+ * service role so the table can keep RLS locked to public-read-only.
  */
 export async function POST(request: Request) {
-  const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  if (!isAdmin(user.id)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (!isBlogAdmin()) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const body = await request.json().catch(() => null)
@@ -63,7 +58,7 @@ export async function POST(request: Request) {
         status === 'published'
           ? body.published_at ?? new Date().toISOString()
           : null,
-      author_id: user.id,
+      author_id: null,
     })
     .select('*')
     .single()

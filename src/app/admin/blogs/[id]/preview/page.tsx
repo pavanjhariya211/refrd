@@ -2,8 +2,8 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, Calendar, Clock, Edit, Eye, Tag as TagIcon } from 'lucide-react'
-import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { isAdmin } from '@/lib/admin'
+import { createServiceClient } from '@/lib/supabase/server'
+import { isBlogAdmin } from '@/lib/blog-admin-auth'
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { readingMinutes } from '@/lib/blog'
@@ -23,12 +23,9 @@ export default async function BlogPostPreviewPage({
 }: {
   params: { id: string }
 }) {
-  const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) redirect(`/auth/login?next=/admin/blogs/${params.id}/preview`)
-  if (!isAdmin(user.id)) notFound()
+  if (!isBlogAdmin()) {
+    redirect(`/admin/login?next=/admin/blogs/${params.id}/preview`)
+  }
 
   // Service role so drafts and scheduled (future-published) posts are
   // visible — public RLS would hide both.
