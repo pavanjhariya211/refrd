@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { Edit, ExternalLink, Trash2, Send, FileText, Clock } from 'lucide-react'
+import { Edit, ExternalLink, Eye, Trash2, Send, FileText, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { formatRelativeTime } from '@/lib/utils'
 import type { BlogPostStatus } from '@/types'
@@ -157,14 +157,25 @@ export function AdminBlogList({ initialRows }: { initialRows: AdminBlogRow[] }) 
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap justify-end gap-1.5">
-                    {row.status === 'published' && !scheduled && (
+                    {row.status === 'published' && !scheduled ? (
                       <a
                         href={`/blogs/${row.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
+                        title="Open live post"
                         className="inline-flex items-center justify-center rounded-btn border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    ) : (
+                      <a
+                        href={`/admin/blogs/${row.id}/preview`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Preview draft"
+                        className="inline-flex items-center justify-center rounded-btn border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                      >
+                        <Eye className="h-3.5 w-3.5" />
                       </a>
                     )}
                     <Link href={`/admin/blogs/${row.id}/edit`}>

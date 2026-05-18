@@ -44,6 +44,7 @@ export default async function EditBlogPostPage({
             cover_image_url: post.cover_image_url,
             og_image_url: post.og_image_url,
             meta_description: post.meta_description,
+            canonical_url: post.canonical_url,
             tags: post.tags ?? [],
             status: post.status,
             published_at: post.published_at,

@@ -13,6 +13,10 @@ create table if not exists public.blog_posts (
   cover_image_url text,
   og_image_url text,
   meta_description text,
+  -- Override the rel=canonical URL for cross-posted content (e.g. when
+  -- the same article also lives on your personal site). NULL means
+  -- "use the default /blogs/[slug] canonical".
+  canonical_url text,
   tags text[] not null default '{}',
   status text not null default 'draft' check (status in ('draft', 'published')),
   -- When status='published' and published_at > now(), the post is scheduled
@@ -28,6 +32,10 @@ create index if not exists blog_posts_status_published_at_idx
   on public.blog_posts (status, published_at desc nulls last);
 create index if not exists blog_posts_tags_idx
   on public.blog_posts using gin (tags);
+
+-- Idempotent add for existing installs that ran an earlier version of
+-- this file before canonical_url was introduced.
+alter table public.blog_posts add column if not exists canonical_url text;
 
 alter table public.blog_posts enable row level security;
 

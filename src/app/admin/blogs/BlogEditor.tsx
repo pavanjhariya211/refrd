@@ -29,6 +29,7 @@ import {
   Save,
   Send,
   ExternalLink,
+  Eye,
   Clock,
 } from 'lucide-react'
 import { Input } from '@/components/ui/Input'
@@ -62,6 +63,7 @@ export function BlogEditor({ postId, initial }: Props) {
   )
   const [coverImageUrl, setCoverImageUrl] = useState(initial.cover_image_url ?? '')
   const [ogImageUrl, setOgImageUrl] = useState(initial.og_image_url ?? '')
+  const [canonicalUrl, setCanonicalUrl] = useState(initial.canonical_url ?? '')
   const [tagsInput, setTagsInput] = useState((initial.tags ?? []).join(', '))
   const [scheduleAt, setScheduleAt] = useState(
     initial.published_at && new Date(initial.published_at).getTime() > Date.now()
@@ -118,6 +120,7 @@ export function BlogEditor({ postId, initial }: Props) {
       cover_image_url: coverImageUrl.trim() || null,
       og_image_url: ogImageUrl.trim() || null,
       meta_description: metaDescription.trim() || null,
+      canonical_url: canonicalUrl.trim() || null,
       tags: tagList(),
       ...overrides,
     }
@@ -297,15 +300,27 @@ export function BlogEditor({ postId, initial }: Props) {
             </Button>
           </div>
 
-          {postId && initial.status === 'published' && (
-            <a
-              href={`/blogs/${slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-            >
-              <ExternalLink className="h-3 w-3" /> View live post
-            </a>
+          {postId && (
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <a
+                href={`/admin/blogs/${postId}/preview`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-primary"
+              >
+                <Eye className="h-3 w-3" /> Preview draft
+              </a>
+              {initial.status === 'published' && (
+                <a
+                  href={`/blogs/${slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                >
+                  <ExternalLink className="h-3 w-3" /> View live post
+                </a>
+              )}
+            </div>
           )}
         </div>
 
@@ -348,6 +363,13 @@ export function BlogEditor({ postId, initial }: Props) {
               placeholder="Override cover image for social shares"
               value={ogImageUrl}
               onChange={(e) => setOgImageUrl(e.target.value)}
+            />
+            <Input
+              label="Canonical URL (optional)"
+              placeholder="https://example.com/original-post"
+              value={canonicalUrl}
+              onChange={(e) => setCanonicalUrl(e.target.value)}
+              hint="Set this if the post was first published elsewhere."
             />
           </div>
         </div>

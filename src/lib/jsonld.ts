@@ -144,13 +144,17 @@ export function articleJsonLd(post: {
   slug: string
   excerpt?: string | null
   meta_description?: string | null
+  canonical_url?: string | null
   cover_image_url?: string | null
   og_image_url?: string | null
   published_at?: string | null
   updated_at: string
   created_at: string
 }) {
-  const url = `${SITE_URL}/blogs/${post.slug}`
+  // If the author set a canonical override (cross-posted content),
+  // Article.mainEntityOfPage should point at the canonical source, not
+  // the Refrd copy — otherwise Google may treat us as the duplicate.
+  const url = post.canonical_url?.trim() || `${SITE_URL}/blogs/${post.slug}`
   const image = post.og_image_url || post.cover_image_url || `${SITE_URL}/logo.png`
   return {
     '@context': 'https://schema.org',

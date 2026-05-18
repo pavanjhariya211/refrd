@@ -41,7 +41,8 @@ export async function generateMetadata({
   const post = await getPost(params.slug)
   if (!post) return { title: 'Post not found' }
 
-  const canonical = `${SITE_URL}/blogs/${post.slug}`
+  const canonical =
+    post.canonical_url?.trim() || `${SITE_URL}/blogs/${post.slug}`
   const description =
     post.meta_description?.trim() ||
     post.excerpt?.trim() ||

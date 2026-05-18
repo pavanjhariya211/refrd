@@ -217,6 +217,7 @@ export interface BlogPost {
   cover_image_url?: string | null
   og_image_url?: string | null
   meta_description?: string | null
+  canonical_url?: string | null
   tags: string[]
   status: BlogPostStatus
   published_at?: string | null

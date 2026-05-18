@@ -49,6 +49,7 @@ export async function PATCH(
   if ('cover_image_url' in body) patch.cover_image_url = body.cover_image_url
   if ('og_image_url' in body) patch.og_image_url = body.og_image_url
   if ('meta_description' in body) patch.meta_description = body.meta_description
+  if ('canonical_url' in body) patch.canonical_url = body.canonical_url
   if (Array.isArray(body.tags)) patch.tags = body.tags
   if (body.status === 'draft' || body.status === 'published') {
     patch.status = body.status

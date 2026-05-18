@@ -56,6 +56,7 @@ export async function POST(request: Request) {
       cover_image_url: body.cover_image_url ?? null,
       og_image_url: body.og_image_url ?? null,
       meta_description: body.meta_description ?? null,
+      canonical_url: body.canonical_url ?? null,
       tags: Array.isArray(body.tags) ? body.tags : [],
       status,
       published_at:
