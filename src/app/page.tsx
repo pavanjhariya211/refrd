@@ -11,6 +11,7 @@ import {
   Coins,
   Gem,
   Lock,
+  BadgeCheck,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { PUBLIC_REFERRER_FIELDS } from '@/lib/constants'
@@ -27,34 +28,26 @@ export const dynamic = 'force-dynamic'
 const HOW_STEPS = [
   {
     n: '01',
-    title: 'Bid to Apply',
+    title: 'Find & Bid Safely',
     description:
-      'Upload your resume, place a bid, pay upfront. Higher bids float to the top of the review queue.',
-    Icon: Target,
-    iconClass: 'bg-orange-100 text-orange-600',
-  },
-  {
-    n: '02',
-    title: 'AI Scores Both Sides',
-    description:
-      'Full match score — skills, experience, profile completeness. Both you and the referrer see the same breakdown.',
-    Icon: Bot,
+      'Your funds are locked in an escrow hold via Razorpay. The referrer sees the commitment, but cannot access the funds yet.',
+    Icon: Lock,
     iconClass: 'bg-violet-100 text-violet-600',
   },
   {
-    n: '03',
-    title: 'Get Reviewed First',
+    n: '02',
+    title: 'AI-Match Verification',
     description:
-      'The verified employee reviews top bids. Your AI score and profile are front and center — no mystery criteria.',
-    Icon: Eye,
+      'Our system performs a resume scoring breakdown against the target role to ensure a high-quality referral for the employee.',
+    Icon: Bot,
     iconClass: 'bg-purple-100 text-purple-600',
   },
   {
-    n: '04',
-    title: 'Referral or Refund',
+    n: '03',
+    title: 'Verified Proof or Refund',
     description:
-      'Referred? The employee earns only after proof of referral. Declined or 7 days pass? Full refund, no questions.',
-    Icon: Coins,
+      'A strict 7-day window. The referrer must provide verified portal submission proof, or your escrow is instantly refunded 100%.',
+    Icon: BadgeCheck,
     iconClass: 'bg-emerald-100 text-emerald-600',
   },
 ] as const
@@ -188,16 +181,16 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* ─── HOW IT WORKS — 4-card light grid ─────────────────── */}
+      {/* ─── HOW IT WORKS — 3-card trust grid ─────────────────── */}
       <section className="mx-auto w-full max-w-7xl px-4 py-20">
         <p className="text-xs font-bold uppercase tracking-widest text-primary">
           How it works
         </p>
         <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
-          Simple. Fair. Transparent.
+          A Risk-Free System Built on Absolute Trust.
         </h2>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {HOW_STEPS.map(({ n, title, description, Icon, iconClass }) => (
             <div
               key={n}
