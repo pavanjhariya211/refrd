@@ -53,7 +53,7 @@ export function Navbar() {
         <Link href="/" className="flex items-center" aria-label="Refrd home">
           <Image
             src="/logo.png"
-            alt="Refrd.ai"
+            alt="Refrd.club"
             width={160}
             height={48}
             priority

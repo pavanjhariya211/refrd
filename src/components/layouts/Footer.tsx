@@ -11,7 +11,7 @@ export function Footer() {
             <Link href="/" className="flex items-center" aria-label="Refrd home">
               <Image
                 src="/logo.png"
-                alt="Refrd.ai"
+                alt="Refrd.club"
                 width={140}
                 height={32}
                 className="h-8 w-auto"

@@ -339,7 +339,7 @@ export default async function HomePage() {
             <span className="italic text-primary">job search</span>
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base text-slate-600">
-            Refrd.ai gives both job seekers and referrers the tools to make
+            Refrd.club gives both job seekers and referrers the tools to make
             every referral count — with full transparency on both sides.
           </p>
         </div>
