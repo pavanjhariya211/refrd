@@ -71,21 +71,15 @@ export function Navbar() {
       }}
     >
       <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20">
-        <Link href="/" className="flex items-center gap-2.5" aria-label="Refrd home">
-          {/* Gradient mark anchors the brand on dark surfaces — the
-              PNG logo on its own gets lost against the bg. */}
-          <span
-            className="grid h-8 w-8 place-items-center rounded-lg text-[15px] font-bold text-white"
-            style={{
-              background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)',
-              boxShadow: '0 0 24px rgba(168, 85, 247, 0.4)',
-            }}
-          >
-            R
-          </span>
-          <span className="text-lg font-semibold tracking-tight text-text">
-            Refrd
-          </span>
+        <Link href="/" className="flex items-center" aria-label="Refrd home">
+          <Image
+            src="/logo.png"
+            alt="Refrd.club"
+            width={160}
+            height={48}
+            priority
+            className="h-9 w-auto"
+          />
         </Link>
 
         <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 md:flex">

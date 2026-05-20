@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Linkedin } from 'lucide-react'
 
 export function Footer() {
@@ -7,19 +8,14 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-16">
         <div className="mb-12 grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
-            <Link href="/" className="flex items-center gap-2.5" aria-label="Refrd home">
-              <span
-                className="grid h-8 w-8 place-items-center rounded-lg text-[15px] font-bold text-white"
-                style={{
-                  background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 100%)',
-                  boxShadow: '0 0 24px rgba(168, 85, 247, 0.4)',
-                }}
-              >
-                R
-              </span>
-              <span className="text-lg font-semibold tracking-tight text-text">
-                Refrd
-              </span>
+            <Link href="/" className="flex items-center" aria-label="Refrd home">
+              <Image
+                src="/logo.png"
+                alt="Refrd.club"
+                width={140}
+                height={40}
+                className="h-8 w-auto"
+              />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-soft">
               A safer way to get referred. Pay only when you actually get
