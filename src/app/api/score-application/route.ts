@@ -1,4 +1,4 @@
-import OpenAI from 'openai'
+import { getOpenAI, OpenAI } from '@/lib/openai'
 import { NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import {
@@ -7,7 +7,6 @@ import {
   parseScoreResponse,
 } from '@/lib/scoring'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 const MODEL = 'gpt-4o-mini'
 
 export async function POST(request: Request) {
@@ -69,7 +68,7 @@ export async function POST(request: Request) {
 
   let raw = ''
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: MODEL,
       max_tokens: 1024,
       response_format: { type: 'json_object' },
