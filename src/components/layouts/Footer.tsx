@@ -9,13 +9,15 @@ export function Footer() {
         <div className="mb-12 grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div>
             <Link href="/" className="flex items-center" aria-label="Refrd home">
-              <Image
-                src="/logo.png"
-                alt="Refrd.club"
-                width={140}
-                height={40}
-                className="h-8 w-auto"
-              />
+              <span className="inline-flex items-center rounded-lg bg-white px-2.5 py-1.5">
+                <Image
+                  src="/logo.png"
+                  alt="Refrd.club"
+                  width={140}
+                  height={40}
+                  className="h-7 w-auto"
+                />
+              </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-soft">
               A safer way to get referred. Pay only when you actually get
