@@ -17,7 +17,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(function Textarea
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={textareaId} className="mb-1.5 block text-sm font-medium text-slate-700">
+        <label htmlFor={textareaId} className="mb-1.5 block text-sm font-medium text-text-soft">
           {label}
         </label>
       )}
@@ -38,11 +38,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, Props>(function Textarea
           {error ? (
             <span className="text-error">{error}</span>
           ) : hint ? (
-            <span className="text-slate-500">{hint}</span>
+            <span className="text-text-faint">{hint}</span>
           ) : null}
         </div>
         {showCount && (
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-text-faint">
             {length}
             {maxLength ? `/${maxLength}` : ''}
           </span>

@@ -33,10 +33,10 @@ export default async function AdminBlogsPage() {
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">Blog admin</h1>
-            <p className="text-sm text-slate-600">
+            <h1 className="text-3xl font-extrabold text-text">Blog admin</h1>
+            <p className="text-sm text-text-soft">
               Write, edit, schedule, and publish posts. Published posts go live
-              at <code className="rounded bg-slate-100 px-1">/blogs/[slug]</code>.
+              at <code className="rounded bg-white/[0.06] px-1">/blogs/[slug]</code>.
             </p>
           </div>
           <div className="flex items-center gap-2">

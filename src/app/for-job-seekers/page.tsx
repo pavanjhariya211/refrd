@@ -57,15 +57,15 @@ export default function ForJobSeekersPage() {
       <JsonLd data={faqPageJsonLd([...FAQS])} />
       <Navbar />
 
-      <section className="bg-gradient-to-b from-brand-50 via-white to-white">
+      <section className="bg-transparent">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:py-20">
           <span className="pill bg-brand-100 text-primary">
             <Sparkles className="h-3.5 w-3.5" /> For job seekers
           </span>
-          <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-text sm:text-5xl">
             Stop applying into the void.
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-text-soft">
             Refrd puts you in front of verified employees at the companies you want.
             Bid for priority, see your AI match score before you pay, and get a
             full refund if you&apos;re not selected.
@@ -87,8 +87,8 @@ export default function ForJobSeekersPage() {
 
       <section className="mx-auto w-full max-w-5xl px-4 py-16">
         <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-slate-900">What Refrd gives you</h2>
-          <p className="mt-2 text-sm text-slate-600">
+          <h2 className="text-3xl font-extrabold text-text">What Refrd gives you</h2>
+          <p className="mt-2 text-sm text-text-soft">
             Three guarantees, baked into how the product works.
           </p>
         </div>
@@ -120,11 +120,11 @@ export default function ForJobSeekersPage() {
         </div>
       </section>
 
-      <section className="bg-slate-50">
+      <section className="bg-white/[0.03]">
         <div className="mx-auto w-full max-w-3xl px-4 py-16">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-slate-900">How it works</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <h2 className="text-3xl font-extrabold text-text">How it works</h2>
+            <p className="mt-2 text-sm text-text-soft">
               Eight steps, ~5 minutes for the apply itself.
             </p>
           </div>
@@ -201,21 +201,21 @@ export default function ForJobSeekersPage() {
 
       <section className="mx-auto w-full max-w-4xl px-4 py-16">
         <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-slate-900">Why it works</h2>
+          <h2 className="text-3xl font-extrabold text-text">Why it works</h2>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="card">
             <Trophy className="h-5 w-5 text-primary" />
-            <h3 className="mt-2 text-sm font-bold text-slate-900">Pure auction</h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <h3 className="mt-2 text-sm font-bold text-text">Pure auction</h3>
+            <p className="mt-1 text-sm text-text-soft">
               Highest bids reviewed first. No opaque tiers, no &ldquo;premium&rdquo;
               fast-track that costs 10x more.
             </p>
           </div>
           <div className="card">
             <ShieldCheck className="h-5 w-5 text-success" />
-            <h3 className="mt-2 text-sm font-bold text-slate-900">Proof-of-referral</h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <h3 className="mt-2 text-sm font-bold text-text">Proof-of-referral</h3>
+            <p className="mt-1 text-sm text-text-soft">
               Payouts only fire after the referrer uploads the company&apos;s
               confirmation email. AI verifies the screenshot before the wallet
               credits.
@@ -223,8 +223,8 @@ export default function ForJobSeekersPage() {
           </div>
           <div className="card">
             <Sparkles className="h-5 w-5 text-warning" />
-            <h3 className="mt-2 text-sm font-bold text-slate-900">Full transparency</h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <h3 className="mt-2 text-sm font-bold text-text">Full transparency</h3>
+            <p className="mt-1 text-sm text-text-soft">
               The same AI score breakdown — overall, skills match, experience,
               education, cover note — is visible to both you and the referrer.
             </p>
@@ -232,10 +232,10 @@ export default function ForJobSeekersPage() {
         </div>
       </section>
 
-      <section className="bg-slate-900 text-white">
+      <section className="bg-bg-elev text-text border-y border-border">
         <div className="mx-auto w-full max-w-3xl px-4 py-16 text-center">
           <h2 className="text-3xl font-extrabold">Ready to be reviewed first?</h2>
-          <p className="mt-3 text-slate-300">
+          <p className="mt-3 text-text-faint">
             Sign up takes 30 seconds. No credit card on signup.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -245,12 +245,12 @@ export default function ForJobSeekersPage() {
               </Button>
             </Link>
             <Link href="/jobs">
-              <Button size="lg" variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="border-white/40 bg-transparent text-white hover:bg-bg-card/10">
                 Browse jobs first
               </Button>
             </Link>
           </div>
-          <p className="mt-6 text-xs text-slate-400">
+          <p className="mt-6 text-xs text-text-faint">
             Are you a referrer instead?{' '}
             <Link href="/for-referrers" className="text-white underline">
               See the referrer guide →
@@ -261,16 +261,16 @@ export default function ForJobSeekersPage() {
 
       {/* ─── FAQ — visible content backing the FAQPage JSON-LD ──── */}
       <section className="mx-auto w-full max-w-3xl px-4 py-16">
-        <h2 className="text-2xl font-extrabold text-slate-900">
+        <h2 className="text-2xl font-extrabold text-text">
           Common questions
         </h2>
-        <div className="mt-8 divide-y divide-slate-200 border-y border-slate-200">
+        <div className="mt-8 divide-y divide-border border-y border-border">
           {FAQS.map((faq) => (
             <div key={faq.question} className="py-5">
-              <h3 className="text-base font-semibold text-slate-900">
+              <h3 className="text-base font-semibold text-text">
                 {faq.question}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              <p className="mt-2 text-sm leading-relaxed text-text-soft">
                 {faq.answer}
               </p>
             </div>
@@ -297,8 +297,8 @@ function Benefit({
       <div className="flex h-10 w-10 items-center justify-center rounded-btn bg-brand-50">
         {icon}
       </div>
-      <h3 className="mt-3 text-base font-semibold text-slate-900">{title}</h3>
-      <p className="mt-1 text-sm leading-relaxed text-slate-600">{children}</p>
+      <h3 className="mt-3 text-base font-semibold text-text">{title}</h3>
+      <p className="mt-1 text-sm leading-relaxed text-text-soft">{children}</p>
     </div>
   )
 }
@@ -320,11 +320,11 @@ function Step({
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white">
           {icon}
         </div>
-        <span className="mt-1 text-xs font-bold text-slate-400">{n.toString().padStart(2, '0')}</span>
+        <span className="mt-1 text-xs font-bold text-text-faint">{n.toString().padStart(2, '0')}</span>
       </div>
       <div className="flex-1 pt-1">
-        <h3 className="text-base font-semibold text-slate-900">{title}</h3>
-        <p className="mt-1 text-sm leading-relaxed text-slate-600">{children}</p>
+        <h3 className="text-base font-semibold text-text">{title}</h3>
+        <p className="mt-1 text-sm leading-relaxed text-text-soft">{children}</p>
       </div>
     </li>
   )

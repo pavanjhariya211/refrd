@@ -2,46 +2,167 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-primary: #1A56DB;
-  --color-accent: #0EA5E9;
-  --color-bg: #F8FAFC;
-  --color-card: #FFFFFF;
-  --color-text-primary: #1E293B;
-  --color-text-secondary: #475569;
-  --color-border: #CBD5E1;
-  --color-success: #16A34A;
-  --color-error: #DC2626;
-  --color-warning: #D97706;
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+html {
+  scroll-behavior: smooth;
 }
 
-html, body {
-  background: var(--color-bg);
-  color: var(--color-text-primary);
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+html,
+body {
+  background: #0a0612;
+  color: #f4f1fa;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+/* Selection: subtle violet so it reads against any surface. */
+::selection {
+  background: rgba(168, 85, 247, 0.35);
+  color: #fff;
+}
+
+/* Dark scrollbar to match the atmosphere. */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.5);
 }
 
 @layer components {
+  /* ─── CARDS ────────────────────────────────────────────────── */
   .card {
-    @apply bg-white rounded-card shadow-card p-6 border border-slate-200/60;
+    @apply rounded-card border border-border bg-bg-card/60 p-6 backdrop-blur-sm;
+    background: linear-gradient(
+      180deg,
+      rgba(29, 22, 53, 0.6) 0%,
+      rgba(22, 16, 41, 0.4) 100%
+    );
+  }
+  .card-hi {
+    @apply rounded-card border border-border-hi bg-bg-card-hi/80 p-6;
+    background: linear-gradient(
+      180deg,
+      rgba(29, 22, 53, 0.9) 0%,
+      rgba(22, 16, 41, 0.7) 100%
+    );
   }
   .card-hover {
-    @apply transition-shadow hover:shadow-card-hover;
+    @apply transition-all duration-300 hover:-translate-y-0.5;
   }
+  .card-hover:hover {
+    border-color: rgba(168, 85, 247, 0.3);
+  }
+
+  /* ─── INPUTS ───────────────────────────────────────────────── */
   .input-base {
-    @apply w-full rounded-input border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:bg-slate-50 disabled:cursor-not-allowed;
+    @apply w-full rounded-input border border-border bg-bg-card/60 px-3.5 py-2.5 text-sm text-text placeholder:text-text-faint focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/30 disabled:opacity-50 disabled:cursor-not-allowed;
   }
+
+  /* ─── PILLS / TAGS ─────────────────────────────────────────── */
   .pill {
     @apply inline-flex items-center gap-1 rounded-pill px-2.5 py-0.5 text-xs font-medium;
   }
+
+  /* Section eyebrow — mono label with the glowing dot. Replaces
+     the old `text-xs font-bold uppercase tracking-widest text-primary`
+     pattern across marketing sections. */
+  .section-meta {
+    @apply inline-flex items-center gap-2.5 rounded-pill border border-violet/20 bg-violet/5 px-3 py-1 font-mono text-xs uppercase tracking-widest text-violet-bright;
+  }
+  .section-meta::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #c084fc;
+    box-shadow: 0 0 8px #c084fc;
+  }
+
+  /* Headline italic accent — used in hero + section titles. */
+  .accent-italic {
+    @apply font-serif italic;
+    background: linear-gradient(135deg, #c084fc 0%, #ec4899 50%, #6366f1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-right: 0.05em;
+  }
+
+  /* Live pulse — used on auction cards and "live" indicators. */
+  .live-pulse {
+    @apply inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-success;
+  }
+  .live-pulse::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    animation: pulse-dot 1.6s ease-in-out infinite;
+  }
+
+  /* Visible-dot — used in "visible to you / referrer" rows. */
+  .visible-dot {
+    @apply inline-block h-1.5 w-1.5 rounded-full bg-success;
+    box-shadow: 0 0 8px #10b981;
+  }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+@layer utilities {
+  /* Text-balance for hero headlines. */
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Prose dark — tightens up rendered blog content against the
+   dark background. Tailwind Typography defaults are light. */
+.prose-invert h1,
+.prose-invert h2,
+.prose-invert h3,
+.prose-invert h4 {
+  color: #f4f1fa;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.prose-invert p,
+.prose-invert li {
+  color: #b5acc9;
+}
+.prose-invert a {
+  color: #c084fc;
+  text-decoration: none;
+}
+.prose-invert a:hover {
+  text-decoration: underline;
+}
+.prose-invert strong {
+  color: #f4f1fa;
+  font-weight: 600;
+}
+.prose-invert code {
+  color: #c084fc;
+  background: rgba(168, 85, 247, 0.1);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.prose-invert blockquote {
+  border-left: 2px solid #a855f7;
+  color: #b5acc9;
+}

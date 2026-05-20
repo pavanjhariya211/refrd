@@ -15,7 +15,7 @@ export function VerifiedBadge({ status, size = 'sm', showLabel, className }: Pro
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-pill bg-blue-50 px-2 py-0.5 text-xs font-semibold text-primary',
+        'inline-flex items-center gap-1 rounded-pill bg-violet/10 px-2 py-0.5 text-xs font-semibold text-violet-bright',
         className
       )}
       title="Verified employee"

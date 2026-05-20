@@ -65,14 +65,14 @@ export default async function WalletPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">Wallet</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-extrabold text-text">Wallet</h1>
+        <p className="text-sm text-text-soft">
           Each successful referral credits 85% of the bid (min ₹50 platform fee).
         </p>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           <div className="card">
-            <p className="text-xs uppercase text-slate-500">Available balance</p>
+            <p className="text-xs uppercase text-text-faint">Available balance</p>
             <p className="mt-1 text-3xl font-extrabold text-success">
               {formatINR(wallet?.balance ?? 0)}
             </p>
@@ -81,19 +81,19 @@ export default async function WalletPage() {
             </Link>
           </div>
           <div className="card">
-            <p className="text-xs uppercase text-slate-500">Total earned</p>
+            <p className="text-xs uppercase text-text-faint">Total earned</p>
             <p className="mt-1 text-3xl font-extrabold">{formatINR(wallet?.total_earned ?? 0)}</p>
-            <p className="text-xs text-slate-500">Lifetime payouts</p>
+            <p className="text-xs text-text-faint">Lifetime payouts</p>
           </div>
           <div className="card">
-            <p className="text-xs uppercase text-slate-500">Pending review</p>
+            <p className="text-xs uppercase text-text-faint">Pending review</p>
             <p className="mt-1 text-3xl font-extrabold text-warning">{formatINR(pending)}</p>
-            <p className="text-xs text-slate-500">Potential earnings if referred</p>
+            <p className="text-xs text-text-faint">Potential earnings if referred</p>
           </div>
         </div>
 
         <section className="mt-8 card">
-          <h2 className="text-lg font-bold text-slate-900">Earnings — last 30 days</h2>
+          <h2 className="text-lg font-bold text-text">Earnings — last 30 days</h2>
           <div className="mt-4 flex h-32 items-end gap-1">
             {Object.entries(dailyEarnings).map(([day, value]) => (
               <div
@@ -107,13 +107,13 @@ export default async function WalletPage() {
         </section>
 
         <section className="mt-8">
-          <h2 className="mb-3 text-lg font-bold text-slate-900">Transactions</h2>
+          <h2 className="mb-3 text-lg font-bold text-text">Transactions</h2>
           {!txns?.length ? (
-            <div className="card text-center text-sm text-slate-600">No transactions yet.</div>
+            <div className="card text-center text-sm text-text-soft">No transactions yet.</div>
           ) : (
             <div className="card overflow-x-auto p-0">
               <table className="w-full text-sm">
-                <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-semibold uppercase text-slate-500">
+                <thead className="border-b border-border bg-white/[0.03] text-left text-xs font-semibold uppercase text-text-faint">
                   <tr>
                     <th className="px-4 py-3">Date</th>
                     <th className="px-4 py-3">Description</th>
@@ -122,8 +122,8 @@ export default async function WalletPage() {
                 </thead>
                 <tbody>
                   {txns.map((t) => (
-                    <tr key={t.id} className="border-b border-slate-100 last:border-0">
-                      <td className="px-4 py-3 text-slate-500">
+                    <tr key={t.id} className="border-b border-border last:border-0">
+                      <td className="px-4 py-3 text-text-faint">
                         {formatRelativeTime(t.created_at)}
                       </td>
                       <td className="px-4 py-3">{t.description ?? '—'}</td>
@@ -145,11 +145,11 @@ export default async function WalletPage() {
         </section>
 
         <section id="withdraw" className="mt-8 card">
-          <h2 className="text-lg font-bold text-slate-900">Withdraw funds</h2>
-          <p className="text-sm text-slate-600">
+          <h2 className="text-lg font-bold text-text">Withdraw funds</h2>
+          <p className="text-sm text-text-soft">
             Withdrawals are processed in 1–2 business days. Minimum withdrawal: ₹500.
           </p>
-          <p className="mt-3 rounded-card bg-amber-50 p-3 text-xs text-warning">
+          <p className="mt-3 rounded-card bg-amber-500/10 p-3 text-xs text-warning">
             Bank account onboarding is being rolled out. Email{' '}
             <a className="underline" href="mailto:support@refrd.com">support@refrd.com</a> in
             the meantime.

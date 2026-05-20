@@ -90,16 +90,16 @@ export function AdminBlogList({ initialRows }: { initialRows: AdminBlogRow[] }) 
 
   if (rows.length === 0) {
     return (
-      <div className="card text-center text-sm text-slate-600">
+      <div className="card text-center text-sm text-text-soft">
         No posts yet. Click <strong>New post</strong> to write your first.
       </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-card border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded-card border border-border bg-bg-card">
       <table className="w-full text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <thead className="border-b border-border bg-white/[0.03] text-left text-xs font-semibold uppercase tracking-wide text-text-faint">
           <tr>
             <th className="px-4 py-3">Title</th>
             <th className="px-4 py-3">Status</th>
@@ -107,23 +107,23 @@ export function AdminBlogList({ initialRows }: { initialRows: AdminBlogRow[] }) 
             <th className="px-4 py-3 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-border">
           {rows.map((row) => {
             const scheduled =
               row.status === 'published' &&
               row.published_at &&
               new Date(row.published_at).getTime() > Date.now()
             return (
-              <tr key={row.id} className="hover:bg-slate-50">
+              <tr key={row.id} className="hover:bg-white/[0.04]">
                 <td className="px-4 py-3">
-                  <div className="font-semibold text-slate-900">{row.title}</div>
-                  <div className="text-xs text-slate-500">/blogs/{row.slug}</div>
+                  <div className="font-semibold text-text">{row.title}</div>
+                  <div className="text-xs text-text-faint">/blogs/{row.slug}</div>
                   {row.tags?.length > 0 && (
                     <div className="mt-1 flex flex-wrap gap-1">
                       {row.tags.slice(0, 3).map((t) => (
                         <span
                           key={t}
-                          className="rounded-pill bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600"
+                          className="rounded-pill bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-text-soft"
                         >
                           {t}
                         </span>
@@ -133,26 +133,26 @@ export function AdminBlogList({ initialRows }: { initialRows: AdminBlogRow[] }) 
                 </td>
                 <td className="px-4 py-3">
                   {scheduled ? (
-                    <span className="inline-flex items-center gap-1 rounded-pill bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">
+                    <span className="inline-flex items-center gap-1 rounded-pill bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-300">
                       <Clock className="h-3 w-3" />
                       Scheduled
                     </span>
                   ) : row.status === 'published' ? (
-                    <span className="inline-flex items-center gap-1 rounded-pill bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                    <span className="inline-flex items-center gap-1 rounded-pill bg-emerald-500/10 px-2 py-0.5 text-xs font-semibold text-emerald-300">
                       Live
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 rounded-pill bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+                    <span className="inline-flex items-center gap-1 rounded-pill bg-white/[0.06] px-2 py-0.5 text-xs font-semibold text-text-soft">
                       <FileText className="h-3 w-3" /> Draft
                     </span>
                   )}
                   {scheduled && row.published_at && (
-                    <div className="mt-1 text-[11px] text-slate-500">
+                    <div className="mt-1 text-[11px] text-text-faint">
                       {new Date(row.published_at).toLocaleString()}
                     </div>
                   )}
                 </td>
-                <td className="px-4 py-3 text-slate-600">
+                <td className="px-4 py-3 text-text-soft">
                   {formatRelativeTime(row.updated_at)}
                 </td>
                 <td className="px-4 py-3">
@@ -163,7 +163,7 @@ export function AdminBlogList({ initialRows }: { initialRows: AdminBlogRow[] }) 
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Open live post"
-                        className="inline-flex items-center justify-center rounded-btn border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                        className="inline-flex items-center justify-center rounded-btn border border-border-hi bg-bg-card px-2.5 py-1.5 text-xs font-semibold text-text-soft hover:bg-white/[0.04]"
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
@@ -173,7 +173,7 @@ export function AdminBlogList({ initialRows }: { initialRows: AdminBlogRow[] }) 
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Preview draft"
-                        className="inline-flex items-center justify-center rounded-btn border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                        className="inline-flex items-center justify-center rounded-btn border border-border-hi bg-bg-card px-2.5 py-1.5 text-xs font-semibold text-text-soft hover:bg-white/[0.04]"
                       >
                         <Eye className="h-3.5 w-3.5" />
                       </a>

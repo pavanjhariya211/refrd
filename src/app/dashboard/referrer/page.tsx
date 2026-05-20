@@ -36,8 +36,8 @@ export default async function ReferrerDashboardPage() {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">Referrer dashboard</h1>
-            <p className="text-sm text-slate-600">Track your jobs, applicants, and earnings.</p>
+            <h1 className="text-3xl font-extrabold text-text">Referrer dashboard</h1>
+            <p className="text-sm text-text-soft">Track your jobs, applicants, and earnings.</p>
           </div>
           <Link href="/post-job">
             <Button>
@@ -50,24 +50,24 @@ export default async function ReferrerDashboardPage() {
           <div className="card">
             <Briefcase className="h-5 w-5 text-primary" />
             <p className="mt-2 text-2xl font-extrabold">{activeJobs}</p>
-            <p className="text-xs text-slate-500">Active jobs</p>
+            <p className="text-xs text-text-faint">Active jobs</p>
           </div>
           <div className="card">
             <Users className="h-5 w-5 text-success" />
             <p className="mt-2 text-2xl font-extrabold">{totalApps}</p>
-            <p className="text-xs text-slate-500">Total applicants</p>
+            <p className="text-xs text-text-faint">Total applicants</p>
           </div>
           <Link href="/dashboard/referrer/wallet" className="card card-hover">
             <Wallet className="h-5 w-5 text-warning" />
             <p className="mt-2 text-2xl font-extrabold">{formatINR(wallet?.balance ?? 0)}</p>
-            <p className="text-xs text-slate-500">Wallet balance</p>
+            <p className="text-xs text-text-faint">Wallet balance</p>
           </Link>
         </div>
 
         <div className="mt-8">
-          <h2 className="mb-3 text-lg font-bold text-slate-900">Your jobs</h2>
+          <h2 className="mb-3 text-lg font-bold text-text">Your jobs</h2>
           {!jobs?.length ? (
-            <div className="card text-center text-sm text-slate-600">
+            <div className="card text-center text-sm text-text-soft">
               You haven&apos;t posted any jobs yet.{' '}
               <Link href="/post-job" className="font-semibold text-primary">
                 Post your first job →
@@ -82,20 +82,20 @@ export default async function ReferrerDashboardPage() {
                   className="card card-hover flex items-center justify-between gap-4"
                 >
                   <div>
-                    <h3 className="font-semibold text-slate-900">{j.title}</h3>
-                    <p className="text-xs text-slate-500">
+                    <h3 className="font-semibold text-text">{j.title}</h3>
+                    <p className="text-xs text-text-faint">
                       {j.status} · posted {formatRelativeTime(j.created_at)}
                     </p>
                   </div>
                   <div className="flex items-center gap-6 text-sm">
                     <div className="text-right">
                       <p className="font-bold">{j.applications_count}</p>
-                      <p className="text-xs text-slate-500">applicants</p>
+                      <p className="text-xs text-text-faint">applicants</p>
                     </div>
                     {j.current_highest_bid > 0 && (
                       <div className="text-right">
                         <p className="font-bold text-warning">{formatINR(j.current_highest_bid)}</p>
-                        <p className="text-xs text-slate-500">highest bid</p>
+                        <p className="text-xs text-text-faint">highest bid</p>
                       </div>
                     )}
                   </div>

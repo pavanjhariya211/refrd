@@ -270,17 +270,17 @@ export function ApplyModal({ job, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-stretch justify-center bg-slate-900/50 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="flex h-full w-full flex-col overflow-hidden bg-white shadow-card-hover sm:h-auto sm:max-h-[92vh] sm:max-w-2xl sm:rounded-card">
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+      <div className="flex h-full w-full flex-col overflow-hidden bg-bg-card shadow-card-hover sm:h-auto sm:max-h-[92vh] sm:max-w-2xl sm:rounded-card">
+        <header className="flex items-center justify-between border-b border-border px-5 py-3">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-text-faint">
               Step {step === 'resume' ? '1' : step === 'bid' ? '2' : step === 'pay' ? '3' : '✓'} of 3
             </p>
-            <h2 className="text-base font-bold text-slate-900">
+            <h2 className="text-base font-bold text-text">
               Apply to {job.title} at {job.company_name}
             </h2>
           </div>
-          <button onClick={onClose} aria-label="Close" className="rounded-full p-2 hover:bg-slate-100">
+          <button onClick={onClose} aria-label="Close" className="rounded-full p-2 hover:bg-white/[0.06]">
             <X className="h-4 w-4" />
           </button>
         </header>
@@ -290,7 +290,7 @@ export function ApplyModal({ job, onClose }: Props) {
             <div className="space-y-5">
               <label
                 ref={dropRef}
-                className="flex cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center hover:border-primary"
+                className="flex cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed border-border-hi bg-white/[0.03] px-4 py-10 text-center hover:border-primary"
                 onDragOver={(e) => {
                   e.preventDefault()
                 }}
@@ -303,11 +303,11 @@ export function ApplyModal({ job, onClose }: Props) {
                   }
                 }}
               >
-                <FileUp className="h-8 w-8 text-slate-400" />
-                <p className="mt-2 text-sm font-semibold text-slate-700">
+                <FileUp className="h-8 w-8 text-text-faint" />
+                <p className="mt-2 text-sm font-semibold text-text-soft">
                   Drag &amp; drop your resume, or click to browse
                 </p>
-                <p className="mt-1 text-xs text-slate-500">PDF or DOC, up to 5 MB</p>
+                <p className="mt-1 text-xs text-text-faint">PDF or DOC, up to 5 MB</p>
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
@@ -365,13 +365,13 @@ export function ApplyModal({ job, onClose }: Props) {
                 onChange={(e) => setCoverNote(e.target.value)}
               />
 
-              <div className="rounded-card border border-slate-200 bg-slate-50 p-4">
+              <div className="rounded-card border border-border bg-white/[0.03] p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h4 className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">
+                    <h4 className="flex items-center gap-1.5 text-sm font-semibold text-text">
                       <Sparkles className="h-4 w-4 text-primary" /> Check your match before bidding
                     </h4>
-                    <p className="mt-1 text-xs text-slate-600">
+                    <p className="mt-1 text-xs text-text-soft">
                       See your AI score privately. {quickUsed != null
                         ? `${quickUsed} of ${FREE_MATCH_CHECK_LIMIT} free checks used this month.`
                         : `Free for ${FREE_MATCH_CHECK_LIMIT} checks per month.`}
@@ -388,7 +388,7 @@ export function ApplyModal({ job, onClose }: Props) {
                   </Button>
                 </div>
                 {quickError && (
-                  <p className="mt-3 rounded-input bg-amber-50 p-2 text-xs text-warning">
+                  <p className="mt-3 rounded-input bg-amber-500/10 p-2 text-xs text-warning">
                     {quickError}
                   </p>
                 )}
@@ -429,7 +429,7 @@ export function ApplyModal({ job, onClose }: Props) {
               />
               <BidRankIndicator bidAmount={bid} allBids={allBids} />
 
-              <div className="rounded-card border border-amber-200 bg-amber-50 p-4 text-sm text-warning">
+              <div className="rounded-card border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-warning">
                 <strong className="block">A bid does not guarantee a referral.</strong>
                 The referrer selects based on fit. If they decline, you receive a full refund within 24 hours.
               </div>
@@ -445,25 +445,25 @@ export function ApplyModal({ job, onClose }: Props) {
 
           {step === 'pay' && (
             <div className="space-y-5">
-              <div className="card border-slate-200 bg-slate-50">
-                <h3 className="text-sm font-semibold text-slate-900">Order summary</h3>
+              <div className="card border-border bg-white/[0.03]">
+                <h3 className="text-sm font-semibold text-text">Order summary</h3>
                 <dl className="mt-3 space-y-1.5 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-slate-500">Role</dt>
-                    <dd className="font-medium text-slate-900">{job.title}</dd>
+                    <dt className="text-text-faint">Role</dt>
+                    <dd className="font-medium text-text">{job.title}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-slate-500">Your bid</dt>
+                    <dt className="text-text-faint">Your bid</dt>
                     <dd className="font-bold text-warning">{formatINR(bid)}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-slate-500">Refund policy</dt>
+                    <dt className="text-text-faint">Refund policy</dt>
                     <dd className="text-success">Full refund if not selected</dd>
                   </div>
                 </dl>
               </div>
 
-              <ul className="space-y-1.5 text-xs text-slate-600">
+              <ul className="space-y-1.5 text-xs text-text-soft">
                 <li>• Razorpay-secured checkout</li>
                 <li>• AI score visible to both you and the referrer once paid</li>
                 <li>• Auto-refund after 7 days if no response</li>
@@ -486,8 +486,8 @@ export function ApplyModal({ job, onClose }: Props) {
                 </div>
               </div>
               <div>
-                <h3 className="text-xl font-extrabold text-slate-900">Application submitted!</h3>
-                <p className="mt-1 text-sm text-slate-600">
+                <h3 className="text-xl font-extrabold text-text">Application submitted!</h3>
+                <p className="mt-1 text-sm text-text-soft">
                   You&apos;re ranked <strong>#{bidRank}</strong> of {bidTotal ?? live.applicantCount} applicants.
                 </p>
               </div>
@@ -495,7 +495,7 @@ export function ApplyModal({ job, onClose }: Props) {
               <div className="text-left">
                 {scoreLoading && !score && (
                   <>
-                    <p className="mb-3 text-center text-xs text-slate-500">
+                    <p className="mb-3 text-center text-xs text-text-faint">
                       AI is scoring your application…
                     </p>
                     <ScorePanelSkeleton />

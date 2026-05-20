@@ -1,4 +1,4 @@
-import OpenAI from 'openai'
+import { getOpenAI, OpenAI } from '@/lib/openai'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import {
@@ -9,7 +9,6 @@ import {
 import { FREE_MATCH_CHECK_LIMIT } from '@/lib/constants'
 import { getMonthKey } from '@/lib/utils'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 const MODEL = 'gpt-4o-mini'
 
 export async function POST(request: Request) {
@@ -63,7 +62,7 @@ export async function POST(request: Request) {
 
   let raw = ''
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: MODEL,
       max_tokens: 1024,
       // JSON mode — guarantees the response parses as valid JSON.

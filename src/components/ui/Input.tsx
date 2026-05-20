@@ -17,13 +17,16 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-slate-700">
+        <label
+          htmlFor={inputId}
+          className="mb-1.5 block text-sm font-medium text-text-soft"
+        >
           {label}
         </label>
       )}
       <div className="relative">
         {prefix && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
+          <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-text-faint">
             {prefix}
           </span>
         )}
@@ -32,7 +35,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
           id={inputId}
           className={cn(
             'input-base',
-            prefix && 'pl-7',
+            prefix && 'pl-10',
             suffix && 'pr-10',
             error && 'border-error focus:border-error focus:ring-error/20',
             className
@@ -40,15 +43,15 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
           {...rest}
         />
         {suffix && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
+          <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-faint">
             {suffix}
           </span>
         )}
       </div>
       {error ? (
-        <p className="mt-1 text-xs text-error">{error}</p>
+        <p className="mt-1.5 text-xs text-error">{error}</p>
       ) : hint ? (
-        <p className="mt-1 text-xs text-slate-500">{hint}</p>
+        <p className="mt-1.5 text-xs text-text-faint">{hint}</p>
       ) : null}
     </div>
   )

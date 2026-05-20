@@ -75,10 +75,10 @@ export default async function BlogsIndexPage({
       <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-12">
         <header className="mb-10 text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-text sm:text-5xl">
             The Refrd Blog
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-slate-600">
+          <p className="mx-auto mt-3 max-w-2xl text-base text-text-soft">
             Hiring playbooks, referral mechanics, and product notes from the
             team building the referral marketplace.
           </p>
@@ -92,7 +92,7 @@ export default async function BlogsIndexPage({
                 'inline-flex items-center gap-1 rounded-pill border px-3 py-1 text-xs font-medium transition-colors ' +
                 (!searchParams.tag
                   ? 'border-primary bg-primary text-white'
-                  : 'border-slate-200 bg-white text-slate-600 hover:border-primary hover:text-primary')
+                  : 'border-border bg-bg-card text-text-soft hover:border-primary hover:text-primary')
               }
             >
               All
@@ -107,7 +107,7 @@ export default async function BlogsIndexPage({
                     'inline-flex items-center gap-1 rounded-pill border px-3 py-1 text-xs font-medium transition-colors ' +
                     (active
                       ? 'border-primary bg-primary text-white'
-                      : 'border-slate-200 bg-white text-slate-600 hover:border-primary hover:text-primary')
+                      : 'border-border bg-bg-card text-text-soft hover:border-primary hover:text-primary')
                   }
                 >
                   <TagIcon className="h-3 w-3" /> {t}
@@ -118,7 +118,7 @@ export default async function BlogsIndexPage({
         )}
 
         {posts.length === 0 ? (
-          <div className="card mx-auto max-w-xl text-center text-sm text-slate-600">
+          <div className="card mx-auto max-w-xl text-center text-sm text-text-soft">
             {searchParams.tag
               ? `No posts tagged "${searchParams.tag}" yet.`
               : 'No posts yet — check back soon.'}
@@ -141,10 +141,10 @@ function PostCard({ post }: { post: BlogPost }) {
   return (
     <Link
       href={`/blogs/${post.slug}`}
-      className="group flex flex-col overflow-hidden rounded-card border border-slate-200 bg-white shadow-card transition-shadow hover:shadow-card-hover"
+      className="group flex flex-col overflow-hidden rounded-card border border-border bg-bg-card shadow-card transition-shadow hover:shadow-card-hover"
     >
       {post.cover_image_url ? (
-        <div className="relative h-44 w-full overflow-hidden bg-slate-100">
+        <div className="relative h-44 w-full overflow-hidden bg-white/[0.06]">
           <Image
             src={post.cover_image_url}
             alt={post.title}
@@ -154,7 +154,7 @@ function PostCard({ post }: { post: BlogPost }) {
           />
         </div>
       ) : (
-        <div className="h-44 w-full bg-gradient-to-br from-brand-50 via-white to-brand-100" />
+        <div className="h-44 w-full bg-gradient-to-br from-violet-deep via-violet to-pink" />
       )}
       <div className="flex flex-1 flex-col p-5">
         {post.tags?.length > 0 && (
@@ -169,13 +169,13 @@ function PostCard({ post }: { post: BlogPost }) {
             ))}
           </div>
         )}
-        <h2 className="text-lg font-bold leading-snug text-slate-900 group-hover:text-primary">
+        <h2 className="text-lg font-bold leading-snug text-text group-hover:text-primary">
           {post.title}
         </h2>
-        <p className="mt-2 line-clamp-3 text-sm text-slate-600">
+        <p className="mt-2 line-clamp-3 text-sm text-text-soft">
           {post.excerpt?.trim() || autoExcerpt(post.content_html, 160)}
         </p>
-        <div className="mt-4 flex items-center gap-1.5 text-xs text-slate-500">
+        <div className="mt-4 flex items-center gap-1.5 text-xs text-text-faint">
           <Calendar className="h-3.5 w-3.5" />
           {new Date(date).toLocaleDateString('en-US', {
             year: 'numeric',

@@ -16,10 +16,10 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-b from-brand-50 to-white p-4 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-transparent p-4 text-center">
       <p className="text-6xl font-extrabold text-error">Oops</p>
-      <h1 className="text-2xl font-bold text-slate-900">Something broke on our end</h1>
-      <p className="max-w-md text-slate-600">
+      <h1 className="text-2xl font-bold text-text">Something broke on our end</h1>
+      <p className="max-w-md text-text-soft">
         Our team has been notified. Try the action again — most issues are transient.
       </p>
       <div className="flex gap-2">
@@ -29,7 +29,7 @@ export default function GlobalError({
         </Link>
       </div>
       {error.digest && (
-        <p className="mt-3 text-xs text-slate-400">Error ID: {error.digest}</p>
+        <p className="mt-3 text-xs text-text-faint">Error ID: {error.digest}</p>
       )}
     </div>
   )

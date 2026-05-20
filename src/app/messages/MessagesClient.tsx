@@ -75,7 +75,7 @@ export function MessagesClient({ userId, asApplicant, asReferrer, initialApplica
 
   if (all.length === 0) {
     return (
-      <div className="card text-center text-sm text-slate-600">
+      <div className="card text-center text-sm text-text-soft">
         No conversations yet. Apply to a job or wait for an applicant to start a thread.
       </div>
     )
@@ -90,13 +90,13 @@ export function MessagesClient({ userId, asApplicant, asReferrer, initialApplica
             onClick={() => setActiveId(c.id)}
             className={
               'flex w-full items-center gap-2 rounded-input px-2 py-2 text-left ' +
-              (activeId === c.id ? 'bg-brand-50' : 'hover:bg-slate-50')
+              (activeId === c.id ? 'bg-brand-50' : 'hover:bg-white/[0.04]')
             }
           >
             <CompanyAvatar name={c.peerInitials} size="sm" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold">{c.peerName}</p>
-              <p className="truncate text-xs text-slate-500">{c.job?.title}</p>
+              <p className="truncate text-xs text-text-faint">{c.job?.title}</p>
             </div>
           </button>
         ))}
@@ -104,9 +104,9 @@ export function MessagesClient({ userId, asApplicant, asReferrer, initialApplica
 
       <section className="card flex h-[70vh] flex-col p-0">
         {active && (
-          <header className="border-b border-slate-200 px-4 py-3">
+          <header className="border-b border-border px-4 py-3">
             <p className="text-sm font-bold">{active.job?.title}</p>
-            <p className="text-xs text-slate-500">{active.job?.company_name}</p>
+            <p className="text-xs text-text-faint">{active.job?.company_name}</p>
           </header>
         )}
         <div ref={scrollerRef} className="flex-1 space-y-2 overflow-y-auto p-4">
@@ -117,11 +117,11 @@ export function MessagesClient({ userId, asApplicant, asReferrer, initialApplica
                 <div
                   className={
                     'max-w-[70%] rounded-card px-3 py-2 text-sm ' +
-                    (me ? 'bg-primary text-white' : 'bg-slate-100 text-slate-900')
+                    (me ? 'bg-primary text-white' : 'bg-white/[0.06] text-text')
                   }
                 >
                   <p className="whitespace-pre-wrap">{m.content}</p>
-                  <p className={'mt-1 text-[10px] ' + (me ? 'text-white/70' : 'text-slate-500')}>
+                  <p className={'mt-1 text-[10px] ' + (me ? 'text-white/70' : 'text-text-faint')}>
                     {formatRelativeTime(m.created_at)}
                   </p>
                 </div>
@@ -129,12 +129,12 @@ export function MessagesClient({ userId, asApplicant, asReferrer, initialApplica
             )
           })}
           {messages.length === 0 && (
-            <p className="py-8 text-center text-xs text-slate-400">
+            <p className="py-8 text-center text-xs text-text-faint">
               No messages yet. Say hi.
             </p>
           )}
         </div>
-        <div className="border-t border-slate-200 p-3">
+        <div className="border-t border-border p-3">
           <div className="flex items-end gap-2">
             <Textarea
               value={text}
@@ -152,7 +152,7 @@ export function MessagesClient({ userId, asApplicant, asReferrer, initialApplica
               <Send className="h-4 w-4" />
             </Button>
           </div>
-          <p className="mt-1 text-[10px] text-slate-400">⌘/Ctrl + Enter to send</p>
+          <p className="mt-1 text-[10px] text-text-faint">⌘/Ctrl + Enter to send</p>
         </div>
       </section>
     </div>

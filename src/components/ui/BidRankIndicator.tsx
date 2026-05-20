@@ -20,7 +20,7 @@ export function BidRankIndicator({ bidAmount, allBids, className }: Props) {
 
   if (bidAmount <= 0) {
     return (
-      <div className={cn('text-xs text-slate-500', className)}>
+      <div className={cn('text-xs text-text-faint', className)}>
         Enter a bid to see your projected rank
       </div>
     )
@@ -32,21 +32,21 @@ export function BidRankIndicator({ bidAmount, allBids, className }: Props) {
   return (
     <div className={cn('space-y-2', className)}>
       <div className="flex items-baseline justify-between text-sm">
-        <span className="font-semibold text-slate-900">
+        <span className="font-semibold text-text">
           You&apos;d be ranked <span className="text-primary">#{rank}</span>{' '}
-          <span className="text-slate-500">of {total}</span>
+          <span className="text-text-faint">of {total}</span>
         </span>
         {isFirst && <span className="text-xs font-semibold text-success">🏆 Top bid</span>}
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+      <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
         <div
           className={cn('h-full rounded-full transition-all', isFirst ? 'bg-success' : 'bg-primary')}
           style={{ width: `${pct}%` }}
         />
       </div>
       {!isFirst && nextHigher && (
-        <p className="text-xs text-slate-500">
-          Bid <strong className="text-slate-900">{formatINR(nextHigher + 100)}</strong> to move
+        <p className="text-xs text-text-faint">
+          Bid <strong className="text-text">{formatINR(nextHigher + 100)}</strong> to move
           to #{rank - 1}
         </p>
       )}

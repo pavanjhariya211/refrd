@@ -38,8 +38,8 @@ export default async function ApplicantsPage({ params }: { params: { jobId: stri
       <Navbar />
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900">{job.title}</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-2xl font-extrabold text-text">{job.title}</h1>
+          <p className="text-sm text-text-soft">
             {apps.length} applicants · highest bid currently:&nbsp;
             {job.current_highest_bid > 0 ? `₹${job.current_highest_bid.toLocaleString('en-IN')}` : '—'}
           </p>

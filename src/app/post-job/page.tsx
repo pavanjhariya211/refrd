@@ -13,8 +13,8 @@ export default async function PostJobPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
-        <h1 className="text-3xl font-extrabold text-slate-900">Post a job</h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <h1 className="text-3xl font-extrabold text-text">Post a job</h1>
+        <p className="mt-1 text-sm text-text-soft">
           Job seekers will bid to apply. Highest bid is reviewed first. You earn 85% of each
           confirmed referral.
         </p>

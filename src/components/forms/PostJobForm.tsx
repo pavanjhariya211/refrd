@@ -94,21 +94,21 @@ export function PostJobForm({ userId }: { userId: string }) {
 
   return (
     <div className="card space-y-6">
-      <div className="flex items-center gap-2 text-xs text-slate-500">
+      <div className="flex items-center gap-2 text-xs text-text-faint">
         {[1, 2, 3].map((n) => (
           <div key={n} className="flex flex-1 items-center gap-2">
             <div
               className={
                 'flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ' +
-                (step >= n ? 'bg-primary text-white' : 'bg-slate-100 text-slate-400')
+                (step >= n ? 'bg-primary text-white' : 'bg-white/[0.06] text-text-faint')
               }
             >
               {n}
             </div>
-            <span className={step === n ? 'font-semibold text-slate-900' : ''}>
+            <span className={step === n ? 'font-semibold text-text' : ''}>
               {n === 1 ? 'Basics' : n === 2 ? 'Role detail' : 'Bid & publish'}
             </span>
-            {n < 3 && <div className="h-px flex-1 bg-slate-200" />}
+            {n < 3 && <div className="h-px flex-1 bg-white/[0.08]" />}
           </div>
         ))}
       </div>
@@ -132,7 +132,7 @@ export function PostJobForm({ userId }: { userId: string }) {
             <Input label="Location" value={location} onChange={(e) => setLocation(e.target.value)} />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Location type</label>
+            <label className="mb-1.5 block text-sm font-medium text-text-soft">Location type</label>
             <div className="flex flex-wrap gap-2">
               {LOCATION_TYPES.map((opt) => (
                 <button
@@ -143,7 +143,7 @@ export function PostJobForm({ userId }: { userId: string }) {
                     'rounded-btn border px-3 py-1.5 text-sm font-medium ' +
                     (locationType === opt.value
                       ? 'border-primary bg-brand-50 text-primary'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50')
+                      : 'border-border text-text-soft hover:bg-white/[0.04]')
                   }
                 >
                   {opt.label}
@@ -152,7 +152,7 @@ export function PostJobForm({ userId }: { userId: string }) {
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Experience level</label>
+            <label className="mb-1.5 block text-sm font-medium text-text-soft">Experience level</label>
             <div className="flex flex-wrap gap-2">
               {EXPERIENCE_LEVELS.map((opt) => (
                 <button
@@ -163,7 +163,7 @@ export function PostJobForm({ userId }: { userId: string }) {
                     'rounded-btn border px-3 py-1.5 text-sm font-medium ' +
                     (experienceLevel === opt.value
                       ? 'border-primary bg-brand-50 text-primary'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50')
+                      : 'border-border text-text-soft hover:bg-white/[0.04]')
                   }
                 >
                   {opt.label}
@@ -196,7 +196,7 @@ export function PostJobForm({ userId }: { userId: string }) {
             placeholder="2 rounds: technical + system design"
           />
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Skills required</label>
+            <label className="mb-1.5 block text-sm font-medium text-text-soft">Skills required</label>
             <div className="flex gap-2">
               <Input
                 placeholder="Add a skill and press Enter"
@@ -266,7 +266,7 @@ export function PostJobForm({ userId }: { userId: string }) {
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
           />
-          <div className="rounded-card bg-slate-50 p-4 text-xs text-slate-600">
+          <div className="rounded-card bg-white/[0.03] p-4 text-xs text-text-soft">
             <strong>Reminder:</strong> Refrd takes a 15% platform fee (min ₹50). The remainder
             credits to your wallet the moment you submit a referral.
           </div>

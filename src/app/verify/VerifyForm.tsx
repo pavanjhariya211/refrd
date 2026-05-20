@@ -50,7 +50,7 @@ export function VerifyForm({ status, companyName, linkedinVerifiedAt }: Props) {
       <div
         className={
           'flex items-start gap-3 rounded-card p-4 text-sm ' +
-          (isVerified ? 'bg-green-50 text-success' : 'bg-amber-50 text-warning')
+          (isVerified ? 'bg-green-500/10 text-success' : 'bg-amber-500/10 text-warning')
         }
       >
         <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" />

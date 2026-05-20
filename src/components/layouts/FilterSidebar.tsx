@@ -23,7 +23,7 @@ export function FilterSidebar({ filters, onChange, onReset }: Props) {
   return (
     <aside className="card sticky top-20 space-y-5 self-start">
       <div className="flex items-center justify-between">
-        <h3 className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">
+        <h3 className="flex items-center gap-1.5 text-sm font-semibold text-text">
           <Filter className="h-4 w-4" /> Filters
         </h3>
         <button
@@ -35,7 +35,7 @@ export function FilterSidebar({ filters, onChange, onReset }: Props) {
       </div>
 
       <div>
-        <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-text-faint">
           Location
         </label>
         <div className="space-y-1">
@@ -54,7 +54,7 @@ export function FilterSidebar({ filters, onChange, onReset }: Props) {
       </div>
 
       <div>
-        <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-text-faint">
           Experience
         </label>
         <div className="space-y-1">

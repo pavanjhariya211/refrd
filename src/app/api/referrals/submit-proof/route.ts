@@ -1,4 +1,4 @@
-import OpenAI from 'openai'
+import { getOpenAI } from '@/lib/openai'
 import { NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { releasePayout } from '@/lib/payments'
@@ -8,7 +8,6 @@ import { sendEmail, emailLayout } from '@/lib/email'
 export const runtime = 'nodejs'
 export const maxDuration = 30
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 const VISION_MODEL = 'gpt-4o-mini'
 
 interface SubmitBody {
@@ -96,7 +95,7 @@ export async function POST(request: Request) {
   // ─── OCR + analysis ──────────────────────────────────────────────────────
   let ocr: OcrDecision
   try {
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAI().chat.completions.create({
       model: VISION_MODEL,
       max_tokens: 400,
       response_format: { type: 'json_object' },

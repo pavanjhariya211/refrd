@@ -26,9 +26,9 @@ export default function AdminLoginPage({
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-12">
-        <div className="rounded-card border border-slate-200 bg-white p-6 shadow-card">
-          <h1 className="text-2xl font-extrabold text-slate-900">Admin sign in</h1>
-          <p className="mt-1 text-sm text-slate-600">
+        <div className="rounded-card border border-border bg-bg-card p-6 shadow-card">
+          <h1 className="text-2xl font-extrabold text-text">Admin sign in</h1>
+          <p className="mt-1 text-sm text-text-soft">
             Restricted access for blog publishing.
           </p>
           <div className="mt-6">

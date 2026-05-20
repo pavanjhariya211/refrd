@@ -51,8 +51,8 @@ export default async function BlogPostPreviewPage({
       <Navbar />
 
       {/* Banner so the preview is never mistaken for the live post. */}
-      <div className="border-b border-amber-200 bg-amber-50">
-        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm text-amber-900">
+      <div className="border-b border-amber-500/20 bg-amber-500/10">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm text-amber-200">
           <span className="inline-flex items-center gap-2">
             <Eye className="h-4 w-4" />
             <strong>
@@ -62,8 +62,8 @@ export default async function BlogPostPreviewPage({
                   ? 'Scheduled preview'
                   : 'Live post preview'}
             </strong>
-            <span className="text-amber-700">
-              · only visible to admins. <code className="rounded bg-amber-100 px-1">noindex</code> applied.
+            <span className="text-amber-300">
+              · only visible to admins. <code className="rounded bg-amber-500/15 px-1">noindex</code> applied.
             </span>
           </span>
           <Link
@@ -78,7 +78,7 @@ export default async function BlogPostPreviewPage({
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12">
         <Link
           href="/admin/blogs"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-primary"
+          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-text-faint hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" /> All posts
         </Link>
@@ -97,15 +97,15 @@ export default async function BlogPostPreviewPage({
                 ))}
               </div>
             )}
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-              {post.title || <span className="text-slate-400">Untitled draft</span>}
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-text sm:text-5xl">
+              {post.title || <span className="text-text-faint">Untitled draft</span>}
             </h1>
             {post.excerpt && (
-              <p className="mt-4 text-lg leading-relaxed text-slate-600">
+              <p className="mt-4 text-lg leading-relaxed text-text-soft">
                 {post.excerpt}
               </p>
             )}
-            <div className="mt-5 flex items-center gap-4 text-sm text-slate-500">
+            <div className="mt-5 flex items-center gap-4 text-sm text-text-faint">
               <span className="inline-flex items-center gap-1.5">
                 <Calendar className="h-4 w-4" />
                 {new Date(date).toLocaleDateString('en-US', {
@@ -122,7 +122,7 @@ export default async function BlogPostPreviewPage({
           </header>
 
           {post.cover_image_url && (
-            <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-card bg-slate-100">
+            <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-card bg-white/[0.06]">
               <Image
                 src={post.cover_image_url}
                 alt={post.title}
@@ -135,7 +135,7 @@ export default async function BlogPostPreviewPage({
           )}
 
           <div
-            className="prose prose-slate prose-lg max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-a:text-primary prose-img:rounded-card"
+            className="prose prose-invert prose-lg max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-a:text-primary prose-img:rounded-card"
             dangerouslySetInnerHTML={{ __html: post.content_html }}
           />
         </article>

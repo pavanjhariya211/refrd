@@ -30,7 +30,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-brand-50 to-white">
+    <div className="flex min-h-screen flex-col bg-transparent">
       <header className="px-4 py-4">
         <Link href="/" className="flex items-center" aria-label="Refrd home">
           <Image src="/logo.png" alt="Refrd.club" width={160} height={48} priority className="h-12 w-auto" />
@@ -38,8 +38,8 @@ export default function LoginPage() {
       </header>
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-12">
         <div className="card w-full">
-          <h1 className="text-2xl font-extrabold text-slate-900">Welcome back</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="text-2xl font-extrabold text-text">Welcome back</h1>
+          <p className="mt-1 text-sm text-text-soft">
             Sign in to continue your search.
           </p>
 
@@ -54,12 +54,12 @@ export default function LoginPage() {
             Continue with LinkedIn
           </Button>
 
-          <p className="mt-4 text-center text-xs text-slate-500">
+          <p className="mt-4 text-center text-xs text-text-faint">
             We use LinkedIn to verify employee identity. We never read your network or
             post on your behalf.
           </p>
 
-          <p className="mt-6 text-center text-sm text-slate-600">
+          <p className="mt-6 text-center text-sm text-text-soft">
             New here?{' '}
             <Link href="/auth/signup" className="font-semibold text-primary hover:underline">
               Create an account

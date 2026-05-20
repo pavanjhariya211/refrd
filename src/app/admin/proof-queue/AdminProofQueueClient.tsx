@@ -78,7 +78,7 @@ export function AdminProofQueueClient({ initialRows }: { initialRows: AdminProof
 
   if (rows.length === 0) {
     return (
-      <div className="card mt-6 text-center text-sm text-slate-600">
+      <div className="card mt-6 text-center text-sm text-text-soft">
         Queue is empty. Auto-refunds run nightly for proofs older than 7 days.
       </div>
     )
@@ -95,7 +95,7 @@ export function AdminProofQueueClient({ initialRows }: { initialRows: AdminProof
                 href={row.proof_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block bg-slate-100"
+                className="block bg-white/[0.06]"
                 title="Open full size in new tab"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -110,10 +110,10 @@ export function AdminProofQueueClient({ initialRows }: { initialRows: AdminProof
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-base font-semibold text-slate-900">
+                      <h3 className="text-base font-semibold text-text">
                         {row.application.job.title}
                       </h3>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-text-faint">
                         {row.application.job.company_name} ·{' '}
                         {formatRelativeTime(row.created_at)}
                       </p>
@@ -122,8 +122,8 @@ export function AdminProofQueueClient({ initialRows }: { initialRows: AdminProof
                       className={
                         'pill ' +
                         (row.status === 'rejected'
-                          ? 'bg-red-50 text-error'
-                          : 'bg-amber-50 text-warning')
+                          ? 'bg-red-500/10 text-error'
+                          : 'bg-amber-500/10 text-warning')
                       }
                     >
                       {row.status === 'rejected' ? 'rejected (re-review)' : 'needs review'}
@@ -131,11 +131,11 @@ export function AdminProofQueueClient({ initialRows }: { initialRows: AdminProof
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 rounded-card bg-slate-50 p-3 text-xs">
+                <div className="grid grid-cols-2 gap-3 rounded-card bg-white/[0.03] p-3 text-xs">
                   <div>
-                    <p className="font-semibold text-slate-500">Candidate</p>
+                    <p className="font-semibold text-text-faint">Candidate</p>
                     <p>{row.application.applicant.name ?? '—'}</p>
-                    <p className="text-slate-500">{row.application.applicant.email ?? ''}</p>
+                    <p className="text-text-faint">{row.application.applicant.email ?? ''}</p>
                     {row.application.applicant.linkedin_url && (
                       <a
                         href={row.application.applicant.linkedin_url}
@@ -148,34 +148,34 @@ export function AdminProofQueueClient({ initialRows }: { initialRows: AdminProof
                     )}
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-500">Referrer</p>
+                    <p className="font-semibold text-text-faint">Referrer</p>
                     <p>{row.referrer.name ?? '—'}</p>
-                    <p className="text-slate-500">{row.referrer.email ?? ''}</p>
-                    <p className="text-slate-500">
+                    <p className="text-text-faint">{row.referrer.email ?? ''}</p>
+                    <p className="text-text-faint">
                       Profile company:{' '}
                       <strong>{row.referrer.company_name ?? '—'}</strong>
                     </p>
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-500">OCR — extracted company</p>
-                    <p>{row.ocr_extracted_company ?? <em className="text-slate-400">none</em>}</p>
+                    <p className="font-semibold text-text-faint">OCR — extracted company</p>
+                    <p>{row.ocr_extracted_company ?? <em className="text-text-faint">none</em>}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-slate-500">OCR — extracted candidate</p>
-                    <p>{row.ocr_extracted_candidate ?? <em className="text-slate-400">none</em>}</p>
+                    <p className="font-semibold text-text-faint">OCR — extracted candidate</p>
+                    <p>{row.ocr_extracted_candidate ?? <em className="text-text-faint">none</em>}</p>
                   </div>
                   <div className="col-span-2">
-                    <p className="font-semibold text-slate-500">OCR — sender</p>
-                    <p>{row.ocr_sender ?? <em className="text-slate-400">none</em>}</p>
+                    <p className="font-semibold text-text-faint">OCR — sender</p>
+                    <p>{row.ocr_sender ?? <em className="text-text-faint">none</em>}</p>
                   </div>
                   <div className="col-span-2">
-                    <p className="font-semibold text-slate-500">OCR reasoning</p>
-                    <p className="text-slate-700">{row.ocr_reasoning ?? '—'}</p>
+                    <p className="font-semibold text-text-faint">OCR reasoning</p>
+                    <p className="text-text-soft">{row.ocr_reasoning ?? '—'}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between rounded-card bg-amber-50 px-3 py-2 text-sm">
-                  <span className="text-slate-700">
+                <div className="flex items-center justify-between rounded-card bg-amber-500/10 px-3 py-2 text-sm">
+                  <span className="text-text-soft">
                     Bid: <strong>{formatINR(row.application.bid_amount)}</strong>
                   </span>
                   <a
