@@ -21,6 +21,7 @@
     "@tiptap/starter-kit": "^2.10.3",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
+    "geist": "^1.7.0",
     "lucide-react": "^0.460.0",
     "next": "14.2.18",
     "openai": "^6.35.0",

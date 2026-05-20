@@ -1,14 +1,24 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans } from 'next/font/google'
+import { Instrument_Serif } from 'next/font/google'
+import { GeistSans } from 'geist/font/sans'
+import { GeistMono } from 'geist/font/mono'
 import Script from 'next/script'
 import { Toaster } from 'sonner'
+import { BackgroundLayers } from '@/components/layouts/BackgroundLayers'
 import './globals.css'
 
-const jakarta = Plus_Jakarta_Sans({
+// Three-font stack matching the reference design:
+//  - Geist: workhorse body font (replaces Plus Jakarta Sans). Sourced
+//    from the official `geist` package since next/font/google only
+//    ships Geist from Next 15 onward (we're on 14).
+//  - Geist Mono: small caps labels, numbers, eyebrow text.
+//  - Instrument Serif: italic accents in hero + section titles.
+const instrument = Instrument_Serif({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
+  weight: '400',
+  style: ['normal', 'italic'],
   display: 'swap',
-  variable: '--font-jakarta',
+  variable: '--font-instrument',
 })
 
 const GTM_ID = 'GTM-5B7FV44W'
@@ -18,9 +28,6 @@ const SITE_DESCRIPTION =
   'A competitive auction marketplace where job seekers bid for referrals from verified employees. Upfront payment. Full refund if not selected.'
 
 export const metadata: Metadata = {
-  // `template` lets per-page titles render as "<page> | Refrd" without each
-  // page repeating the brand suffix. `default` is used where a page sets no
-  // title of its own.
   title: {
     default: SITE_TITLE,
     template: '%s | Refrd',
@@ -38,9 +45,6 @@ export const metadata: Metadata = {
     'job search',
   ],
   icons: {
-    // Next.js auto-detects src/app/icon.png and src/app/apple-icon.png. The
-    // explicit entries below are redundant for the favicon itself but make
-    // the icon discoverable to OG-card crawlers and older browsers.
     icon: '/icon.png',
     apple: '/apple-icon.png',
   },
@@ -58,6 +62,10 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: ['/logo.png'],
   },
+  // Tell browsers the page is dark so native UI (form controls,
+  // scrollbars on Mac) renders against the right backdrop.
+  themeColor: '#0a0612',
+  colorScheme: 'dark',
   robots: {
     index: true,
     follow: true,
@@ -66,11 +74,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={jakarta.variable}>
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${GeistMono.variable} ${instrument.variable} dark`}
+    >
       <head>
-        {/* Google Tag Manager — next/script hoists this with afterInteractive,
-            which is the Next.js App Router-idiomatic equivalent of placing the
-            snippet high in <head>. dataLayer is initialised inside the IIFE. */}
         <Script id="gtm-base" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -79,8 +87,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','${GTM_ID}');`}
         </Script>
       </head>
-      <body className={jakarta.className}>
-        {/* Google Tag Manager (noscript) — must be the first thing in <body> */}
+      <body className="font-sans bg-bg text-text">
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
@@ -89,8 +96,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        {children}
-        <Toaster position="top-right" richColors closeButton />
+        {/* Fixed atmospheric layers — sit behind everything at z-0. */}
+        <BackgroundLayers />
+        {/* All content is positioned above the background. */}
+        <div className="relative z-10">{children}</div>
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          theme="dark"
+          toastOptions={{
+            style: {
+              background: 'rgba(22, 16, 41, 0.95)',
+              border: '1px solid rgba(255,255,255,0.14)',
+              backdropFilter: 'blur(8px)',
+            },
+          }}
+        />
       </body>
     </html>
   )
