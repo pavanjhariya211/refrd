@@ -43,7 +43,7 @@ export default async function MessagesPage({
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
-        <h1 className="mb-4 text-2xl font-extrabold text-slate-900">Messages</h1>
+        <h1 className="mb-4 text-2xl font-extrabold text-text">Messages</h1>
         <MessagesClient
           userId={user.id}
           asApplicant={(appsAsApplicant.data as unknown as any[]) ?? []}

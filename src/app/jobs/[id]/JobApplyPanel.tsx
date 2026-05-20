@@ -77,9 +77,9 @@ export function JobApplyPanel({ job }: Props) {
 
         {isClosed ? (
           <>
-            <div className="rounded-card bg-slate-100 p-4 text-center text-sm text-slate-700">
+            <div className="rounded-card bg-white/[0.06] p-4 text-center text-sm text-text-soft">
               <p className="font-semibold">Applications closed</p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-text-faint">
                 {closedReason === 'deadline' && deadlineDate
                   ? `The deadline passed on ${deadlineDate.toLocaleDateString(undefined, {
                       day: 'numeric',
@@ -98,7 +98,7 @@ export function JobApplyPanel({ job }: Props) {
             <Button size="lg" fullWidth onClick={onApply}>
               Apply &amp; place bid →
             </Button>
-            <p className="text-center text-xs text-slate-500">
+            <p className="text-center text-xs text-text-faint">
               Full refund if not selected · Bids reviewed highest first
             </p>
           </>

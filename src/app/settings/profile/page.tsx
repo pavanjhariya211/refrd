@@ -24,8 +24,8 @@ export default async function ProfileSettingsPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">Profile settings</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-extrabold text-text">Profile settings</h1>
+        <p className="text-sm text-text-soft">
           Your profile is what referrers and applicants see. Keep it sharp.
         </p>
         <div className="mt-6">

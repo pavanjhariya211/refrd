@@ -91,16 +91,16 @@ export function SeekerDashboardClient({ applications }: Props) {
       </section>
 
       <section className="mt-8">
-        <h2 className="mb-3 text-lg font-bold text-slate-900">Active applications</h2>
+        <h2 className="mb-3 text-lg font-bold text-text">Active applications</h2>
         {applications.length === 0 ? (
-          <div className="card text-center text-sm text-slate-600">
+          <div className="card text-center text-sm text-text-soft">
             You haven&apos;t applied yet.{' '}
             <Link href="/jobs" className="font-semibold text-primary">Browse jobs →</Link>
           </div>
         ) : (
           <div className="card overflow-x-auto p-0">
             <table className="w-full text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-semibold uppercase text-slate-500">
+              <thead className="border-b border-border bg-white/[0.03] text-left text-xs font-semibold uppercase text-text-faint">
                 <tr>
                   <th className="px-4 py-3">Role</th>
                   <th className="px-4 py-3">Bid</th>
@@ -126,13 +126,13 @@ export function SeekerDashboardClient({ applications }: Props) {
 
       {refunded.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-3 text-lg font-bold text-slate-900">Refunded bids</h2>
+          <h2 className="mb-3 text-lg font-bold text-text">Refunded bids</h2>
           <div className="grid gap-2 sm:grid-cols-2">
             {refunded.map((r) => (
               <div key={r.id} className="card flex items-center justify-between">
                 <div>
                   <p className="font-semibold">{r.job?.title}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-text-faint">
                     Refunded {formatRelativeTime(r.updated_at)}
                   </p>
                 </div>
@@ -152,7 +152,7 @@ export function SeekerDashboardClient({ applications }: Props) {
             <ScorePanel score={openScoreFor.match} showImprovementTips />
           ) : (
             <>
-              <p className="mb-3 text-sm text-slate-500">
+              <p className="mb-3 text-sm text-text-faint">
                 Scoring in progress — your match breakdown will appear here in a few seconds.
               </p>
               <ScorePanelSkeleton />
@@ -167,10 +167,10 @@ export function SeekerDashboardClient({ applications }: Props) {
 function Stat({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
     <div className="card">
-      <p className="text-xs uppercase text-slate-500">{label}</p>
+      <p className="text-xs uppercase text-text-faint">{label}</p>
       <p
         className={
-          'mt-1 text-2xl font-extrabold ' + (highlight ? 'text-success' : 'text-slate-900')
+          'mt-1 text-2xl font-extrabold ' + (highlight ? 'text-success' : 'text-text')
         }
       >
         {value}
@@ -191,10 +191,10 @@ function SidePanel({
   return (
     <div className="fixed inset-0 z-50 flex bg-slate-900/40">
       <button className="flex-1" aria-label="Close" onClick={onClose} />
-      <div className="flex h-full w-full max-w-xl flex-col overflow-hidden bg-white shadow-card-hover">
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
-          <h3 className="text-base font-bold text-slate-900">{title}</h3>
-          <button onClick={onClose} className="rounded-full p-2 hover:bg-slate-100">
+      <div className="flex h-full w-full max-w-xl flex-col overflow-hidden bg-bg-card shadow-card-hover">
+        <header className="flex items-center justify-between border-b border-border px-5 py-3">
+          <h3 className="text-base font-bold text-text">{title}</h3>
+          <button onClick={onClose} className="rounded-full p-2 hover:bg-white/[0.06]">
             <X className="h-4 w-4" />
           </button>
         </header>

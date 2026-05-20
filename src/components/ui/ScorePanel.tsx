@@ -37,12 +37,12 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
             <span className="text-4xl font-extrabold" style={{ color: meta.color }}>
               {score.overall_score}
             </span>
-            <span className="text-sm text-slate-500">/ 100</span>
+            <span className="text-sm text-text-faint">/ 100</span>
             <span className="text-sm font-semibold" style={{ color: meta.color }}>
               {meta.label}
             </span>
           </div>
-          <p className="mt-2 text-sm italic leading-relaxed text-slate-700">
+          <p className="mt-2 text-sm italic leading-relaxed text-text-soft">
             <Sparkles className="mr-1 inline h-3.5 w-3.5 align-text-bottom" />
             {score.ai_summary}
           </p>
@@ -50,7 +50,7 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
       </div>
 
       <div className="space-y-3">
-        <h4 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h4 className="text-sm font-semibold uppercase tracking-wide text-text-faint">
           Score Breakdown
         </h4>
         {DIMENSION_LABELS.map(({ key, label, weight }) => {
@@ -58,11 +58,11 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
           const color = getColorForScore(value)
           return (
             <div key={key} className="flex items-center gap-3">
-              <div className="w-32 shrink-0 text-sm text-slate-600">
+              <div className="w-32 shrink-0 text-sm text-text-soft">
                 {label}
-                <span className="ml-1 text-xs text-slate-400">{weight}%</span>
+                <span className="ml-1 text-xs text-text-faint">{weight}%</span>
               </div>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
                 <div
                   className="h-full rounded-full transition-all"
                   style={{ width: `${value}%`, background: color }}
@@ -82,13 +82,13 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
             <CheckCircle2 className="h-4 w-4" /> Matched Skills
           </h4>
           {score.matched_skills.length === 0 ? (
-            <p className="text-xs text-slate-500">None detected</p>
+            <p className="text-xs text-text-faint">None detected</p>
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {score.matched_skills.map((s) => (
                 <span
                   key={s}
-                  className="pill bg-green-50 text-success"
+                  className="pill bg-success/10 text-[#6ee7b7]"
                   style={{ border: '1px solid #BBF7D0' }}
                 >
                   {s}
@@ -102,13 +102,13 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
             <XCircle className="h-4 w-4" /> Missing Skills
           </h4>
           {score.missing_skills.length === 0 ? (
-            <p className="text-xs text-slate-500">None — strong match</p>
+            <p className="text-xs text-text-faint">None — strong match</p>
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {score.missing_skills.map((s) => (
                 <span
                   key={s}
-                  className="pill bg-red-50 text-error"
+                  className="pill bg-error/10 text-[#fca5a5]"
                   style={{ border: '1px solid #FECACA' }}
                 >
                   {s}
@@ -127,7 +127,7 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
           <h4 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-warning">
             <Lightbulb className="h-4 w-4" /> Improvement Tips
           </h4>
-          <ul className="space-y-1.5 text-sm text-slate-700">
+          <ul className="space-y-1.5 text-sm text-text-soft">
             {score.improvement_tips.map((tip, i) => (
               <li key={i} className="flex gap-2">
                 <span className="text-warning">→</span>
@@ -138,7 +138,7 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
         </div>
       )}
 
-      <p className="text-center text-xs text-slate-400">
+      <p className="text-center text-xs text-text-faint">
         Scored on {new Date(score.scored_at).toLocaleString()}
       </p>
     </div>
@@ -148,13 +148,13 @@ export function ScorePanel({ score, showImprovementTips, className }: Props) {
 export function ScorePanelSkeleton() {
   return (
     <div className="animate-pulse space-y-6">
-      <div className="h-32 rounded-card bg-slate-100" />
+      <div className="h-32 rounded-card bg-white/[0.06]" />
       <div className="space-y-2">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-4 rounded bg-slate-100" />
+          <div key={i} className="h-4 rounded bg-white/[0.06]" />
         ))}
       </div>
-      <div className="h-24 rounded-card bg-slate-100" />
+      <div className="h-24 rounded-card bg-white/[0.06]" />
     </div>
   )
 }

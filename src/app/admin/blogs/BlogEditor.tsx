@@ -92,7 +92,7 @@ export function BlogEditor({ postId, initial }: Props) {
     editorProps: {
       attributes: {
         class:
-          'prose prose-slate prose-lg max-w-none min-h-[420px] focus:outline-none px-5 py-5',
+          'prose prose-invert prose-lg max-w-none min-h-[420px] focus:outline-none px-5 py-5',
       },
     },
     immediatelyRender: false,
@@ -223,11 +223,11 @@ export function BlogEditor({ postId, initial }: Props) {
             placeholder="Post title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border-none bg-transparent text-4xl font-extrabold tracking-tight text-slate-900 focus:outline-none focus:ring-0"
+            className="w-full border-none bg-transparent text-4xl font-extrabold tracking-tight text-text focus:outline-none focus:ring-0"
           />
         </div>
 
-        <div className="overflow-hidden rounded-card border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-card border border-border bg-bg-card">
           <EditorToolbar editor={editor} uploadFile={uploadFile} />
           <EditorContent editor={editor} />
         </div>
@@ -248,9 +248,9 @@ export function BlogEditor({ postId, initial }: Props) {
 
       {/* ─── Right column: meta + actions ────────────────────────────────── */}
       <aside className="space-y-4">
-        <div className="rounded-card border border-slate-200 bg-white p-4">
-          <h3 className="text-sm font-bold text-slate-900">Publish</h3>
-          <p className="mt-1 text-xs text-slate-500">
+        <div className="rounded-card border border-border bg-bg-card p-4">
+          <h3 className="text-sm font-bold text-text">Publish</h3>
+          <p className="mt-1 text-xs text-text-faint">
             {initial.status === 'published'
               ? 'Currently live.'
               : 'Currently a draft.'}
@@ -277,8 +277,8 @@ export function BlogEditor({ postId, initial }: Props) {
             </Button>
           </div>
 
-          <div className="mt-4 border-t border-slate-100 pt-4">
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="mt-4 border-t border-border pt-4">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-text-faint">
               <Clock className="mr-1 inline h-3 w-3" /> Schedule
             </label>
             <input
@@ -306,7 +306,7 @@ export function BlogEditor({ postId, initial }: Props) {
                 href={`/admin/blogs/${postId}/preview`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-primary"
+                className="inline-flex items-center gap-1 text-xs font-medium text-text-soft hover:text-primary"
               >
                 <Eye className="h-3 w-3" /> Preview draft
               </a>
@@ -324,9 +324,9 @@ export function BlogEditor({ postId, initial }: Props) {
           )}
         </div>
 
-        <div className="rounded-card border border-slate-200 bg-white p-4">
-          <h3 className="text-sm font-bold text-slate-900">Cover image</h3>
-          <p className="mt-1 text-xs text-slate-500">
+        <div className="rounded-card border border-border bg-bg-card p-4">
+          <h3 className="text-sm font-bold text-text">Cover image</h3>
+          <p className="mt-1 text-xs text-text-faint">
             Shown on the blog index card and the post header.
           </p>
           <CoverImageField
@@ -337,8 +337,8 @@ export function BlogEditor({ postId, initial }: Props) {
           />
         </div>
 
-        <div className="rounded-card border border-slate-200 bg-white p-4">
-          <h3 className="text-sm font-bold text-slate-900">SEO</h3>
+        <div className="rounded-card border border-border bg-bg-card p-4">
+          <h3 className="text-sm font-bold text-text">SEO</h3>
           <div className="mt-3 space-y-3">
             <Input
               label="URL slug"
@@ -374,8 +374,8 @@ export function BlogEditor({ postId, initial }: Props) {
           </div>
         </div>
 
-        <div className="rounded-card border border-slate-200 bg-white p-4">
-          <h3 className="text-sm font-bold text-slate-900">Tags</h3>
+        <div className="rounded-card border border-border bg-bg-card p-4">
+          <h3 className="text-sm font-bold text-text">Tags</h3>
           <Input
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
@@ -398,7 +398,7 @@ export function BlogEditor({ postId, initial }: Props) {
 
         <Link
           href="/admin/blogs"
-          className="block text-center text-xs text-slate-500 hover:text-primary"
+          className="block text-center text-xs text-text-faint hover:text-primary"
         >
           ← Back to all posts
         </Link>
@@ -422,7 +422,7 @@ function EditorToolbar({
     'inline-flex h-8 w-8 items-center justify-center rounded-btn transition-colors ' +
     (active
       ? 'bg-primary text-white'
-      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900')
+      : 'text-text-soft hover:bg-white/[0.06] hover:text-text')
 
   function addLink() {
     const prev = editor!.getAttributes('link').href
@@ -449,7 +449,7 @@ function EditorToolbar({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-slate-50 px-3 py-2">
+    <div className="flex flex-wrap items-center gap-1 border-b border-border bg-white/[0.03] px-3 py-2">
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -474,7 +474,7 @@ function EditorToolbar({
       >
         <Strikethrough className="h-4 w-4" />
       </button>
-      <div className="mx-1 h-5 w-px bg-slate-200" />
+      <div className="mx-1 h-5 w-px bg-white/[0.08]" />
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
@@ -491,7 +491,7 @@ function EditorToolbar({
       >
         <Heading3 className="h-4 w-4" />
       </button>
-      <div className="mx-1 h-5 w-px bg-slate-200" />
+      <div className="mx-1 h-5 w-px bg-white/[0.08]" />
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -532,7 +532,7 @@ function EditorToolbar({
       >
         <Minus className="h-4 w-4" />
       </button>
-      <div className="mx-1 h-5 w-px bg-slate-200" />
+      <div className="mx-1 h-5 w-px bg-white/[0.08]" />
       <button
         type="button"
         onClick={addLink}
@@ -594,13 +594,13 @@ function CoverImageField({
   return (
     <div className="mt-3">
       {url ? (
-        <div className="group relative overflow-hidden rounded-card border border-slate-200">
+        <div className="group relative overflow-hidden rounded-card border border-border">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={url} alt="Cover" className="h-32 w-full object-cover" />
           <button
             type="button"
             onClick={() => onChange('')}
-            className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-pill bg-white/90 text-slate-700 shadow hover:bg-white"
+            className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-pill bg-bg-card/90 text-text-soft shadow hover:bg-bg-card"
             title="Remove"
           >
             <X className="h-4 w-4" />
@@ -611,7 +611,7 @@ function CoverImageField({
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed border-slate-300 text-sm text-slate-500 hover:border-primary hover:text-primary disabled:opacity-50"
+          className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed border-border-hi text-sm text-text-faint hover:border-primary hover:text-primary disabled:opacity-50"
         >
           {uploading ? (
             <>

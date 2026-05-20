@@ -61,15 +61,15 @@ export default function ForReferrersPage() {
       <JsonLd data={faqPageJsonLd([...FAQS])} />
       <Navbar />
 
-      <section className="bg-gradient-to-b from-brand-50 via-white to-white">
+      <section className="bg-transparent">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:py-20">
           <span className="pill bg-brand-100 text-primary">
             <Sparkles className="h-3.5 w-3.5" /> For referrers
           </span>
-          <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-text sm:text-5xl">
             Earn for the referrals you&apos;d give anyway.
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-text-soft">
             Post a role at your company. Pre-screened candidates bid for your
             time, sorted by who&apos;s most serious. Submit a referral on your
             ATS, upload the confirmation, and {100 - PLATFORM_FEE_PCT}% of the
@@ -92,8 +92,8 @@ export default function ForReferrersPage() {
 
       <section className="mx-auto w-full max-w-5xl px-4 py-16">
         <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-slate-900">What Refrd gives you</h2>
-          <p className="mt-2 text-sm text-slate-600">
+          <h2 className="text-3xl font-extrabold text-text">What Refrd gives you</h2>
+          <p className="mt-2 text-sm text-text-soft">
             Three things you don&apos;t get on any other referral channel.
           </p>
         </div>
@@ -126,11 +126,11 @@ export default function ForReferrersPage() {
         </div>
       </section>
 
-      <section className="bg-slate-50">
+      <section className="bg-white/[0.03]">
         <div className="mx-auto w-full max-w-3xl px-4 py-16">
           <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-slate-900">How it works</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <h2 className="text-3xl font-extrabold text-text">How it works</h2>
+            <p className="mt-2 text-sm text-text-soft">
               Nine steps end-to-end. Steps 1–2 are once. Steps 3–9 repeat per
               referral.
             </p>
@@ -224,33 +224,33 @@ export default function ForReferrersPage() {
 
       <section className="mx-auto w-full max-w-4xl px-4 py-16">
         <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-slate-900">Why it works</h2>
+          <h2 className="text-3xl font-extrabold text-text">Why it works</h2>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="card">
             <BadgeCheck className="h-5 w-5 text-primary" />
-            <h3 className="mt-2 text-sm font-bold text-slate-900">No spam</h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <h3 className="mt-2 text-sm font-bold text-text">No spam</h3>
+            <p className="mt-1 text-sm text-text-soft">
               Applicants pay to bid. The price filter beats any keyword filter
               — 10 paid serious applicants beat 200 free random ones.
             </p>
           </div>
           <div className="card">
             <Sparkles className="h-5 w-5 text-warning" />
-            <h3 className="mt-2 text-sm font-bold text-slate-900">
+            <h3 className="mt-2 text-sm font-bold text-text">
               Pre-screening done
             </h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-text-soft">
               Every applicant comes with an AI-generated breakdown. You don&apos;t
               have to read 30 resumes — you read the top 3 by score.
             </p>
           </div>
           <div className="card">
             <Wallet className="h-5 w-5 text-success" />
-            <h3 className="mt-2 text-sm font-bold text-slate-900">
+            <h3 className="mt-2 text-sm font-bold text-text">
               Aligned incentives
             </h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-text-soft">
               Payout only releases on proof of actual referral. You can&apos;t
               get paid without doing the work; the seeker can&apos;t lose
               money to someone who didn&apos;t refer them. Both sides win.
@@ -259,10 +259,10 @@ export default function ForReferrersPage() {
         </div>
       </section>
 
-      <section className="bg-slate-900 text-white">
+      <section className="bg-bg-elev text-text border-y border-border">
         <div className="mx-auto w-full max-w-3xl px-4 py-16 text-center">
           <h2 className="text-3xl font-extrabold">Ready to get paid for referrals?</h2>
-          <p className="mt-3 text-slate-300">
+          <p className="mt-3 text-text-faint">
             Sign up takes 30 seconds. The first job pays for itself.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -272,12 +272,12 @@ export default function ForReferrersPage() {
               </Button>
             </Link>
             <Link href="/auth/signup">
-              <Button size="lg" variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="border-white/40 bg-transparent text-white hover:bg-bg-card/10">
                 Sign up first
               </Button>
             </Link>
           </div>
-          <p className="mt-6 text-xs text-slate-400">
+          <p className="mt-6 text-xs text-text-faint">
             Looking for a referral instead?{' '}
             <Link href="/for-job-seekers" className="text-white underline">
               See the seeker guide →
@@ -288,16 +288,16 @@ export default function ForReferrersPage() {
 
       {/* ─── FAQ — visible content backing the FAQPage JSON-LD ──── */}
       <section className="mx-auto w-full max-w-3xl px-4 py-16">
-        <h2 className="text-2xl font-extrabold text-slate-900">
+        <h2 className="text-2xl font-extrabold text-text">
           Common questions
         </h2>
-        <div className="mt-8 divide-y divide-slate-200 border-y border-slate-200">
+        <div className="mt-8 divide-y divide-border border-y border-border">
           {FAQS.map((faq) => (
             <div key={faq.question} className="py-5">
-              <h3 className="text-base font-semibold text-slate-900">
+              <h3 className="text-base font-semibold text-text">
                 {faq.question}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              <p className="mt-2 text-sm leading-relaxed text-text-soft">
                 {faq.answer}
               </p>
             </div>
@@ -324,8 +324,8 @@ function Benefit({
       <div className="flex h-10 w-10 items-center justify-center rounded-btn bg-brand-50">
         {icon}
       </div>
-      <h3 className="mt-3 text-base font-semibold text-slate-900">{title}</h3>
-      <p className="mt-1 text-sm leading-relaxed text-slate-600">{children}</p>
+      <h3 className="mt-3 text-base font-semibold text-text">{title}</h3>
+      <p className="mt-1 text-sm leading-relaxed text-text-soft">{children}</p>
     </div>
   )
 }
@@ -347,11 +347,11 @@ function Step({
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white">
           {icon}
         </div>
-        <span className="mt-1 text-xs font-bold text-slate-400">{n.toString().padStart(2, '0')}</span>
+        <span className="mt-1 text-xs font-bold text-text-faint">{n.toString().padStart(2, '0')}</span>
       </div>
       <div className="flex-1 pt-1">
-        <h3 className="text-base font-semibold text-slate-900">{title}</h3>
-        <p className="mt-1 text-sm leading-relaxed text-slate-600">{children}</p>
+        <h3 className="text-base font-semibold text-text">{title}</h3>
+        <p className="mt-1 text-sm leading-relaxed text-text-soft">{children}</p>
       </div>
     </li>
   )

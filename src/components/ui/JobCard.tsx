@@ -22,18 +22,18 @@ export function JobCard({ job, className }: Props) {
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h3 className="truncate text-base font-semibold text-slate-900">{job.title}</h3>
-              <div className="flex items-center gap-1.5 text-sm text-slate-600">
+              <h3 className="truncate text-base font-semibold text-text">{job.title}</h3>
+              <div className="flex items-center gap-1.5 text-sm text-text-soft">
                 <span className="truncate">{job.company_name}</span>
                 <VerifiedBadge status={job.referrer?.verification_status ?? 'unverified'} />
               </div>
             </div>
             {job.referral_bonus && (
-              <span className="pill bg-amber-50 text-warning">{job.referral_bonus}</span>
+              <span className="pill bg-amber-500/10 text-[#fcd34d]">{job.referral_bonus}</span>
             )}
           </div>
 
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-text-faint">
             {job.location && (
               <span className="inline-flex items-center gap-1">
                 <MapPin className="h-3.5 w-3.5" />
@@ -58,18 +58,18 @@ export function JobCard({ job, className }: Props) {
                 <SkillPill key={s} skill={s} />
               ))}
               {job.skills.length > 5 && (
-                <span className="text-xs text-slate-500">+{job.skills.length - 5} more</span>
+                <span className="text-xs text-text-faint">+{job.skills.length - 5} more</span>
               )}
             </div>
           )}
 
-          <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-3 text-xs">
-            <span className="inline-flex items-center gap-1 text-slate-600">
+          <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border pt-3 text-xs">
+            <span className="inline-flex items-center gap-1 text-text-soft">
               <Users className="h-3.5 w-3.5" />
-              <strong className="text-slate-900">{job.applications_count}</strong> applicants
+              <strong className="text-text">{job.applications_count}</strong> applicants
             </span>
             {job.min_bid > 0 && (
-              <span className="pill bg-amber-50 text-warning">
+              <span className="pill bg-amber-500/10 text-[#fcd34d]">
                 Bids from {formatINR(job.min_bid)}
               </span>
             )}

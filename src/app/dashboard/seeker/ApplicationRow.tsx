@@ -69,24 +69,24 @@ export function ApplicationRow({ app, onViewScore }: Props) {
   return (
     <tr
       className={
-        'border-b border-slate-100 last:border-0 ' +
-        (outranked && app.payment_status === 'paid' ? 'bg-amber-50/50' : '')
+        'border-b border-border last:border-0 ' +
+        (outranked && app.payment_status === 'paid' ? 'bg-amber-500/10/50' : '')
       }
     >
       <td className="px-4 py-3">
-        <Link href={`/jobs/${app.job_id}`} className="font-semibold text-slate-900 hover:text-primary">
+        <Link href={`/jobs/${app.job_id}`} className="font-semibold text-text hover:text-primary">
           {app.job?.title}
         </Link>
-        <p className="text-xs text-slate-500">{app.job?.company_name}</p>
+        <p className="text-xs text-text-faint">{app.job?.company_name}</p>
       </td>
       <td className="px-4 py-3 font-bold text-warning">{formatINR(app.bid_amount)}</td>
       <td className="px-4 py-3">
         {app.payment_status === 'refunded' ? (
-          <span className="text-xs text-slate-400">—</span>
+          <span className="text-xs text-text-faint">—</span>
         ) : (
           <>
             <strong>#{myRank}</strong>
-            <span className="text-xs text-slate-500"> of {count}</span>
+            <span className="text-xs text-text-faint"> of {count}</span>
             {outranked && (
               <p className="text-xs text-warning" title="A higher bid was placed">
                 Top: {formatINR(highest)}
@@ -99,7 +99,7 @@ export function ApplicationRow({ app, onViewScore }: Props) {
         {app.match_grade && app.match_score != null ? (
           <MatchGradeBadge grade={app.match_grade} score={app.match_score} size="sm" />
         ) : (
-          <span className="text-xs text-slate-400">scoring…</span>
+          <span className="text-xs text-text-faint">scoring…</span>
         )}
       </td>
       <td className="px-4 py-3">

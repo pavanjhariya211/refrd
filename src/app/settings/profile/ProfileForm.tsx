@@ -70,7 +70,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       <Input label="Company name" hint="If you're a referrer, the company you can refer to." value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Account type</label>
+        <label className="mb-1.5 block text-sm font-medium text-text-soft">Account type</label>
         <div className="grid grid-cols-3 gap-2">
           {(['jobseeker', 'referrer', 'both'] as UserType[]).map((t) => (
             <button
@@ -81,7 +81,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
                 'rounded-btn border px-3 py-2 text-sm font-medium capitalize ' +
                 (userType === t
                   ? 'border-primary bg-brand-50 text-primary'
-                  : 'border-slate-200 text-slate-600 hover:bg-slate-50')
+                  : 'border-border text-text-soft hover:bg-white/[0.04]')
               }
             >
               {t === 'jobseeker' ? 'Job seeker' : t}
@@ -100,7 +100,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       </label>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-700">Skills</label>
+        <label className="mb-1.5 block text-sm font-medium text-text-soft">Skills</label>
         <div className="flex gap-2">
           <Input
             value={skillInput}

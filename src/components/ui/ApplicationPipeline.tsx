@@ -40,7 +40,7 @@ export function ApplicationPipeline({ status, className }: Props) {
                 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold',
                 done && !current && 'bg-success text-white',
                 current && 'bg-primary text-white ring-4 ring-primary/20',
-                !done && 'bg-slate-100 text-slate-400'
+                !done && 'bg-white/[0.06] text-text-faint'
               )}
             >
               {done && !current ? <Check className="h-3 w-3" /> : i + 1}
@@ -49,7 +49,7 @@ export function ApplicationPipeline({ status, className }: Props) {
               <div
                 className={cn(
                   'h-0.5 flex-1 rounded',
-                  i < currentIdx ? 'bg-success' : 'bg-slate-200'
+                  i < currentIdx ? 'bg-success' : 'bg-white/[0.08]'
                 )}
               />
             )}

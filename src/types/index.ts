@@ -32,24 +32,24 @@ export const MATCH_GRADE_META: Record<
   MatchGrade,
   { label: string; color: string; bg: string }
 > = {
-  A: { label: 'Excellent Match', color: '#16A34A', bg: '#F0FDF4' },
-  B: { label: 'Good Match', color: '#1A56DB', bg: '#EFF6FF' },
-  C: { label: 'Partial Match', color: '#D97706', bg: '#FFFBEB' },
-  D: { label: 'Weak Match', color: '#DC2626', bg: '#FEF2F2' },
-  F: { label: 'Poor Match', color: '#991B1B', bg: '#FEF2F2' },
+  A: { label: 'Excellent Match', color: '#6ee7b7', bg: 'rgba(16,185,129,0.12)' },
+  B: { label: 'Good Match', color: '#c084fc', bg: 'rgba(168,85,247,0.12)' },
+  C: { label: 'Partial Match', color: '#fcd34d', bg: 'rgba(245,158,11,0.12)' },
+  D: { label: 'Weak Match', color: '#fca5a5', bg: 'rgba(239,68,68,0.12)' },
+  F: { label: 'Poor Match', color: '#fca5a5', bg: 'rgba(239,68,68,0.12)' },
 }
 
 export const APPLICATION_STATUS_META: Record<
   ApplicationStatus,
   { label: string; color: string; bg: string }
 > = {
-  applied: { label: 'Applied', color: '#1A56DB', bg: '#EFF6FF' },
-  reviewing: { label: 'Under Review', color: '#D97706', bg: '#FFFBEB' },
-  accepted: { label: 'Accepted', color: '#16A34A', bg: '#F0FDF4' },
-  referred: { label: 'Referred', color: '#16A34A', bg: '#F0FDF4' },
-  interview: { label: 'Interview', color: '#0EA5E9', bg: '#E0F2FE' },
-  offer: { label: 'Offer', color: '#16A34A', bg: '#F0FDF4' },
-  rejected: { label: 'Closed', color: '#DC2626', bg: '#FEF2F2' },
+  applied: { label: 'Applied', color: '#c084fc', bg: 'rgba(168,85,247,0.12)' },
+  reviewing: { label: 'Under Review', color: '#fcd34d', bg: 'rgba(245,158,11,0.12)' },
+  accepted: { label: 'Accepted', color: '#6ee7b7', bg: 'rgba(16,185,129,0.12)' },
+  referred: { label: 'Referred', color: '#6ee7b7', bg: 'rgba(16,185,129,0.12)' },
+  interview: { label: 'Interview', color: '#7dd3fc', bg: 'rgba(14,165,233,0.12)' },
+  offer: { label: 'Offer', color: '#6ee7b7', bg: 'rgba(16,185,129,0.12)' },
+  rejected: { label: 'Closed', color: '#fca5a5', bg: 'rgba(239,68,68,0.12)' },
 }
 
 export interface Profile {

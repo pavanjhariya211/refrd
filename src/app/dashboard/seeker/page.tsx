@@ -28,8 +28,8 @@ export default async function SeekerDashboardPage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">My applications</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-3xl font-extrabold text-text">My applications</h1>
+        <p className="text-sm text-text-soft">
           Track bids, AI score, and rank. Refunds appear automatically.
         </p>
         <SeekerDashboardClient applications={(apps as unknown as Application[]) ?? []} />

@@ -100,7 +100,7 @@ export default async function BlogPostPage({
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12">
         <Link
           href="/blogs"
-          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-primary"
+          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-text-faint hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" /> All posts
         </Link>
@@ -120,15 +120,15 @@ export default async function BlogPostPage({
                 ))}
               </div>
             )}
-            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+            <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-text sm:text-5xl">
               {post.title}
             </h1>
             {post.excerpt && (
-              <p className="mt-4 text-lg leading-relaxed text-slate-600">
+              <p className="mt-4 text-lg leading-relaxed text-text-soft">
                 {post.excerpt}
               </p>
             )}
-            <div className="mt-5 flex items-center gap-4 text-sm text-slate-500">
+            <div className="mt-5 flex items-center gap-4 text-sm text-text-faint">
               <span className="inline-flex items-center gap-1.5">
                 <Calendar className="h-4 w-4" />
                 {new Date(date).toLocaleDateString('en-US', {
@@ -145,7 +145,7 @@ export default async function BlogPostPage({
           </header>
 
           {post.cover_image_url && (
-            <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-card bg-slate-100">
+            <div className="relative mb-10 aspect-[16/9] w-full overflow-hidden rounded-card bg-white/[0.06]">
               <Image
                 src={post.cover_image_url}
                 alt={post.title}
@@ -165,13 +165,13 @@ export default async function BlogPostPage({
            * `prose` styles come from @tailwindcss/typography.
            */}
           <div
-            className="prose prose-slate prose-lg max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-a:text-primary prose-img:rounded-card"
+            className="prose prose-invert prose-lg max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-a:text-primary prose-img:rounded-card"
             dangerouslySetInnerHTML={{ __html: post.content_html }}
           />
         </article>
 
-        <div className="mt-16 border-t border-slate-200 pt-8 text-center">
-          <p className="text-sm text-slate-600">
+        <div className="mt-16 border-t border-border pt-8 text-center">
+          <p className="text-sm text-text-soft">
             Liked this post? Refrd helps job seekers get referred by verified
             employees.
           </p>
@@ -184,7 +184,7 @@ export default async function BlogPostPage({
             </Link>
             <Link
               href="/blogs"
-              className="inline-flex items-center justify-center rounded-btn border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+              className="inline-flex items-center justify-center rounded-btn border border-border-hi bg-bg-card px-5 py-2.5 text-sm font-semibold text-text hover:bg-white/[0.04]"
             >
               More posts
             </Link>

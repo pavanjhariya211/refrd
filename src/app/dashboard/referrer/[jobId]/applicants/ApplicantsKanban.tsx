@@ -211,7 +211,7 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
   return (
     <>
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">Sort:</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-text-faint">Sort:</span>
         {([
           { v: 'bid', label: 'Bid ↓' },
           { v: 'score', label: 'AI score ↓' },
@@ -222,7 +222,7 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
             onClick={() => setSort(opt.v)}
             className={
               'rounded-pill px-3 py-1 text-xs font-medium ' +
-              (sort === opt.v ? 'bg-primary text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200')
+              (sort === opt.v ? 'bg-primary text-white' : 'bg-white/[0.06] text-text-soft hover:bg-white/[0.1]')
             }
           >
             {opt.label}
@@ -239,13 +239,13 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   className={
-                    'rounded-card border bg-slate-50 p-3 ' +
-                    (snapshot.isDraggingOver ? 'border-primary bg-brand-50' : 'border-slate-200')
+                    'rounded-card border bg-white/[0.03] p-3 ' +
+                    (snapshot.isDraggingOver ? 'border-primary bg-brand-50' : 'border-border')
                   }
                 >
-                  <h3 className="mb-2 flex items-center justify-between text-sm font-semibold text-slate-700">
+                  <h3 className="mb-2 flex items-center justify-between text-sm font-semibold text-text-soft">
                     {col.label}
-                    <span className="rounded-pill bg-white px-2 py-0.5 text-xs">
+                    <span className="rounded-pill bg-bg-card px-2 py-0.5 text-xs">
                       {grouped[col.id]?.length ?? 0}
                     </span>
                   </h3>
@@ -266,10 +266,10 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
                                 size="sm"
                               />
                               <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm font-semibold text-slate-900">
+                                <p className="truncate text-sm font-semibold text-text">
                                   {app.applicant?.name ?? 'Applicant'}
                                 </p>
-                                <p className="truncate text-xs text-slate-500">
+                                <p className="truncate text-xs text-text-faint">
                                   {app.applicant?.headline ?? ''}
                                 </p>
                               </div>
@@ -279,7 +279,7 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
                                 <span className="text-lg font-extrabold text-warning">
                                   {formatINR(app.bid_amount)}
                                 </span>
-                                <span className="ml-1 text-xs text-slate-400">
+                                <span className="ml-1 text-xs text-text-faint">
                                   #{rankFor(app)} of {apps.length}
                                 </span>
                               </div>
@@ -325,7 +325,7 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
                     ))}
                     {provided.placeholder}
                     {grouped[col.id]?.length === 0 && (
-                      <p className="py-4 text-center text-xs text-slate-400">No applicants</p>
+                      <p className="py-4 text-center text-xs text-text-faint">No applicants</p>
                     )}
                   </div>
                 </div>
@@ -359,8 +359,8 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
             </div>
             {openScoreFor.cover_note && (
               <div>
-                <h4 className="mb-1 text-sm font-semibold text-slate-900">Cover note</h4>
-                <p className="rounded-card bg-slate-50 p-3 text-sm text-slate-700">
+                <h4 className="mb-1 text-sm font-semibold text-text">Cover note</h4>
+                <p className="rounded-card bg-white/[0.03] p-3 text-sm text-text-soft">
                   {openScoreFor.cover_note}
                 </p>
               </div>
@@ -368,7 +368,7 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
             {openScoreFor.match ? (
               <ScorePanel score={openScoreFor.match} />
             ) : (
-              <p className="text-sm text-slate-500">AI score is still being computed…</p>
+              <p className="text-sm text-text-faint">AI score is still being computed…</p>
             )}
           </div>
         </SidePanel>
@@ -380,27 +380,27 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
             <ProofResultPanel result={proofResult} onClose={closeReferModal} />
           ) : (
             <>
-              <p className="text-sm text-slate-700">
+              <p className="text-sm text-text-soft">
                 Refer <strong>{referFor.applicant?.name}</strong> for{' '}
                 <strong>{jobTitle}</strong>?
               </p>
 
-              <ol className="mt-3 space-y-1 rounded-card bg-blue-50 p-3 text-sm text-primary">
+              <ol className="mt-3 space-y-1 rounded-card bg-blue-500/10 p-3 text-sm text-primary">
                 <li>1. Submit the candidate on your company&apos;s referral system.</li>
                 <li>2. Wait for the confirmation email from your ATS.</li>
                 <li>3. Upload a screenshot of that email below.</li>
               </ol>
 
-              <div className="mt-4 rounded-card bg-slate-50 p-4 text-sm">
+              <div className="mt-4 rounded-card bg-white/[0.03] p-4 text-sm">
                 <div className="flex justify-between">
                   <span>Bid amount</span>
                   <strong>{formatINR(referFor.bid_amount)}</strong>
                 </div>
-                <div className="flex justify-between text-slate-500">
+                <div className="flex justify-between text-text-faint">
                   <span>Platform fee (15%, min ₹50)</span>
                   <span>− {formatINR(calculatePlatformFee(referFor.bid_amount))}</span>
                 </div>
-                <div className="mt-2 flex justify-between border-t border-slate-200 pt-2 text-base">
+                <div className="mt-2 flex justify-between border-t border-border pt-2 text-base">
                   <span className="font-semibold">You earn (on approval)</span>
                   <strong className="text-success">
                     {formatINR(calculateReferrerPayout(referFor.bid_amount))}
@@ -408,12 +408,12 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
                 </div>
               </div>
 
-              <label className="mt-3 flex cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center hover:border-primary">
-                <FileUp className="h-6 w-6 text-slate-400" />
-                <p className="mt-2 text-sm font-semibold text-slate-700">
+              <label className="mt-3 flex cursor-pointer flex-col items-center justify-center rounded-card border-2 border-dashed border-border-hi bg-white/[0.03] px-4 py-6 text-center hover:border-primary">
+                <FileUp className="h-6 w-6 text-text-faint" />
+                <p className="mt-2 text-sm font-semibold text-text-soft">
                   {proofFile ? proofFile.name : 'Upload screenshot of the confirmation email'}
                 </p>
-                <p className="mt-1 text-xs text-slate-500">PNG / JPG, up to 5 MB</p>
+                <p className="mt-1 text-xs text-text-faint">PNG / JPG, up to 5 MB</p>
                 <input
                   type="file"
                   accept="image/png,image/jpeg,image/jpg,image/webp"
@@ -456,12 +456,12 @@ export function ApplicantsKanban({ applications: initial, jobId, jobTitle }: Pro
 
       {declineFor && (
         <Modal onClose={() => setDeclineFor(null)} title="Decline applicant">
-          <p className="text-sm text-slate-700">
+          <p className="text-sm text-text-soft">
             <strong>{declineFor.applicant?.name}</strong> will receive a full refund of{' '}
             <strong>{formatINR(declineFor.bid_amount)}</strong>.
           </p>
           <div className="mt-3">
-            <label className="mb-1 block text-sm font-medium text-slate-700">Reason</label>
+            <label className="mb-1 block text-sm font-medium text-text-soft">Reason</label>
             <select
               className="input-base"
               value={declineReason}
@@ -502,10 +502,10 @@ function SidePanel({
   return (
     <div className="fixed inset-0 z-50 flex bg-slate-900/40">
       <button className="flex-1" aria-label="Close" onClick={onClose} />
-      <div className="flex h-full w-full max-w-xl flex-col overflow-hidden bg-white shadow-card-hover">
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
-          <h3 className="text-base font-bold text-slate-900">{title}</h3>
-          <button onClick={onClose} className="rounded-full p-2 hover:bg-slate-100">
+      <div className="flex h-full w-full max-w-xl flex-col overflow-hidden bg-bg-card shadow-card-hover">
+        <header className="flex items-center justify-between border-b border-border px-5 py-3">
+          <h3 className="text-base font-bold text-text">{title}</h3>
+          <button onClick={onClose} className="rounded-full p-2 hover:bg-white/[0.06]">
             <X className="h-4 w-4" />
           </button>
         </header>
@@ -528,12 +528,12 @@ function ProofResultPanel({
   if (result.status === 'approved') {
     return (
       <div className="space-y-4 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-success">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10 text-success">
           <Check className="h-8 w-8" />
         </div>
         <div>
-          <h3 className="text-xl font-extrabold text-slate-900">Referred!</h3>
-          <p className="mt-1 text-sm text-slate-600">
+          <h3 className="text-xl font-extrabold text-text">Referred!</h3>
+          <p className="mt-1 text-sm text-text-soft">
             <strong className="text-success">{formatINR(result.payout)}</strong> credited to your wallet.
           </p>
         </div>
@@ -544,17 +544,17 @@ function ProofResultPanel({
   if (result.status === 'needs_review') {
     return (
       <div className="space-y-4 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-warning">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10 text-warning">
           <Loader2 className="h-8 w-8" />
         </div>
         <div>
-          <h3 className="text-xl font-extrabold text-slate-900">Submitted for review</h3>
-          <p className="mt-1 text-sm text-slate-600">
+          <h3 className="text-xl font-extrabold text-text">Submitted for review</h3>
+          <p className="mt-1 text-sm text-text-soft">
             Our team will verify your screenshot within 24 hours. Payout releases on approval.
           </p>
         </div>
         {result.reasoning && (
-          <p className="rounded-input bg-slate-50 p-2 text-left text-xs text-slate-600">
+          <p className="rounded-input bg-white/[0.03] p-2 text-left text-xs text-text-soft">
             <strong>Reason:</strong> {result.reasoning}
           </p>
         )}
@@ -564,17 +564,17 @@ function ProofResultPanel({
   }
   return (
     <div className="space-y-4 text-center">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-error">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-error">
         <X className="h-8 w-8" />
       </div>
       <div>
-        <h3 className="text-xl font-extrabold text-slate-900">Could not validate</h3>
-        <p className="mt-1 text-sm text-slate-600">
+        <h3 className="text-xl font-extrabold text-text">Could not validate</h3>
+        <p className="mt-1 text-sm text-text-soft">
           The screenshot doesn&apos;t look like a referral confirmation. Try a clearer image showing the candidate name and company.
         </p>
       </div>
       {result.reasoning && (
-        <p className="rounded-input bg-slate-50 p-2 text-left text-xs text-slate-600">
+        <p className="rounded-input bg-white/[0.03] p-2 text-left text-xs text-text-soft">
           <strong>Reason:</strong> {result.reasoning}
         </p>
       )}
@@ -594,10 +594,10 @@ function Modal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
-      <div className="w-full max-w-md overflow-hidden rounded-card bg-white shadow-card-hover">
-        <header className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
-          <h3 className="text-base font-bold text-slate-900">{title}</h3>
-          <button onClick={onClose} className="rounded-full p-2 hover:bg-slate-100">
+      <div className="w-full max-w-md overflow-hidden rounded-card bg-bg-card shadow-card-hover">
+        <header className="flex items-center justify-between border-b border-border px-5 py-3">
+          <h3 className="text-base font-bold text-text">{title}</h3>
+          <button onClick={onClose} className="rounded-full p-2 hover:bg-white/[0.06]">
             <X className="h-4 w-4" />
           </button>
         </header>

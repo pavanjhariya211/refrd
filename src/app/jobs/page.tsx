@@ -29,8 +29,8 @@ export default function JobsPage() {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">Open roles</h1>
-            <p className="text-sm text-slate-600">
+            <h1 className="text-3xl font-extrabold text-text">Open roles</h1>
+            <p className="text-sm text-text-soft">
               Bid to be reviewed first. Full refund if not selected.
             </p>
           </div>
@@ -55,7 +55,7 @@ export default function JobsPage() {
             {loading ? (
               Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
             ) : jobs.length === 0 ? (
-              <div className="col-span-full card text-center text-sm text-slate-600">
+              <div className="col-span-full card text-center text-sm text-text-soft">
                 No jobs match your filters. Try clearing them.
               </div>
             ) : (

@@ -9,9 +9,9 @@ interface Props {
 }
 
 const variants = {
-  default: 'bg-slate-100 text-slate-700',
-  matched: 'bg-green-50 text-success border border-green-200',
-  missing: 'bg-red-50 text-error border border-red-200',
+  default: 'bg-white/[0.06] text-text-soft border border-border',
+  matched: 'bg-success/10 text-[#6ee7b7] border border-success/25',
+  missing: 'bg-error/10 text-[#fca5a5] border border-error/25',
 }
 
 export function SkillPill({ skill, variant = 'default', size = 'sm', className, onRemove }: Props) {

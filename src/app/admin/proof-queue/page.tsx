@@ -49,8 +49,8 @@ export default async function AdminProofQueuePage() {
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <div className="flex items-baseline justify-between">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">Proof review queue</h1>
-            <p className="text-sm text-slate-600">
+            <h1 className="text-3xl font-extrabold text-text">Proof review queue</h1>
+            <p className="text-sm text-text-soft">
               {rows.length} item{rows.length === 1 ? '' : 's'} awaiting decision.
               Approving releases the referrer&apos;s payout. Rejecting refunds the
               seeker.
