@@ -72,18 +72,14 @@ export function Navbar() {
     >
       <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20">
         <Link href="/" className="flex items-center" aria-label="Refrd home">
-          {/* The logo wordmark is dark navy, so it needs a light plate to
-              stay legible on the dark navbar. */}
-          <span className="inline-flex items-center rounded-lg bg-white px-2.5 py-1.5">
-            <Image
-              src="/logo.png"
-              alt="Refrd.club"
-              width={160}
-              height={48}
-              priority
-              className="h-7 w-auto"
-            />
-          </span>
+          <Image
+            src="/logo.png"
+            alt="Refrd.club"
+            width={160}
+            height={48}
+            priority
+            className="h-8 w-auto"
+          />
         </Link>
 
         <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 md:flex">
