@@ -162,10 +162,37 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ─── LIVE AUCTIONS ───────────────────────────────────────── */}
+      {jobs.length > 0 && (
+        <section className="py-24">
+          <div className="mx-auto max-w-7xl px-4">
+            <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <div className="section-meta">01 · Live now</div>
+                <h2 className="mt-4 text-balance text-[34px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[44px] md:text-[56px]">
+                  Roles open for{' '}
+                  <span className="accent-italic">bidding.</span>
+                </h2>
+              </div>
+              <Link href="/jobs">
+                <Button variant="outline">
+                  View all roles <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {jobs.map((j, i) => (
+                <JobAuctionCard key={j.id} job={j} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ─── HOW IT WORKS ────────────────────────────────────────── */}
       <section id="how" className="py-24">
         <div className="mx-auto max-w-7xl px-4 text-center">
-          <div className="section-meta">01 · How it works</div>
+          <div className="section-meta">02 · How it works</div>
           <h2 className="mx-auto mt-4 max-w-3xl text-balance text-[34px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[44px] md:text-[56px]">
             A risk-free system built on{' '}
             <span className="accent-italic">absolute trust.</span>
@@ -255,7 +282,7 @@ export default async function HomePage() {
       {/* ─── AUDIENCE SPLIT ──────────────────────────────────────── */}
       <section id="for-referrers" className="py-24">
         <div className="mx-auto max-w-7xl px-4 text-center">
-          <div className="section-meta">02 · Two sides, one ledger</div>
+          <div className="section-meta">03 · Two sides, one ledger</div>
           <h2 className="mx-auto mt-4 max-w-3xl text-balance text-[34px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[44px] md:text-[56px]">
             Built for the person{' '}
             <span className="accent-italic">asking</span> and the one{' '}
@@ -317,7 +344,7 @@ export default async function HomePage() {
         />
         <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-4 lg:grid-cols-[1fr_1.05fr]">
           <div>
-            <div className="section-meta">03 · Transparent matching</div>
+            <div className="section-meta">04 · Transparent matching</div>
             <h2 className="mt-4 text-balance text-[34px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[44px] md:text-[56px]">
               Same score. <span className="accent-italic">Both sides.</span> No
               mystery math.
@@ -395,33 +422,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ─── LIVE AUCTIONS ───────────────────────────────────────── */}
-      {jobs.length > 0 && (
-        <section className="py-24">
-          <div className="mx-auto max-w-7xl px-4">
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-              <div>
-                <div className="section-meta">04 · Live now</div>
-                <h2 className="mt-4 text-balance text-[34px] font-semibold leading-[1.05] tracking-[-0.03em] sm:text-[44px] md:text-[56px]">
-                  Roles open for{' '}
-                  <span className="accent-italic">bidding.</span>
-                </h2>
-              </div>
-              <Link href="/jobs">
-                <Button variant="outline">
-                  View all roles <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {jobs.map((j, i) => (
-                <JobAuctionCard key={j.id} job={j} index={i} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ─── FAQ ─────────────────────────────────────────────────── */}
       <section id="faq" className="py-24">
