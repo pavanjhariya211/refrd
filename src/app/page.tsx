@@ -66,7 +66,7 @@ const FAQS = [
   },
   {
     q: 'How does Refrd make money?',
-    a: 'We take a small fee, but only when a referral actually happens. If your money gets refunded, you pay us nothing. The exact fee is shown to you before you confirm your bid — no surprises later.',
+    a: 'We take a small platform fee, but only when a referral actually happens — the exact amount is shown before you confirm your bid, with no surprises later. If you’re not selected and get refunded, the only thing withheld is a flat ₹10 processing fee that covers the payment gateway’s non-refundable transaction charge; the rest of your bid comes straight back to you.',
   },
   {
     q: 'Will the referrer see who I am before I bid?',
