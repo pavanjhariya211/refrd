@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { getRazorpay } from '@/lib/razorpay'
+import { REFUND_PROCESSING_FEE } from '@/lib/constants'
 
 export const runtime = 'nodejs'
 
@@ -45,12 +46,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Payment not captured' }, { status: 400 })
   }
 
+  // Withhold a flat processing fee from every refund. Guard against tiny
+  // bids so we never attempt a zero/negative refund (Razorpay rejects it).
+  const refundAmount =
+    payment.amount > REFUND_PROCESSING_FEE
+      ? payment.amount - REFUND_PROCESSING_FEE
+      : payment.amount
+
   let refundId: string | null = null
   try {
     const razorpay = getRazorpay()
     const refund = await razorpay.payments.refund(payment.razorpay_payment_id!, {
-      amount: payment.amount * 100,
-      notes: { application_id, reason: reason ?? 'declined' },
+      amount: refundAmount * 100,
+      notes: {
+        application_id,
+        reason: reason ?? 'declined',
+        processing_fee: String(payment.amount - refundAmount),
+      },
     })
     refundId = refund.id
   } catch (err) {

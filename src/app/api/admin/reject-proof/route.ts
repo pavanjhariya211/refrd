@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { isAdmin } from '@/lib/admin'
 import { sendEmail, emailLayout } from '@/lib/email'
-import { formatINR } from '@/lib/utils'
 
 export const runtime = 'nodejs'
 
@@ -96,7 +95,7 @@ export async function POST(request: Request) {
       html: emailLayout(`
         <p>Hi ${application.applicant.name ?? 'there'},</p>
         <p>The referrer's proof for <strong>${application.job.title}</strong> at <strong>${application.job.company_name}</strong> couldn't be verified.</p>
-        <p>We've refunded your bid of <strong>${formatINR(application.bid_amount)}</strong> to your original payment method. It should appear in 3–5 business days.</p>
+        <p>We've refunded your bid for <strong>${application.job.title}</strong> to your original payment method. It should appear in 3–5 business days.</p>
       `),
     })
   }

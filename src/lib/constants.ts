@@ -20,6 +20,11 @@ export const FREE_MATCH_CHECK_LIMIT = 5
 
 export const APPLY_AUTO_REFUND_DAYS = 7
 
+// Flat processing fee (in rupees) withheld from every refund issued to a
+// non-selected applicant. Covers the payment gateway's non-refundable
+// transaction charge. Refund amount = bid_amount − this fee.
+export const REFUND_PROCESSING_FEE = 10
+
 export const KANBAN_COLUMNS: { id: 'new' | 'reviewing' | 'referred' | 'closed'; label: string; statuses: ApplicationStatus[] }[] = [
   { id: 'new', label: 'New Applications', statuses: ['applied'] },
   { id: 'reviewing', label: 'Under Review', statuses: ['reviewing', 'accepted'] },
