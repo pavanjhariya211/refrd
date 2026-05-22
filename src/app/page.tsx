@@ -54,7 +54,7 @@ const FAQS = [
   },
   {
     q: 'How do you actually check the referrer works at the company?',
-    a: 'Before anyone can list a role, they have to verify with their company work email — not a personal Gmail. We check that the email domain matches the company they say they work for. If they leave the company, their listings come down.',
+    a: 'Every referrer signs in with LinkedIn when they join, so we have their real identity and profile from the start — no anonymous accounts. The “Verified employee” badge on a job post turns on automatically when the company they’re referring for matches the employer on their LinkedIn profile.',
   },
   {
     q: 'What if the referrer’s company doesn’t allow paid referrals?',
@@ -156,7 +156,7 @@ export default async function HomePage() {
               icon={<CheckCircle2 className="h-4 w-4" />}
               label="Referrers"
               value="Verified"
-              sub="work email"
+              sub="via LinkedIn"
             />
           </div>
         </div>
@@ -306,7 +306,7 @@ export default async function HomePage() {
             body="Your resume vanishes into the ATS black hole. Refrd is a direct line to someone whose internal referral actually gets read — and you only pay if it actually happens."
             tone="violet"
             bullets={[
-              ['Real employees only.', 'Every referrer is checked with their work email before they can list a role.'],
+              ['Real employees only.', 'Every referrer signs in with LinkedIn, so you see a real identity and verified employer — never an anonymous account.'],
               ['See your fit score before bidding.', 'If you’re not a strong match, you’ll know. So will they.'],
               ['Refund without arguing.', 'No referral in 7 days? Money comes back on its own.'],
             ]}
