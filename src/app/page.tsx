@@ -54,7 +54,7 @@ const FAQS = [
   },
   {
     q: 'How do you actually check the referrer works at the company?',
-    a: 'Every referrer signs in with LinkedIn when they join, so we have their real identity and profile from the start — no anonymous accounts. The “Verified employee” badge on a job post turns on automatically when the company they’re referring for matches the employer on their LinkedIn profile.',
+    a: 'Every referrer is identity- and employment-verified before they can list a role — only confirmed employees can post, never anonymous accounts. Each job carries a “Verified employee” badge so you know the referral is coming from a real person inside that company.',
   },
   {
     q: 'What if the referrer’s company doesn’t allow paid referrals?',
